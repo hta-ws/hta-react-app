@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 
+import './App.css';
+import './assets/scss/themes.scss';
+import AppContextProvider from '@hta/context/AppContextProvider';
+import AuthRoutes from '@hta/components/AuthRoutes';
+import configureStore from './toolkit/store';
+import AppAuthProvider from '@hta/core/AppAuthProvider';
+import AppLayout from '@hta/core/AppLayout';
+import AppLocaleProvider from '@hta/context/AppLocaleProvider';
+
+const store = configureStore();
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContextProvider>
+      <Provider store={store}>
+        <AppLocaleProvider>
+          <BrowserRouter>
+            <AppAuthProvider>
+              <AuthRoutes>
+                <AppLayout />
+              </AuthRoutes>
+            </AppAuthProvider>
+          </BrowserRouter>
+        </AppLocaleProvider>
+      </Provider>
+    </AppContextProvider>
   );
 }
 
