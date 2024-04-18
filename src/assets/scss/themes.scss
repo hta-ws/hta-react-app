@@ -321,3 +321,28 @@ body {
 .stock-logo-text {
   padding: none;
 }
+.twocolumn-iconview {
+  li {
+    display: flex;
+
+    flex-direction: column;
+    align-items: center;
+    span {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.iconView {
+  display: flex;
+
+  flex-direction: column;
+  align-items: center;
+  div {
+    font-size: 0.75rem;
+  }
+}
+
+.no-wrap {
+  white-space: nowrap;
+}

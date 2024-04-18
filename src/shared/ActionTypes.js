@@ -20,3 +20,6 @@ export const CHANGE_LAYOUT_LEFT_SIDEBAR_SIZE_TYPE =
   'change_layout_sidebar_size_type';
 
 export const CHANGE_SIDEBAR_VISIBILITY_TYPE = 'change_sidebar_visibility_type';
+
+export const TOGGLE_MENU = 'TOGGLE_MENU';
+export const SET_MENU_ITEMS = 'SET_MENU_ITEMS';

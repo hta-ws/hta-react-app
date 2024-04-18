@@ -6,5 +6,15 @@ Contact: support@themesbrand.com
 File: Custom Css File
 */
 
+$dark-icon-view-active-bg: shade-color($dark-vertical-menu-bg, 15%);
+$dark-icon-view-active-bg-dark: tint-color($dark-vertical-menu-bg-dark, 15%);
 
+// Sonra bu yeni renkleri CSS custom properties olarak tanımlayın
 
+[data-bs-theme="light"] {
+    --vz-vertical-menu-bg-hover: #{$dark-icon-view-active-bg};
+}
+
+[data-bs-theme="dark"] {
+    --vz-vertical-menu-bg-hover: #{$dark-icon-view-active-bg-dark};
+}

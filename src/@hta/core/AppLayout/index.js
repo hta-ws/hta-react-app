@@ -40,7 +40,7 @@ const AppLayout = () => {
     layoutWidthType,
     layoutPositionType,
     leftSidebarSizeType,
-  } = useSelector(({ settings }) => settings);
+  } = useSelector(({ layout }) => layout);
   const { user, isAuthenticated } = useAuthUser();
   // const { updateNavStyle } = useLayoutActionsContext();
   // const { updateMenuStyle, setSidebarBgImage } = useSidebarActionsContext();

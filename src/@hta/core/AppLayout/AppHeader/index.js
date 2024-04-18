@@ -15,7 +15,7 @@ const AppHeader = ({ headerClass }) => {
   const { logout } = useAuthMethod();
   const dispatch = useDispatch();
   const { sidebarVisibilityType, layoutModeType } = useSelector(
-    ({ settings }) => settings,
+    ({ layout }) => layout,
   );
   const toogleMenuBtn = () => {
     var windowSize = document.documentElement.clientWidth;

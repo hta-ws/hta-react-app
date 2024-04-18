@@ -1,6 +1,6 @@
 //
 // _vertical.scss
-// 
+//
 
 .app-content {
     margin-left: var(--#{$prefix}vertical-menu-width);
@@ -13,8 +13,8 @@
 }
 
 .main-content {
-    transition: all .1s ease-out;
-
+    transition: all 0.1s ease-out;
+    position: relative;
     @media (min-width: 768px) {
         margin-left: var(--#{$prefix}vertical-menu-width);
     }
@@ -22,6 +22,7 @@
 
 .page-content {
     padding: calc(#{$header-height} + #{$grid-gutter-width}) calc(#{$grid-gutter-width} * 0.5) $footer-height calc(#{$grid-gutter-width} * 0.5);
+    height: 100vh;
 }
 
 .navbar-menu {
@@ -35,7 +36,7 @@
     top: 0;
     box-shadow: var(--#{$prefix}vertical-menu-box-shadow);
     padding: 0 0 calc(#{$header-height} + 25px) 0;
-    transition: all .1s ease-out;
+    transition: all 0.1s ease-out;
 
     .navbar-nav {
         .nav-link {
@@ -82,20 +83,20 @@
                 }
             }
 
-            &[data-bs-toggle=collapse] {
+            &[data-bs-toggle="collapse"] {
                 &:after {
                     display: block;
                     content: "\F0142";
-                    font-family: 'Material Design Icons';
+                    font-family: "Material Design Icons";
                     margin-left: auto;
-                    transition: transform .2s;
+                    transition: transform 0.2s;
                     font-size: 1.05rem;
                     position: absolute;
                     right: 18px;
                     color: inherit;
                 }
 
-                &[aria-expanded=true] {
+                &[aria-expanded="true"] {
                     color: var(--#{$prefix}vertical-menu-item-active-color);
 
                     .icon-dual {
@@ -136,14 +137,14 @@
                 font-family: $vertical-menu-sub-item-font-family;
 
                 &:before {
-                    content: '';
+                    content: "";
                     width: 6px;
                     height: 1.5px;
                     background-color: var(--#{$prefix}vertical-menu-sub-item-color);
                     position: absolute;
                     left: 2px;
                     top: 16.5px;
-                    transition: all .4s ease-in-out;
+                    transition: all 0.4s ease-in-out;
                     opacity: 0.5;
                 }
 
@@ -169,7 +170,6 @@
                 padding-left: 15px;
 
                 .nav-link {
-
                     &:before {
                         height: 5px;
                         width: 5px;
@@ -193,7 +193,7 @@
 .navbar-brand-box {
     padding: 0 1.3rem;
     text-align: center;
-    transition: all .1s ease-out;
+    transition: all 0.1s ease-out;
 
     @media (max-width: 767.98px) {
         display: none;
@@ -211,7 +211,7 @@
         background-color: var(--#{$prefix}header-item-sub-color);
         position: absolute;
         border-radius: 2px;
-        transition: .3s cubic-bezier(.8, .5, .2, 1.4);
+        transition: 0.3s cubic-bezier(0.8, 0.5, 0.2, 1.4);
         width: 100%;
         height: 2px;
         display: block;
@@ -234,7 +234,6 @@
 
     .vertical-menu-btn:hover &:not(.open) {
         span {
-
             &:nth-child(1) {
                 top: -1px;
             }
@@ -249,7 +248,6 @@
         transform: rotate(-90deg);
 
         span {
-
             &:nth-child(1) {
                 left: 1px;
                 top: 5px;
@@ -294,7 +292,7 @@
         .row {
             margin: 0;
 
-            >* {
+            > * {
                 width: 100%;
                 padding: 0;
             }
@@ -304,7 +302,6 @@
             margin-left: -100%;
             padding: 10px 0 20px 0;
         }
-
     }
 
     .navbar-menu {
@@ -324,7 +321,6 @@
     }
 
     &[data-sidebar-size="sm-hover"] {
-
         .main-content {
             margin-left: var(--#{$prefix}vertical-menu-width-sm);
 
@@ -369,7 +365,6 @@
 
             // Sidebar Menu
             .navbar-nav {
-
                 .badge {
                     display: none;
                 }
@@ -439,7 +434,6 @@
                 }
 
                 .nav-link {
-
                     i {
                         font-size: 18px;
 
@@ -562,7 +556,6 @@
 
             // Sidebar Menu
             .navbar-nav {
-
                 .badge {
                     display: none !important;
                 }
@@ -609,8 +602,7 @@
                     position: relative;
 
                     &:hover {
-
-                        >a.menu-link {
+                        > a.menu-link {
                             position: relative;
                             width: calc(200px + var(--#{$prefix}vertical-menu-width-sm));
                             transition: none;
@@ -638,7 +630,7 @@
                             }
                         }
 
-                        >.menu-dropdown {
+                        > .menu-dropdown {
                             display: block;
                             left: var(--#{$prefix}vertical-menu-width-sm);
                             position: absolute;
@@ -657,7 +649,7 @@
 
                     .nav-item {
                         &:hover {
-                            >.nav-link {
+                            > .nav-link {
                                 color: var(--#{$prefix}vertical-menu-item-hover-color);
 
                                 &:after {
@@ -704,7 +696,7 @@
                 .nav-link {
                     display: block;
                     text-align: center;
-                    padding: $vertical-menu-sub-item-padding-y $vertical-menu-sub-item-padding-x*0.35;
+                    padding: $vertical-menu-sub-item-padding-y $vertical-menu-sub-item-padding-x * 0.35;
 
                     i {
                         display: block;
@@ -720,7 +712,7 @@
                         display: none !important;
                     }
 
-                    &[data-bs-toggle=collapse]:after {
+                    &[data-bs-toggle="collapse"]:after {
                         position: relative;
                         display: inline-block;
                         right: 0;
@@ -728,7 +720,7 @@
                     }
 
                     &.menu-link {
-                        &[data-bs-toggle=collapse]:after {
+                        &[data-bs-toggle="collapse"]:after {
                             display: none;
                         }
                     }
@@ -743,7 +735,6 @@
                 }
             }
 
-
             .menu-title {
                 text-align: center;
 
@@ -755,7 +746,6 @@
     }
 
     &[data-sidebar="dark"] {
-
         .logo-dark {
             display: none;
         }
@@ -776,7 +766,6 @@
     }
 
     &[data-layout-style="detached"] {
-
         #layout-wrapper,
         .main-content {
             min-height: 100vh;
@@ -834,19 +823,15 @@
 
         &[data-sidebar-size="sm"] {
             @media (min-width: 768px) {
-
                 #layout-wrapper,
                 .main-content {
                     min-height: 1400px;
                 }
             }
         }
-
-
     }
 
     @if $sidebar-gradient-mode {
-
         &:is([data-sidebar="gradient"], [data-sidebar="gradient-2"], [data-sidebar="gradient-3"], [data-sidebar="gradient-4"]) {
             .logo-dark {
                 display: none;
@@ -861,9 +846,8 @@
 
 [data-layout="vertical"][data-bs-theme="dark"] {
     &[data-layout-style="detached"] {
-
         @media (min-width: 1024.1px) {
-            &:is([data-sidebar="light"],[data-sidebar="dark"], [data-sidebar="gradient"], [data-sidebar="gradient-2"], [data-sidebar="gradient-3"], [data-sidebar="gradient-4"]) {
+            &:is([data-sidebar="light"], [data-sidebar="dark"], [data-sidebar="gradient"], [data-sidebar="gradient-2"], [data-sidebar="gradient-3"], [data-sidebar="gradient-4"]) {
                 .logo-dark {
                     display: none;
                 }
@@ -877,7 +861,7 @@
 }
 
 .menu-title {
-    letter-spacing: .05em;
+    letter-spacing: 0.05em;
     cursor: default;
     font-size: 11px;
     text-transform: uppercase;
@@ -921,12 +905,12 @@
 [dir="rtl"] {
     .navbar-menu {
         .navbar-nav {
-            .nav-link[data-bs-toggle=collapse] {
+            .nav-link[data-bs-toggle="collapse"] {
                 &:after {
                     transform: rotate(180deg);
                 }
 
-                &[aria-expanded=true]:after {
+                &[aria-expanded="true"]:after {
                     transform: rotate(270deg);
                 }
             }
@@ -934,11 +918,9 @@
     }
 }
 
-@if $sidebar-gradient-mode { 
-    
+@if $sidebar-gradient-mode {
     .bg-vertical-gradient {
         background: $vertical-menu-bg-gradient;
-        ;
     }
 
     .bg-vertical-gradient-2 {
@@ -954,9 +936,7 @@
     }
 }
 
-
 @if $sidebar-img {
-
     //sidebar-images
     .sidebar-background {
         position: absolute;
@@ -968,37 +948,35 @@
         left: 0;
         background-size: cover;
         background-position: 50%;
-        opacity: .07;
+        opacity: 0.07;
     }
 
     [data-sidebar-image="img-1"] {
         .sidebar-background {
-            background-image: url('../../images/sidebar/img-1.jpg');
+            background-image: url("../../images/sidebar/img-1.jpg");
         }
     }
 
     [data-sidebar-image="img-2"] {
         .sidebar-background {
-            background-image: url('../../images/sidebar/img-2.jpg');
+            background-image: url("../../images/sidebar/img-2.jpg");
         }
     }
 
     [data-sidebar-image="img-3"] {
         .sidebar-background {
-            background-image: url('../../images/sidebar/img-3.jpg');
+            background-image: url("../../images/sidebar/img-3.jpg");
         }
     }
 
     [data-sidebar-image="img-4"] {
         .sidebar-background {
-            background-image: url('../../images/sidebar/img-4.jpg');
+            background-image: url("../../images/sidebar/img-4.jpg");
         }
     }
-
 }
 
 [data-layout="semibox"] {
-
     .page-title-box {
         padding: 10px 0;
         background-color: transparent;
@@ -1007,7 +985,6 @@
     }
 
     @media (min-width: 768px) {
-
         &[data-sidebar-size="sm"],
         &[data-sidebar-size="sm-hover"] {
             .main-content {
@@ -1035,7 +1012,6 @@
     }
 
     @media (min-width: 1440px) {
-
         .page-content {
             padding: calc(#{$header-height} + #{$grid-gutter-width} * 2) calc(#{$grid-gutter-width} * 0.5) $footer-height calc(#{$grid-gutter-width} * 0.5);
         }
@@ -1069,7 +1045,6 @@
         }
 
         &[data-sidebar-size="md"] {
-
             .main-content {
                 margin-left: calc(var(--#{$prefix}vertical-menu-width-md) + 25px);
             }

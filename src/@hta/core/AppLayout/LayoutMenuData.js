@@ -142,50 +142,51 @@ const Navdata = () => {
     },
     {
       id: 'dashboard',
-      label: 'Dashboards',
+      label: 'Hisse Analizi',
       icon: 'ri-dashboard-2-line',
-      link: '/#',
+      link: '/dashboards',
       stateVariables: isDashboard,
       click: function (e) {
         e.preventDefault();
         setIsDashboard(!isDashboard);
         setIscurrentState('Dashboard');
+        // history('/dashboard');
         updateIconSidebar(e);
       },
       subItems: [
         {
           id: 'analytics',
-          label: 'Analytics',
-          link: '/dashboard-analytics',
+          label: 'Ozet Rapor',
+          link: '/dashboards',
           parentId: 'dashboard',
         },
         {
           id: 'crm',
-          label: 'CRM',
+          label: 'Hedef Fiyat',
           link: '/dashboard-crm',
           parentId: 'dashboard',
         },
         {
           id: 'ecommerce',
-          label: 'Ecommerce',
-          link: '/dashboard',
+          label: 'Bilanço',
+          link: '/dashboardd',
           parentId: 'dashboard',
         },
         {
           id: 'crypto',
-          label: 'Crypto',
+          label: 'Sektor Analizi',
           link: '/dashboard-crypto',
           parentId: 'dashboard',
         },
         {
           id: 'projects',
-          label: 'Projects',
+          label: 'Rasyolar',
           link: '/dashboard-projects',
           parentId: 'dashboard',
         },
         {
           id: 'nft',
-          label: 'NFT',
+          label: 'Teknik Analiz',
           link: '/dashboard-nft',
           parentId: 'dashboard',
         },
@@ -200,8 +201,14 @@ const Navdata = () => {
       ],
     },
     {
+      id: 'dashboard',
+      label: 'Son Bilançolar',
+      icon: 'ri-honour-line',
+      link: '/dashboard',
+    },
+    {
       id: 'apps',
-      label: 'Apps',
+      label: 'Hisse ',
       icon: 'ri-apps-2-line',
       link: '/#',
       click: function (e) {

@@ -7,8 +7,10 @@ import {
   CHANGE_LAYOUT_POSITION_TYPE,
   CHANGE_LAYOUT_LEFT_SIDEBAR_SIZE_TYPE,
   CHANGE_SIDEBAR_VISIBILITY_TYPE,
+  TOGGLE_MENU,
+  SET_MENU_ITEMS,
 } from 'shared/ActionTypes';
-
+import { MenuData } from 'shared/MenuData';
 import { createReducer } from '@reduxjs/toolkit';
 import {
   layoutTypes,
@@ -27,7 +29,7 @@ const initialSettings = {
   initialPath: '/',
   layoutType: layoutTypes.TWOCOLUMN,
   leftSidebarType: leftSidebarTypes.DARK,
-  layoutModeType: layoutModeTypes.DARKMODE,
+  layoutModeType: layoutModeTypes.LIGHTMODE,
   layoutWidthType: layoutWidthTypes.FLUID,
   layoutPositionType: layoutPositionTypes.FIXED,
   topbarThemeType: topbarThemeTypes.LIGHT,
@@ -36,9 +38,11 @@ const initialSettings = {
   leftSidebarImageType: leftSidebarImageTypes.NONE,
   preloader: preloaderTypes.DISABLE,
   sidebarVisibilityType: sidebarVisibilitytypes.SHOW,
+  menuItems: MenuData,
+  activeMenus: {},
 };
 
-const settingsReducer = createReducer(initialSettings, (builder) => {
+const layoutReducer = createReducer(initialSettings, (builder) => {
   builder
     .addCase(SET_INITIAL_PATH, (state, action) => {
       state.initialPath = action.payload;
@@ -64,7 +68,15 @@ const settingsReducer = createReducer(initialSettings, (builder) => {
     })
     .addCase(CHANGE_SIDEBAR_VISIBILITY_TYPE, (state, action) => {
       state.sidebarVisibilitytype = action.payload;
+    })
+
+    .addCase(TOGGLE_MENU, (state, action) => {
+      const menuId = action.payload;
+      state.activeMenus[menuId] = !state.activeMenus[menuId];
+    })
+    .addCase(SET_MENU_ITEMS, (state, action) => {
+      state.menuItems = action.payload;
     });
 });
 
-export default settingsReducer;
+export default layoutReducer;

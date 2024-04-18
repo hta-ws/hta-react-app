@@ -1,6 +1,12 @@
 //
 // _two-column.scss
-// 
+//
+:root {
+    --vz-vertical-menu-item-active-bg: #007bff; /* Mavi arkaplan */
+    --vz-vertical-menu-item-active-color: #280606; /* Beyaz yazı */
+    --vz-vertical-menu-item-hover-bg: #0056b3; /* Daha koyu mavi arkaplan */
+    --vz-vertical-menu-item-hover-color: #ffffff; /* Beyaz yazı */
+}
 
 [data-layout="twocolumn"] {
     .app-menu {
@@ -9,7 +15,7 @@
         left: $twocolumn-menu-iconview-width;
 
         .menu-link {
-            letter-spacing: .05em;
+            letter-spacing: 0.05em;
             cursor: default;
             font-size: 11px;
             text-transform: uppercase;
@@ -31,19 +37,19 @@
                 padding-top: 16px;
             }
 
-            >li:not(.twocolumn-item-show) {
+            > li:not(.twocolumn-item-show) {
                 display: none;
             }
 
             .twocolumn-item-show {
-                >div {
+                > div {
                     display: block !important;
                     height: auto !important;
                 }
             }
 
-            >.nav-item {
-                >.menu-dropdown {
+            > .nav-item {
+                > .menu-dropdown {
                     display: block !important;
                     height: auto !important;
                 }
@@ -71,12 +77,12 @@
     .main-content {
         margin-left: calc(#{$twocolumn-menu-width} + #{$twocolumn-menu-iconview-width});
 
-        @media (max-width:767.98px) {
+        @media (max-width: 767.98px) {
             margin-left: $twocolumn-menu-iconview-width;
         }
     }
 
-    &:is([data-sidebar="dark"], [data-sidebar="gradient"], [data-sidebar="gradient-2"], [data-sidebar="gradient-3"], [data-sidebar="gradient-4"]) {   
+    &:is([data-sidebar="dark"], [data-sidebar="gradient"], [data-sidebar="gradient-2"], [data-sidebar="gradient-3"], [data-sidebar="gradient-4"]) {
         .app-menu {
             .navbar-brand-box {
                 .logo-light {
@@ -100,6 +106,27 @@
         position: absolute;
         padding: 0;
         text-align: center;
+        /* styles.css */
+
+        .iconView {
+            cursor: pointer;
+            // border-left: 2px solid transparent;
+            padding: 4px;
+            transition:
+                background-color 0.3s,
+                color 0.3s;
+        }
+
+        .iconView.active {
+            background-color: var(--vz-vertical-menu-bg-hover);
+            color: var(--vz-vertical-menu-item-active-color);
+        }
+
+        .iconView:hover {
+            background-color: var(--vz-vertical-menu-bg-hover);
+            color: var(--vz-vertical-menu-item-hover-color);
+            //  border-color: red;
+        }
 
         li {
             position: relative;
@@ -117,8 +144,8 @@
         }
 
         .nav-icon {
-            width: 42px;
-            height: 42px;
+            width: 32px;
+            height: 32px;
             color: var(--#{$prefix}vertical-menu-item-color);
             line-height: 42px;
             z-index: 1;
@@ -154,7 +181,6 @@
 
     @media (max-width: 991.98px) {
         .logo {
-
             span.logo-lg {
                 display: block;
             }
@@ -181,7 +207,6 @@
 
     &[data-sidebar="dark"] {
         .app-menu {
-
             .navbar-brand-box {
                 .logo-light {
                     display: block;
@@ -228,7 +253,6 @@
                 left: 0;
             }
         }
-
     }
 
     #page-topbar,

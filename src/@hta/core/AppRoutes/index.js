@@ -5,8 +5,8 @@ import { authRouteConfig } from './AuthRoutes';
 import Error403 from '../../../modules/errorPages/Error403';
 import { errorPagesConfigs } from './ErrorPagesRoutes';
 import { accountPagesConfigs } from './AccountRoutes';
-// import { samplePagesConfigs } from 'modules/sample';
-// import { adminPagesConfigs } from 'modules/admin';
+import { samplePagesConfigs } from 'modules/sample';
+import { adminPagesConfigs } from 'modules/admin';
 // import { hissePagesConfig } from 'modules/hisse';
 
 export const authorizedStructure = (loginUrl) => {
@@ -14,9 +14,9 @@ export const authorizedStructure = (loginUrl) => {
     fallbackPath: loginUrl,
     unAuthorizedComponent: <Error403 />,
     routes: [
-      // ...samplePagesConfigs,
+      ...samplePagesConfigs,
       ...accountPagesConfigs,
-      // ...adminPagesConfigs,
+      ...adminPagesConfigs,
       // ...hissePagesConfig,
     ],
   };

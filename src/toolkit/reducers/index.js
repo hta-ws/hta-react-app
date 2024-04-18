@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
-import Settings from './Setting';
 import Common from './Common';
+import Layout from './Layout';
 
 const reducers = () =>
   combineReducers({
-    settings: Settings,
     common: Common,
+    layout: Layout,
   });
 export default reducers;

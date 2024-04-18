@@ -52,7 +52,7 @@ const AppSidebar = () => {
               <img src={logoSm} alt='' height='22' />
             </span>
             <span className='logo-lg'>
-              <img src={logoDark} alt='' height='41' />
+              <img src={logoDark} alt='' height='17' />
             </span>
           </Link>
 
@@ -61,7 +61,7 @@ const AppSidebar = () => {
               <img src={logoSm} alt='' height='22' />
             </span>
             <span className='logo-lg'>
-              <img src={logoLight} alt='' height='41' />
+              <img src={logoLight} alt='' height='17' />
             </span>
           </Link>
           <button
@@ -74,7 +74,7 @@ const AppSidebar = () => {
           </button>
         </div>
 
-        <AppTwoColumnLayout />
+        <AppTwoColumnLayout layout='twocolumn' />
 
         {/* <SimpleBar id='scrollbar' className='h-100'>
           <Container fluid>

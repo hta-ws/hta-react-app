@@ -45,7 +45,7 @@ const JWTAuthAuthProvider = ({ children }) => {
           dispatch({ type: FETCH_SUCCESS });
           // dispatch({ type: SET_USER, payload: data.result.user });
           setJWTAuthData({
-            user: data.result.user,
+            user: data.items.user,
             isLoading: false,
             isAuthenticated: true,
           });

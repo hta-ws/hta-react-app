@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 // Import Data
-import { Collapse, Row, Col, Badge } from 'reactstrap';
-import navdata from '../LayoutMenuData';
+import { Collapse } from 'reactstrap';
+import navdata from 'shared/LayoutMenuData';
 //i18n
 
 import { withRouter } from '@hta/hooks/withRouter';
@@ -19,7 +19,7 @@ const VerticalLayout = (props) => {
  layout settings
  */
 
-  const selectLayoutState = (state) => state.Layout;
+  const selectLayoutState = (state) => state.layout;
   const selectLayoutProperties = createSelector(
     selectLayoutState,
     (layout) => ({
@@ -64,7 +64,7 @@ const VerticalLayout = (props) => {
           hamburgerIcon.classList.remove('open');
         }
       } else {
-        var hamburgerIcon = document.querySelector('.hamburger-icon');
+        hamburgerIcon = document.querySelector('.hamburger-icon');
         if (hamburgerIcon !== null) {
           hamburgerIcon.classList.add('open');
         }
@@ -92,7 +92,7 @@ const VerticalLayout = (props) => {
       }
     }
   }, [leftsidbarSizeType, sidebarVisibilitytype, layoutType]);
-
+  console.log('--------------------------------------------------');
   useEffect(() => {
     window.addEventListener('resize', resizeSidebarMenu, true);
   }, [resizeSidebarMenu]);
@@ -219,7 +219,7 @@ const VerticalLayout = (props) => {
                   data-bs-toggle='collapse'
                 >
                   <i className={item.icon}></i>
-                  <span data-key='t-apps'>{props.t(item.label)}</span>
+                  <span data-key='t-apps'>{item.label}</span>
                   {item.badgeName ? (
                     <span
                       className={'badge badge-pill bg-' + item.badgeColor}
@@ -245,7 +245,7 @@ const VerticalLayout = (props) => {
                                 to={subItem.link ? subItem.link : '/#'}
                                 className='nav-link'
                               >
-                                {props.t(subItem.label)}
+                                {subItem.label}
                                 {subItem.badgeName ? (
                                   <span
                                     className={
@@ -267,7 +267,7 @@ const VerticalLayout = (props) => {
                                 to='/#'
                                 data-bs-toggle='collapse'
                               >
-                                {props.t(subItem.label)}
+                                {subItem.label}
                                 {subItem.badgeName ? (
                                   <span
                                     className={
@@ -301,7 +301,7 @@ const VerticalLayout = (props) => {
                                                 }
                                                 className='nav-link'
                                               >
-                                                {props.t(childItem.label)}
+                                                {childItem.label}
                                               </Link>
                                             </li>
                                           ) : (
@@ -312,7 +312,7 @@ const VerticalLayout = (props) => {
                                                 onClick={childItem.click}
                                                 data-bs-toggle='collapse'
                                               >
-                                                {props.t(childItem.label)}
+                                                {childItem.label}
                                               </Link>
                                               <Collapse
                                                 className='menu-dropdown'
@@ -333,9 +333,7 @@ const VerticalLayout = (props) => {
                                                           className='nav-link'
                                                           data-key='t-basic-action'
                                                         >
-                                                          {props.t(
-                                                            subChildItem.label,
-                                                          )}{' '}
+                                                          {subChildItem.label}
                                                         </Link>
                                                       </li>
                                                     ),
@@ -362,8 +360,7 @@ const VerticalLayout = (props) => {
                   className='nav-link menu-link'
                   to={item.link ? item.link : '/#'}
                 >
-                  <i className={item.icon}></i>{' '}
-                  <span>{props.t(item.label)}</span>
+                  <i className={item.icon}></i> <span>{item.label}</span>
                   {item.badgeName ? (
                     <span
                       className={'badge badge-pill bg-' + item.badgeColor}
@@ -384,7 +381,13 @@ const VerticalLayout = (props) => {
 
 VerticalLayout.propTypes = {
   location: PropTypes.object,
-  t: PropTypes.any,
+  // t: PropTypes.any,
+  router: PropTypes.shape({
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  layoutType: PropTypes.string.isRequired, // assuming layoutType is a string
 };
 
 export default withRouter(VerticalLayout);
