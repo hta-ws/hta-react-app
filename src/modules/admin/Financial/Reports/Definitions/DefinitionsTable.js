@@ -115,7 +115,7 @@ const DefinitionsTable = ({
                     />
                   ))}
                 </colgroup>
-                <thead>
+                <thead className='bg-light sticky-top'>
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id} className='text-uppercase  '>
                       {headerGroup.headers.map((header) => (

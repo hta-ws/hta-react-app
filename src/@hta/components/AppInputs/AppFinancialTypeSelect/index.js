@@ -24,9 +24,11 @@ const AppFinancialTypeSelect = ({
   const handleSelect = (id) => {
     setfinancialStatementTypeId(id);
   };
+
   useEffect(() => {
     setQueryParams();
   }, []);
+
   // Aktif financial type'ın label'ını bulmak
   const activeLabel =
     data.apiData?.find((item) => item.id === financialStatementTypeId)?.label ||
@@ -40,9 +42,17 @@ const AppFinancialTypeSelect = ({
           tag='button'
           type='button'
         >
-          <strong>{activeLabel} </strong>
+          <strong>{activeLabel}</strong>
         </DropdownToggle>
         <DropdownMenu className='dropdown-menu'>
+          <li key='-1'>
+            <DropdownItem
+              className='dropdown-item'
+              onClick={() => handleSelect(-1)}
+            >
+              Tüm Bilanço Türleri
+            </DropdownItem>
+          </li>
           {data.loading ? (
             <DropdownItem className='dropdown-item'>Loading...</DropdownItem>
           ) : (
@@ -69,7 +79,7 @@ const AppFinancialTypeSelect = ({
 };
 
 AppFinancialTypeSelect.propTypes = {
-  financialStatementTypeId: PropTypes.number, // financialStatementTypeId olarak number türünde olmalı
+  financialStatementTypeId: PropTypes.number,
   setfinancialStatementTypeId: PropTypes.func.isRequired,
 };
 

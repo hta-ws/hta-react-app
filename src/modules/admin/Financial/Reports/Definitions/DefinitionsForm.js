@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardHeader, CardBody, Row, Col } from 'reactstrap';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Row,
+  Col,
+  UncontrolledAlert,
+} from 'reactstrap';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 // import styled from 'styled-components';
@@ -66,7 +73,7 @@ const DefinitionsForm = ({
     setformData({
       ...formData,
       report_code: data?.slug || '', // Assuming 'slug' is the 'report_code' you want to use
-      label: data?.taxonomy_title_content_tr || '',
+      label: data?.label || '',
       ifrs_code: data?.ifrs_code || '',
       bilanco_tipi: data?.bilanco_tipi || '',
       financial_statement_type_id: data?.financial_statement_type_id || '',
@@ -128,6 +135,7 @@ const DefinitionsForm = ({
               ifrs_code: formData?.ifrs_code || '',
               id: formData?.id || 0,
               financial_statement_type_id: formData.financial_statement_type_id,
+              financial_statement_format_code: financialStatementFormatCode,
             }}
             enableReinitialize
             validationSchema={validationSchema}
@@ -201,14 +209,9 @@ const DefinitionsForm = ({
                   <span className='form-control'>{formData?.bilanco_tipi}</span>
                 </div>
                 <Row>
-                  <Col></Col>
+                  <Col> </Col>
                   <Col className='auto'>
                     <div className='hstack gap-2 justify-content-end'>
-                      {isSubmitting && error && (
-                        <div className='alert alert-danger' role='alert'>
-                          {error}
-                        </div>
-                      )}
                       {isSubmitting && loading && (
                         <span>
                           <span
@@ -241,6 +244,20 @@ const DefinitionsForm = ({
                     </div>
                   </Col>
                 </Row>
+
+                {isSubmitting && error && (
+                  <Row className='mt-2'>
+                    <Col md='12'>
+                      <UncontrolledAlert
+                        color='danger'
+                        className='alert-solid alert-dismissible bg-danger text-white alert-label-icon fade show material-shadow mb-xl-0'
+                      >
+                        <i className='ri-error-warning-line label-icon'></i>
+                        <strong>Hata</strong> - {error}
+                      </UncontrolledAlert>
+                    </Col>
+                  </Row>
+                )}
               </Form>
             )}
           </Formik>

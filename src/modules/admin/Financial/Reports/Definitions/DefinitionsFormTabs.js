@@ -76,18 +76,18 @@ const DefinitionsFormTabs = ({ formData }) => {
                 </tr>
                 <tr>
                   <th>Hisse Adı</th>
-                  <th>Period</th>
+                  <th className='text-center'>Period</th>
                   <th className='text-end'>Value</th>
-                  <th>Kap Linki</th>
+                  <th className='text-center'>Kap Linki</th>
                 </tr>
               </thead>
               <tbody>
                 {financialData.map((item, index) => (
                   <tr key={index}>
                     <td>{item.stock_code}</td>
-                    <td>{item.period}</td>
+                    <td className='text-center'>{item.period}</td>
                     <td className='text-end'>{formatValue(item.value)}</td>
-                    <td>
+                    <td className='text-center'>
                       <a
                         href={`https://www.kap.org.tr/Bildirim/${item.disclosure_index}`}
                         target='_blank'

@@ -92,10 +92,11 @@ function AppSelectIFRSCodeModal({
   onReportCodeSelect,
 }) {
   const [sorting, setSorting] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(0);
   // const [searchTerm, setSearchTerm] = useState('');
   const [globalFilter, setGlobalFilter] = React.useState('');
   const debouncedSearchTerm = useDebounce(globalFilter, 500);
-  const [financialStatementTypeId, setfinancialStatementTypeId] = useState(2);
+  const [financialStatementTypeId, setfinancialStatementTypeId] = useState(-1);
   const [selectedStockCode, setSelectedStockCode] = useState(null);
   const [{ apiData }, { setQueryParams }] = useGetDataApi(
     'financial-management',
@@ -104,6 +105,7 @@ function AppSelectIFRSCodeModal({
     {
       stockCode: selectedStockCode,
       financialStatementTypeId: financialStatementTypeId,
+      isDisabled: isDisabled,
     },
     false,
     null,
@@ -141,9 +143,10 @@ function AppSelectIFRSCodeModal({
       setQueryParams({
         stockCode: selectedStockCode,
         financialStatementTypeId: financialStatementTypeId,
+        isDisabled: isDisabled,
       });
     }
-  }, [financialStatementTypeId, selectedStockCode]);
+  }, [financialStatementTypeId, selectedStockCode, isDisabled]);
 
   useEffect(() => {
     if (debouncedSearchTerm) {
@@ -151,6 +154,9 @@ function AppSelectIFRSCodeModal({
       // Burada API arama işlemini gerçekleştirebilirsiniz
     }
   }, [debouncedSearchTerm]);
+  const handleToggleIsDisabled = () => {
+    setIsDisabled(isDisabled === 0 ? 1 : 0);
+  };
 
   return (
     <Modal isOpen={isOpen} toggle={toggle} scrollable={true} size={'xl'}>
@@ -161,7 +167,7 @@ function AppSelectIFRSCodeModal({
         <Card>
           <CardBody className='border-0'>
             <Row className='justify-content-between gy-1'>
-              <Col lg={2}>
+              <Col lg={4}>
                 <div className='search-box position-relative'>
                   <Input
                     type='text'
@@ -183,6 +189,17 @@ function AppSelectIFRSCodeModal({
               </Col>
               <Col className='col-lg-auto'>
                 <div className='d-flex gap-2 flex-wrap'>
+                  <div className='form-check form-switch form-switch-right form-switch-md align-self-center'>
+                    <label className='form-label text-muted'>
+                      Tüm Kalemleri Göster
+                    </label>
+                    <input
+                      className='form-check-input code-switcher'
+                      type='checkbox'
+                      checked={isDisabled}
+                      onChange={handleToggleIsDisabled}
+                    />
+                  </div>
                   <AppFinancialSampleStockSelect
                     financialStatementFormatCode={financialStatementFormatCode}
                     setSelectedStockCode={setSelectedStockCode}
@@ -213,7 +230,7 @@ function AppSelectIFRSCodeModal({
             </Row>
             <StyledSimpleBar>
               <Table className='table-hover table-striped mt-2'>
-                <thead>
+                <thead className='bg-light sticky-top'>
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
