@@ -32,7 +32,10 @@ const numberFormatter = new Intl.NumberFormat('en-US', {
 });
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
-  const itemRank = rankItem(row.getValue(columnId), value);
+  const searchValue = row.getValue(columnId).toLocaleLowerCase('tr-TR');
+  const filterValue = value.toLocaleLowerCase('tr-TR');
+  console.log('serchValue', searchValue, 'filterValue', filterValue);
+  const itemRank = rankItem(searchValue, filterValue);
   addMeta({
     itemRank,
   });
@@ -48,12 +51,12 @@ const columns = [
     filterFn: fuzzyFilter,
   },
   {
-    accessorFn: (row) => row.taxonomy_title_content_tr,
+    accessorFn: (row) => row.label,
     id: 'label',
     header: () => <span>Açıklama</span>,
-    cell: (info) => info.getValue(),
+    cell: (info) => info.row.original.taxonomy_title_content_tr,
     enableSorting: true,
-    filterFn: 'myFn',
+    filterFn: 'fuzzyFilter',
   },
   {
     accessorFn: (row) => row.value1,
@@ -148,12 +151,12 @@ function AppSelectIFRSCodeModal({
     }
   }, [financialStatementTypeId, selectedStockCode, isDisabled]);
 
-  useEffect(() => {
-    if (debouncedSearchTerm) {
-      console.log('Arama yapılıyor:', debouncedSearchTerm);
-      // Burada API arama işlemini gerçekleştirebilirsiniz
-    }
-  }, [debouncedSearchTerm]);
+  // useEffect(() => {
+  //   if (debouncedSearchTerm) {
+  //     console.log('Arama yapılıyor:', debouncedSearchTerm);
+  //     // Burada API arama işlemini gerçekleştirebilirsiniz
+  //   }
+  // }, [debouncedSearchTerm]);
   const handleToggleIsDisabled = () => {
     setIsDisabled(isDisabled === 0 ? 1 : 0);
   };

@@ -158,7 +158,7 @@ const DefinitionsForm = ({
                     name='report_code'
                     type='text'
                     className='form-control'
-                    disabled={apiData?.is_locked == 1}
+                    disabled={formData?.is_locked == 1}
                   />
                   <ErrorMessage
                     name='report_code'
