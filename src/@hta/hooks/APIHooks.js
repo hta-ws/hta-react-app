@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import _ from 'lodash';
 import { isRequestSuccessful, sanitizeData } from '@hta/helpers/ApiHelper';
 import jwtAxios from '@hta/services/auth/jwt-auth'; // Özelleştirilmiş jwtAxios instance'ını import edin
@@ -29,12 +29,18 @@ export const useGetDataApi = (
     setAllowApiCall(true);
   };
 
-  const setQueryParams = (newParams) => {
+  // const setQueryParams = (newParams) => {
+  //   setLoading(true);
+  //   setError(null);
+  //   updateQueryParams({ ...newParams });
+  //   setAllowApiCall(true);
+  // };
+  const setQueryParams = useCallback((newParams) => {
     setLoading(true);
     setError(null);
     updateQueryParams({ ...newParams });
     setAllowApiCall(true);
-  };
+  }, []); // No dependencies since the update logic does not rely on external variables
 
   // const submitData = (
   //   data,
@@ -172,7 +178,25 @@ export const useGetDataApi = (
         'Component got unmounted or params changed.',
       );
   }, [initialUrl, queryParams, allowApiCall, method]);
-
+  const updateApiData = useCallback(
+    (updatedRow, actionType = 'update') => {
+      let newData;
+      if (actionType === 'update') {
+        const exists = apiData.some((row) => row.id === updatedRow.id);
+        if (exists) {
+          newData = apiData.map((row) =>
+            row.id === updatedRow.id ? { ...row, ...updatedRow } : row,
+          );
+        } else {
+          newData = [...apiData, updatedRow];
+        }
+      } else if (actionType === 'remove') {
+        newData = apiData.filter((row) => row.id !== updatedRow.id);
+      }
+      setData(newData);
+    },
+    [apiData],
+  );
   return [
     { loading, apiData, error, initialUrl },
     {
@@ -182,6 +206,7 @@ export const useGetDataApi = (
       updateInitialUrl,
       setQueryParams,
       submitData,
+      updateApiData,
     },
   ];
 };

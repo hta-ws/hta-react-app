@@ -1,5 +1,6 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
+import { rankItem } from '@tanstack/match-sorter-utils';
 // import {useMediaQuery, useTheme} from '@mui/material';
 
 // export const useWidth = () => {
@@ -119,3 +120,19 @@ export const useSelectOptionsFromTableData = (
     return options;
   }, [tableData, valueKey, labelKey, blankData]);
 };
+
+export const fuzzyFilter = (row, columnId, value, addMeta) => {
+  const searchValue = row.getValue(columnId).toLocaleLowerCase('tr-TR');
+  const filterValue = value.toLocaleLowerCase('tr-TR');
+  console.log('serchValue', searchValue, 'filterValue', filterValue);
+  const itemRank = rankItem(searchValue, filterValue);
+  addMeta({
+    itemRank,
+  });
+  return itemRank.passed;
+};
+
+export const numberFormatter = new Intl.NumberFormat('tr-TR', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});

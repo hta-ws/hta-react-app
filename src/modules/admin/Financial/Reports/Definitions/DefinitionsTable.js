@@ -26,6 +26,7 @@ import AppFinancialStatementFormatSelect from '@hta/components/AppInputs/AppFina
 import { DefinitionsColumns } from './DefinitionsColumns';
 import AppApiStatusHandler from '@hta/components/AppApiStatusHandler'; // useGroupedData hook'unun dosya yolu
 import { StyledSimpleBar } from './styled';
+import { FormatSelect, TypeSelect } from '../Components';
 const DefinitionsTable = ({
   setSelectedRow,
   selectedRow,
@@ -65,6 +66,8 @@ const DefinitionsTable = ({
       <Card>
         <CardHeader className='d-flex justify-content-between align-items-center'>
           <h5 className='mb-0'>Bilanço dan alaınacak veri yönetim ekranı</h5>
+          <FormatSelect />
+          <TypeSelect />
           <AppFinancialStatementFormatSelect
             financialStatementFormatCode={financialStatementFormatCode}
             setFinancialStatementFormatCode={setFinancialStatementFormatCode}

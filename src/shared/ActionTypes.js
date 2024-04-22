@@ -23,3 +23,25 @@ export const CHANGE_SIDEBAR_VISIBILITY_TYPE = 'change_sidebar_visibility_type';
 
 export const TOGGLE_MENU = 'TOGGLE_MENU';
 export const SET_MENU_ITEMS = 'SET_MENU_ITEMS';
+
+//Financial statement formats
+
+export const GET_FINANCIAL_STATEMENT_FORMAT_LIST =
+  'get_financial_statement_format_list';
+export const GET_FINANCIAL_STATEMENT_TYPE_LIST =
+  'get_financial_statement_type_list';
+export const GET_FINANCIAL_STATEMENT_PROCEDURE_LIST =
+  'get_financial_statement_procedure_list';
+
+export const GET_FINANCIAL_STATEMENT_SAMPLE_STOCK_CODE_LIST =
+  'get_financial_statement_sample_stock_code_list';
+
+export const SET_FINANCIAL_STATEMENT_FORMAT = 'set_financial_statement_format';
+export const SET_FINANCIAL_STATEMENT_TYPE = 'set_financial_statement_type';
+export const SET_FINANCIAL_STATEMENT_PROCEDURE =
+  'set_financial_statement_procedure';
+
+export const SET_FINANCIAL_STATEMENT_CURRENT_POPULATION_RECORD =
+  'set_financial_statement_current_population_record';
+export const SET_FINANCIAL_STATEMENT_SAMPLE_STOCK_CODE =
+  'get_financial_statement_sample_stock_code';

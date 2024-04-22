@@ -50,8 +50,8 @@ export const MenuData = [
           },
           {
             id: 'bilancodan-alinacak-kodlar',
-            label: 'Bilanço Kodları',
-            link: '/admin/financial-result-management/ifrs-definitions',
+            label: 'Formul tanımları',
+            link: 'admin/financial/reports/formulas',
             roles: ['admin', 'user'], // Sadece admin erişebilir
           },
           {

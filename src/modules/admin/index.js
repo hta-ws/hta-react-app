@@ -24,7 +24,7 @@ const ReportDefinitionsPage = React.lazy(
   () => import('./Financial/Reports/Definitions'),
 );
 const ReportFormulasPage = React.lazy(
-  () => import('./Financial/Reports/Formulas'),
+  () => import('./Financial/Reports/Population'),
 );
 
 // const FinancialRatiosManagementPage = React.lazy(
