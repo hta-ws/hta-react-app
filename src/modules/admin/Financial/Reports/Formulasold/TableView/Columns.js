@@ -9,7 +9,7 @@ export const Columns = (selectedRow) => [
     size: 50,
     cell: (info) => <span>{info.getValue()}</span>,
   }),
-  columnHelper.accessor((row) => row.report_code, {
+  columnHelper.accessor((row) => row.s_label, {
     id: 'combined',
     size: 500,
     header: 'Rapor Kodu ve Etiket',
@@ -28,7 +28,7 @@ export const Columns = (selectedRow) => [
               href='#'
               style={{ maxWidth: selectedRow ? '450px' : '100%' }}
             >
-              {info.row.original.label}
+              {info.getValue()}
             </a>
           </h5>
           <p
@@ -36,7 +36,7 @@ export const Columns = (selectedRow) => [
             style={{ maxWidth: selectedRow ? '450px' : '100%' }}
           >
             <span className={`fw-medium ${selectedRow ? 'text-truncate' : ''}`}>
-              {info.getValue()}
+              {info.row.original.s_report_code}
             </span>
           </p>
         </div>

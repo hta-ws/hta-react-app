@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Nav, NavItem, NavLink, TabContent, TabPane, Table } from 'reactstrap';
 import classnames from 'classnames';
-import { useGetDataApi } from '@hta/hooks/APIHooks';
+import { useGetDataApi } from '@hta/hooks/APIHooksOld';
 
 const DefinitionsFormTabs = ({ formData }) => {
   console.log('formData', formData);

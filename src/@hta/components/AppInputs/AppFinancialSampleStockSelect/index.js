@@ -6,7 +6,7 @@ import {
   DropdownItem,
   UncontrolledDropdown,
 } from 'reactstrap';
-import { useGetDataApi } from '@hta/hooks/APIHooks'; // API helper hook'unun import edilmesi
+import { useGetDataApi } from '@hta/hooks/APIHooksOld'; // API helper hook'unun import edilmesi
 
 const AppFinancialSampleStockSelect = ({
   financialStatementFormatCode,

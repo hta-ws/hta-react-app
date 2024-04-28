@@ -1,53 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { useGetDataApi } from '@hta/hooks/APIHooks';
+import React, { useEffect } from 'react';
 import { Row, Col } from 'reactstrap';
+import { useSelector, useDispatch } from 'react-redux';
+
+import AppMetaTags from '@hta/components/AppMetaTags';
+import { selectSelectedFormulaRecord } from 'toolkit/selectors/adminSelectors';
+
 import TableView from './TableView';
-import FromView from './FormView';
+import FormView from './FormView';
+import { useGetDataApi } from '@hta/hooks/APIHooks';
+import { getSpMetadataList } from 'toolkit/actions';
 const Formulas = () => {
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [financialStatementFormatCode, setFinancialStatementFormatCode] =
-    useState(1);
-  const [{ loading, apiData, error }, { setQueryParams }] = useGetDataApi(
-    'financial-management',
-    'get-report-calculation-definitions',
-    [],
-    { financialStatementFormatId: 1 },
-    true,
-    null,
-    'GET',
-  );
-  const refreshTable = () => {
-    setSelectedRow(null);
-    setQueryParams({
-      financialStatementFormatId: financialStatementFormatCode,
-    });
-  };
+  const dispatch = useDispatch();
+  const title = 'Rapor Formul ve Hesaplama Tanımlamaaları';
+  const description = 'Rapor Kodları ve Etiketleri Tanımlamak için kullanılır';
+  const selectedRecord = useSelector(selectSelectedFormulaRecord);
+
+  const [apiStates, apiActions] = useGetDataApi({
+    controller: 'financial-statement-management',
+    action: 'get-formula-list',
+    method: 'POST',
+    initialData: [],
+  });
   useEffect(() => {
-    setQueryParams({
-      financialStatementFormatId: financialStatementFormatCode,
-    });
-  }, [financialStatementFormatCode]);
-  console.log('apiData', apiData);
+    dispatch(getSpMetadataList());
+  }, [dispatch]);
   return (
-    <Row className='g-1'>
-      <Col md={selectedRow ? '6' : '4'}>
-        <TableView
-          apiData={apiData}
-          selectedRow={selectedRow}
-          setSelectedRow={setSelectedRow}
-          financialStatementFormatCode={financialStatementFormatCode}
-          setFinancialStatementFormatCode={setFinancialStatementFormatCode}
-          refreshTable={refreshTable}
-          loading={loading}
-          error={error}
-        />
-      </Col>
-      {selectedRow && (
-        <Col md={6}>
-          <FromView selectedRow={selectedRow} setSelectedRow={setSelectedRow} />
+    <>
+      <AppMetaTags title={title} description={description} />
+      <Row className='gx-2'>
+        <Col md={selectedRecord ? '6' : '12'}>
+          <TableView apiStates={apiStates} apiActions={apiActions} />
         </Col>
-      )}
-    </Row>
+        {selectedRecord && (
+          <Col md={6}>
+            <FormView updateTableData={apiActions.updateApiData} />
+          </Col>
+        )}
+      </Row>
+    </>
   );
 };
 

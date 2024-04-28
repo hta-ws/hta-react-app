@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Row, Col } from 'reactstrap';
 
-import { useGetDataApi } from '@hta/hooks/APIHooks';
+import { useGetDataApi } from '@hta/hooks/APIHooksOld';
 import DefinitionsTable from './DefinitionsTable';
 import DefinitionsForm from './DefinitionsForm';
 

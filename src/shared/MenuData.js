@@ -45,13 +45,13 @@ export const MenuData = [
           {
             id: 'kod-definitions',
             label: 'Kod Tanımları',
-            link: 'admin/financial/reports/definitions',
-            roles: ['admin', 'user'], // Sadece admin erişebilir
+            link: '/admin/financial-result-management/report-code-population-definitions',
+            roles: ['admin'], // Sadece admin erişebilir
           },
           {
             id: 'bilancodan-alinacak-kodlar',
             label: 'Formul tanımları',
-            link: 'admin/financial/reports/formulas',
+            link: '/admin/financial-result-management/report-code-formula-definitions',
             roles: ['admin', 'user'], // Sadece admin erişebilir
           },
           {

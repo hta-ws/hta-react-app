@@ -19,7 +19,7 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import { rankItem } from '@tanstack/match-sorter-utils';
-import { useGetDataApi } from '@hta/hooks/APIHooks';
+import { useGetDataApi } from '@hta/hooks/APIHooksOld';
 import { useDebounce } from '@hta/hooks/useDebounce';
 import SimpleBar from 'simplebar-react';
 import styled from 'styled-components';

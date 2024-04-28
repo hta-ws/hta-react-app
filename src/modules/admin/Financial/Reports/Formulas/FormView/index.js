@@ -1,149 +1,120 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
   Card,
-  CardHeader,
-  FormGroup,
-  Label,
-  Input,
-  Button,
   CardBody,
+  CardHeader,
+  Nav,
+  NavItem,
+  NavLink,
+  TabContent,
+  TabPane,
 } from 'reactstrap';
-import { Formik, Field, Form } from 'formik';
-import * as Yup from 'yup';
-import { useGetDataApi } from '@hta/hooks/APIHooks';
-import SelectComponent from './SelectComponent';
 
-const FormView = ({ selectedRow, setSelectedRow }) => {
-  const id = selectedRow?.id;
-  const controller = 'financial-management';
-  const actionGet = 'get-report-calculation-definition';
+import { setSelectedFormulaRecord } from 'toolkit/actions';
+import { selectSelectedFormulaRecord } from 'toolkit/selectors/adminSelectors';
+import { FormViewBar } from '../../Components/styled';
+import FormPan from './Tabs/FormPan';
+import RunLogPan from './Tabs/RunLogPan';
+import ResultPan from './Tabs/ResultPan';
+const FormView = ({ updateTableData }) => {
+  const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState('1');
 
-  const [{ loading, error, apiData }, { setQueryParams, submitData }] =
-    useGetDataApi(
-      controller,
-      actionGet,
-      [],
-      { id: selectedRow?.id },
-      false,
-      null,
-      'GET',
-    );
+  // State to keep track of the active tab
 
-  const [formData, setFormData] = useState(apiData || {});
-
+  const selectedRecord = useSelector(selectSelectedFormulaRecord);
+  const title = selectedRecord?.s_label || '';
   useEffect(() => {
-    if (id) {
-      setQueryParams({ id });
+    if (!selectedRecord.id) setActiveTab('1');
+  }, [selectedRecord]);
+
+  const id = selectedRecord?.id || null;
+  const toggleTab = (tab) => {
+    if (id === null && (tab === '2' || tab === '3' || tab === '4')) {
+      return; // id null ise 2, 3 ve 4 numaralı tabları açmaya çalışma
     }
-  }, [id]);
-
-  useEffect(() => {
-    setFormData(apiData || {});
-  }, [apiData]);
-
-  // Form validation schema
-  const validationSchema = Yup.object().shape({
-    report_code: Yup.string().required('Report code is required'),
-    label: Yup.string().required('Label is required'),
-    p_positive_codes: Yup.array()
-      .of(Yup.string())
-      .required('At least one positive code is required'),
-  });
+    setActiveTab(tab);
+  };
 
   return (
     <Card>
       <CardHeader className='d-flex justify-content-between align-items-center'>
-        <h5 className='mb-0'>{formData.label || 'New Record'}</h5>
-        <Button onClick={() => setSelectedRow(null)} color='danger' outline>
+        <h5 className='mb-0'>
+          <span className='text-uppercase'> {title}</span>
+          <span className='text-muted fw-normal fs-13 fw-500'>
+            {' '}
+            formül tanımları
+          </span>{' '}
+        </h5>
+        <button
+          type='button'
+          className='btn btn-soft-danger btn-icon btn-sm fs-16 close-btn-email material-shadow-none'
+          onClick={() => dispatch(setSelectedFormulaRecord(null))}
+        >
           <i className='ri-close-fill align-bottom'></i>
-        </Button>
+        </button>
       </CardHeader>
       <CardBody>
-        <Formik
-          initialValues={{
-            report_code: formData.report_code || '',
-            label: formData.label || '',
-            p_positive_codes: formData.p_positive_codes || [],
-          }}
-          validationSchema={validationSchema}
-          enableReinitialize
-          onSubmit={(values) => {
-            submitData(
-              controller,
-              'update-report-calculation-definition',
-              values,
-            );
-            console.log('Submitted values:', values);
-            setSelectedRow(null);
-          }}
-        >
-          {({ errors, touched }) => (
-            <Form>
-              <SelectComponent label='Select Report Method' name='sp_id' />
-              <FormGroup>
-                <Label for='report_code'>Report Code</Label>
-                <Field
-                  name='report_code'
-                  as={Input}
-                  invalid={touched.report_code && !!errors.report_code}
-                />
-                {touched.report_code && errors.report_code && (
-                  <div className='invalid-feedback'>{errors.report_code}</div>
-                )}
-              </FormGroup>
-              <FormGroup>
-                <Label for='label'>Label</Label>
-                <Field
-                  name='label'
-                  as={Input}
-                  invalid={touched.label && !!errors.label}
-                />
-                {touched.label && errors.label && (
-                  <div className='invalid-feedback'>{errors.label}</div>
-                )}
-              </FormGroup>
-              <FormGroup>
-                <Label for='p_positive_codes'>Positive Codes</Label>
-                <Field
-                  name='p_positive_codes'
-                  as={Input}
-                  type='select'
-                  multiple
-                  invalid={
-                    touched.p_positive_codes && !!errors.p_positive_codes
-                  }
-                >
-                  {[
-                    'kisa_vadeli_borclanmalar',
-                    'uzun_vadeli_borclanmalar',
-                    'uzun_vadeli_borclanmalarin_kisa_vadeli_kisimlari',
-                  ].map((code) => (
-                    <option key={code} value={code}>
-                      {code}
-                    </option>
-                  ))}
-                </Field>
-                {touched.p_positive_codes && errors.p_positive_codes && (
-                  <div className='invalid-feedback'>
-                    {errors.p_positive_codes}
-                  </div>
-                )}
-              </FormGroup>
-              <Button type='submit' color='primary'>
-                Save
-              </Button>
-            </Form>
-          )}
-        </Formik>
+        <FormViewBar>
+          <Nav tabs className='nav nav-pills nav-custom nav-custom-light mb-3'>
+            <NavItem>
+              <NavLink
+                className={activeTab === '1' ? 'active' : ''}
+                onClick={() => toggleTab('1')}
+              >
+                Tanımlamalar
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                disabled={id === null} // Eğer id null ise bu tab'ı disable yap
+                className={activeTab === '2' ? 'active' : ''}
+                onClick={() => toggleTab('2')}
+              >
+                Çalışma Günlüğü
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                disabled={id === null} // Eğer id null ise bu tab'ı disable yap
+                className={activeTab === '3' ? 'active' : ''}
+                onClick={() => toggleTab('3')}
+              >
+                Örnek Sonuçlar
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                disabled={id === null} // Eğer id null ise bu tab'ı disable yap
+                className={activeTab === '4' ? 'active' : ''}
+                onClick={() => toggleTab('4')}
+              >
+                Tanımlamalar
+              </NavLink>
+            </NavItem>
+          </Nav>
+          <TabContent activeTab={activeTab}>
+            <TabPane tabId='1'>
+              <FormPan updateTableData={updateTableData} />
+            </TabPane>
+            <TabPane tabId='2'>
+              <RunLogPan formikValues={selectedRecord} />
+            </TabPane>
+            <TabPane tabId='3'>
+              <ResultPan formikValues={selectedRecord} />
+            </TabPane>
+            <TabPane tabId='4'>Content of Tab 4</TabPane>
+          </TabContent>
+        </FormViewBar>
       </CardBody>
     </Card>
   );
 };
-
 FormView.propTypes = {
-  selectedRow: PropTypes.object,
-  setSelectedRow: PropTypes.func.isRequired,
+  updateTableData: PropTypes.func.isRequired,
 };
 
 export default FormView;

@@ -14,19 +14,21 @@ const IncomeStatementDataPage = React.lazy(
 const IfrsCodeCalculationsPage = React.lazy(
   () => import('./FinancialCalculationManagement/IfrsCodeCalculationsPage'),
 );
-const IfrsCodeDefinitionsPage = React.lazy(
-  () => import('./FinancialCalculationManagement/IfrsCodeDefinitionsPage'),
-);
+// const IfrsCodeDefinitionsPage = React.lazy(
+//   () => import('./FinancialCalculationManagement/IfrsCodeDefinitionsPage'),
+// );
 
 const EditorPage = React.lazy(() => import('./Financial/Editor'));
 const PresentationPage = React.lazy(() => import('./Financial/Presentation'));
 const ReportDefinitionsPage = React.lazy(
   () => import('./Financial/Reports/Definitions'),
 );
-const ReportFormulasPage = React.lazy(
+const ReportCodePopulationPage = React.lazy(
   () => import('./Financial/Reports/Population'),
 );
-
+const ReportCodeFormulasPage = React.lazy(
+  () => import('./Financial/Reports/Formulas'),
+);
 // const FinancialRatiosManagementPage = React.lazy(
 //   () =>
 //     import('./FinancialCalculationManagement/FinancialRatiosManagementPage'),
@@ -62,9 +64,15 @@ export const adminPagesConfigs = [
   },
   {
     permittedRole: RoutePermittedRole.admin,
-    path: '/admin/financial-result-management/ifrs-definitions',
-    element: <IfrsCodeDefinitionsPage />,
+    path: '/admin/financial-result-management/report-code-population-definitions',
+    element: <ReportCodePopulationPage />,
   },
+  {
+    permittedRole: RoutePermittedRole.admin,
+    path: '/admin/financial-result-management/report-code-formula-definitions',
+    element: <ReportCodeFormulasPage />,
+  },
+
   {
     permittedRole: RoutePermittedRole.admin,
     path: '/admin/financial/editor',
@@ -80,11 +88,11 @@ export const adminPagesConfigs = [
     path: '/admin/financial/reports/definitions',
     element: <ReportDefinitionsPage />,
   },
-  {
-    permittedRole: RoutePermittedRole.admin,
-    path: '/admin/financial/reports/formulas',
-    element: <ReportFormulasPage />,
-  },
+  // {
+  //   permittedRole: RoutePermittedRole.admin,
+  //   path: '/admin/financial/reports/formulas',
+  //   element: <ReportFormulasPage />,
+  // },
   //   {
   //     permittedRole: RoutePermittedRole.admin,
   //     path: '/admin/financial-result-management/ratios-management',

@@ -23,6 +23,7 @@ export const Columns = (selectedRow) => [
     id: 'combined',
     size: 500,
     header: 'Rapor Kodu ve Etiket',
+    className: 'cursor-pointer',
     cell: (info) => (
       <div
         className='d-flex align-items-center'

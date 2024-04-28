@@ -4,8 +4,12 @@ import { Row, Col } from 'reactstrap'; // Assuming you're using Reactstrap
 import FormView from './FormView';
 import TableView from './TableView';
 import { setCurrentPopulationRecord } from 'toolkit/actions';
-import { useGetDataApi } from '@hta/hooks/APIHooks';
+import { useGetDataApi } from '@hta/hooks/APIHooksOld';
+import { withRouter } from '@hta/hooks/withRouter';
+import AppMetaTags from '@hta/components/AppMetaTags';
 const Population = () => {
+  const title = 'Rapor Kodları ve Etiketleri';
+  const description = 'Rapor Kodları ve Etiketleri Tanımlamak için hzarılandı.';
   const dispatch = useDispatch();
   const {
     financialStatementFormatId = null,
@@ -32,24 +36,27 @@ const Population = () => {
       financialStatementFormatId: financialStatementFormatId,
     });
   };
-  console.log('apiData', apiData);
+
   return (
-    <Row>
-      <Col md={selectedRow ? '6' : '12'}>
-        <TableView
-          loading={loading}
-          apiData={apiData}
-          error={error}
-          refreshData={refreshData}
-        />
-      </Col>
-      {selectedRow && (
-        <Col md={6}>
-          <FormView updateApiData={updateApiData} />
+    <>
+      <AppMetaTags title={title} description={description} />
+      <Row>
+        <Col md={selectedRow ? '6' : '12'}>
+          <TableView
+            loading={loading}
+            apiData={apiData}
+            error={error}
+            refreshData={refreshData}
+          />
         </Col>
-      )}
-    </Row>
+        {selectedRow && (
+          <Col md={6}>
+            <FormView updateApiData={updateApiData} />
+          </Col>
+        )}
+      </Row>
+    </>
   );
 };
 
-export default Population;
+export default withRouter(Population);

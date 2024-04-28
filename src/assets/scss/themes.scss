@@ -346,3 +346,9 @@ body {
 .no-wrap {
   white-space: nowrap;
 }
+
+//todo delete
+tr[role="button"].cursor-pointer,
+tr[role="button"].cursor-pointer td {
+  cursor: pointer;
+}

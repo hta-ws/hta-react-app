@@ -25,7 +25,7 @@ const TableView = ({ loading, apiData, error, refreshData }) => {
       financial_statement_format_id: financialStatementFormatId, // Default to the value from state
       is_locked: 0, // Default value if no specific data is provided
     };
-
+    console.log('recordData', recordData);
     dispatch(setCurrentPopulationRecord(recordData));
   };
 
@@ -35,11 +35,11 @@ const TableView = ({ loading, apiData, error, refreshData }) => {
   return (
     <Card>
       <CardHeader className='d-flex justify-content-between align-items-center'>
-        <h5 className='mb-0'>Financial Data Management Screen</h5>
+        <h5 className='mb-0'>Bilançodan Alınacak Kodların Tanımlama Ekranı</h5>
         <FormatSelect />
       </CardHeader>
       <CardBody>
-        <Row className='g-2 mt-0'>
+        <Row className='g-2 mt-0 mb-2'>
           <Col md={6}>
             {/* <div className='search-box'>
               <Input

@@ -136,3 +136,24 @@ export const numberFormatter = new Intl.NumberFormat('tr-TR', {
   minimumFractionDigits: 0,
   maximumFractionDigits: 0,
 });
+
+export function formatTime(seconds) {
+  if (seconds === 0) return '-';
+  const totalMilliseconds = seconds * 1000;
+  const minutes = Math.floor(totalMilliseconds / 60000);
+  const remainingMilliseconds = totalMilliseconds % 60000;
+  const secs = Math.floor(remainingMilliseconds / 1000);
+  const milliseconds = Math.floor(remainingMilliseconds % 1000);
+
+  let result = '';
+  if (minutes > 0) {
+    result += `${minutes} dk `;
+  }
+  if (secs > 0) {
+    result += `${secs} sn `;
+  }
+  if (milliseconds > 0) {
+    result += `${milliseconds} ms`;
+  }
+  return result.trim();
+}

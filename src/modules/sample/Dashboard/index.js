@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useGetDataApi } from '@hta/hooks/APIHooks';
+import { useGetDataApi } from '@hta/hooks/APIHooksOld';
 
 const Dashboard = () => {
   const controller = 'financial-management';

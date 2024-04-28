@@ -9,10 +9,9 @@ import {
 } from '@tanstack/react-table';
 import { Table } from 'reactstrap';
 
-// our pester.dev specific react-table
 const DataTable = ({
   columns,
-  data,
+  data = [], // Default to an empty array if data is null
   debouncedSearchTerm,
   setGlobalFilter,
   onSelectRow,
@@ -33,19 +32,17 @@ const DataTable = ({
     enableSorting: true,
     onGlobalFilterChange: setGlobalFilter,
   });
-  console.log('data', data);
-  // Render the UI for your table
+  const trClass = typeof onSelectRow === 'function' ? 'cursor-pointer' : '';
+
   const handleClickRow = (row) => {
-    // onReportCodeSelect fonksiyonunun tanımlı olup olmadığını kontrol eder
     if (typeof onSelectRow === 'function') {
       onSelectRow(row);
     }
-
-    // toggle fonksiyonunun tanımlı olup olmadığını kontrol eder
     if (typeof toggle === 'function') {
       toggle();
     }
   };
+
   return (
     <Table className='table-hover table-striped'>
       <thead className='bg-light sticky-top'>
@@ -76,28 +73,33 @@ const DataTable = ({
         ))}
       </thead>
       <tbody role='rowgroup'>
-        {table.getRowModel().rows.map((row) => {
-          return (
+        {data.length > 0 ? (
+          table.getRowModel().rows.map((row) => (
             <tr
               key={row.id}
-              role='row'
+              role='button'
+              className={trClass}
               onClick={() => handleClickRow(row.original)}
+              style={{ cursor: 'pointer' }}
             >
-              {row.getVisibleCells().map((cell) => {
-                return (
-                  <td
-                    key={cell.id}
-                    role='cell'
-                    className={cell.column.columnDef.className}
-                    style={cell.column.columnDef.cellStyle}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                );
-              })}
+              {row.getVisibleCells().map((cell) => (
+                <td
+                  key={cell.id}
+                  className={cell.column.columnDef.className}
+                  style={cell.column.columnDef.cellStyle}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
             </tr>
-          );
-        })}
+          ))
+        ) : (
+          <tr className='p-6'>
+            <td colSpan={columns.length} style={{ textAlign: 'center' }}>
+              <h6> Kayıt bulunamadı...</h6>
+            </td>
+          </tr>
+        )}
       </tbody>
     </Table>
   );
@@ -105,10 +107,11 @@ const DataTable = ({
 
 DataTable.propTypes = {
   columns: PropTypes.array.isRequired,
-  data: PropTypes.array.isRequired,
+  data: PropTypes.array, // Removed isRequired to allow for null or undefined
   debouncedSearchTerm: PropTypes.string,
   setGlobalFilter: PropTypes.func,
   onSelectRow: PropTypes.func,
   toggle: PropTypes.func,
 };
+
 export default DataTable;

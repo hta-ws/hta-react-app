@@ -9,7 +9,7 @@ import {
   UncontrolledAlert,
 } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { useGetDataApi } from '@hta/hooks/APIHooks';
+import { useGetDataApi } from '@hta/hooks/APIHooksOld';
 import { setCurrentPopulationRecord } from 'toolkit/actions'; // Make sure to import this action
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -22,6 +22,7 @@ const validationSchema = Yup.object().shape({
 import AppDeleteModal from '@hta/components/AppDeleteModal';
 import IfrsCodeSelect from '../../Components/IfrsCodeSelect';
 import { StyledSimpleBarForm } from '../styled';
+import InformationTabs from '../InformationTabs/InformationTabs';
 const FormView = ({ updateApiData }) => {
   const dispatch = useDispatch();
   const {
@@ -215,7 +216,11 @@ const FormView = ({ updateApiData }) => {
                           Data işleniyor...
                         </span>
                       )}
-                      <button type='submit' className='btn btn-primary'>
+                      <button
+                        type='submit'
+                        className='btn btn-primary'
+                        disabled={isSubmitting}
+                      >
                         {formData?.id ? 'Kaydet' : 'Ekle'}
                       </button>
                       <button
@@ -254,6 +259,12 @@ const FormView = ({ updateApiData }) => {
               </Form>
             )}
           </Formik>
+
+          <Row className='mt-2'>
+            <Col>
+              <InformationTabs formData={formData} />
+            </Col>
+          </Row>
         </StyledSimpleBarForm>
         <AppDeleteModal
           show={deleteModal}

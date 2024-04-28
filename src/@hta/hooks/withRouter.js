@@ -6,7 +6,22 @@ export const withRouter = (Component) => {
     let location = useLocation();
     let navigate = useNavigate();
     let params = useParams();
-    return <Component {...props} router={{ location, navigate, params }} />;
+
+    // URL'den sorgu parametrelerini parse edin
+    let searchParams = new URLSearchParams(location.search);
+
+    // router objesine query ekleyin
+    return (
+      <Component
+        {...props}
+        router={{
+          location,
+          navigate,
+          params,
+          query: Object.fromEntries(searchParams.entries()), // Sorgu parametrelerini objeye dönüştür
+        }}
+      />
+    );
   }
 
   return ComponentWithRouterProp;

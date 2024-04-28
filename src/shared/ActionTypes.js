@@ -45,3 +45,8 @@ export const SET_FINANCIAL_STATEMENT_CURRENT_POPULATION_RECORD =
   'set_financial_statement_current_population_record';
 export const SET_FINANCIAL_STATEMENT_SAMPLE_STOCK_CODE =
   'get_financial_statement_sample_stock_code';
+
+export const GET_SP_METADATA_LIST = 'get_sp_meta_data_list';
+export const GET_REPORT_CODE_LIST = 'get_report_code_list';
+
+export const SET_SELECTED_FORMULA_RECORD = 'set_selected_formula_record';

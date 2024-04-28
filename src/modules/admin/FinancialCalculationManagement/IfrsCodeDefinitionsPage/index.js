@@ -14,7 +14,7 @@ import {
 import Select from 'react-select';
 import SimpleBar from 'simplebar-react';
 import styled from 'styled-components';
-import { useGetDataApi } from '@hta/hooks/APIHooks';
+import { useGetDataApi } from '@hta/hooks/APIHooksOld';
 import DefinitionTable from './DefinitionTable';
 const StyledSimpleBar = styled(SimpleBar)`
   height: calc(100vh - 186px);

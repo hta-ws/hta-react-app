@@ -3,15 +3,16 @@ import _ from 'lodash';
 import { isRequestSuccessful, sanitizeData } from '@hta/helpers/ApiHelper';
 import jwtAxios from '@hta/services/auth/jwt-auth'; // Özelleştirilmiş jwtAxios instance'ını import edin
 
-export const useGetDataApi = (
+export const useGetDataApi = ({
   controller,
   action,
-  initialData = undefined,
+  initialData = null,
   params = {},
-  initialCall = true,
-  callbackFun,
+  initialCall = false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  callbackFun = () => {},
   method = 'GET',
-) => {
+}) => {
   const baseUrl = process.env.REACT_APP_API_URL;
   const [initialUrl, setInitialUrl] = useState(
     `${baseUrl}/${controller}/${action}`,
@@ -98,7 +99,7 @@ export const useGetDataApi = (
     jwtAxios(config)
       .then((response) => {
         if (isRequestSuccessful(response.status)) {
-          setData(response.data.items); // Update state with the new data
+          //setData(response.data.items); // Update state with the new data
           if (callback) {
             callback(response.data); // Execute callback with the full response data
           }
@@ -106,7 +107,10 @@ export const useGetDataApi = (
           setError(
             response.data.error ? response.data.error : response.data.message,
           );
-          setData(initialData); // Reset to initial data on error
+          setData(initialData);
+          if (callback) {
+            callback(response.data); // Execute callback with the full response data
+          } // Reset to initial data on error
         }
       })
       .catch((error) => {
@@ -115,6 +119,9 @@ export const useGetDataApi = (
         } else {
           const errorMessage = error.response?.data?.message || error.message;
           setError(errorMessage);
+          if (callback) {
+            callback(error.response?.data); // Execute callback with the full response data
+          }
         }
       })
       .finally(() => setLoading(false));

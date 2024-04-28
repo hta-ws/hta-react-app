@@ -12,7 +12,7 @@ import {
   Col,
 } from 'reactstrap';
 import ToggleSwitch from './ToggleSwitch';
-import { useGetDataApi } from '@hta/hooks/APIHooks';
+import { useGetDataApi } from '@hta/hooks/APIHooksOld';
 import { useDebounce } from '@hta/hooks/useDebounce';
 import SimpleBar from 'simplebar-react';
 import styled from 'styled-components';
@@ -78,7 +78,7 @@ function IfrsCodeSelect({
   return (
     <Modal isOpen={isOpen} toggle={toggle} scrollable={true} size={'xl'}>
       <ModalHeader toggle={toggle} className='py-2'>
-        Bilanço Kalemi seçimi
+        Bilanço Kalemi seçimill
       </ModalHeader>
       <ModalBody className='py-1'>
         <Card>
@@ -87,7 +87,7 @@ function IfrsCodeSelect({
               <Col lg={4}>
                 <SearchBox
                   value={globalFilter}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
+                  onChange={(value) => setGlobalFilter(value)}
                 />
               </Col>
               <Col className='col-lg-auto'>
