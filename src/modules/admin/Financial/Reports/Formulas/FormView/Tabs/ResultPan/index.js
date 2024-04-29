@@ -25,7 +25,6 @@ const ResultPan = ({ formikValues }) => {
   const { setQueryParams } = apiActions;
 
   const handleRefresh = () => {
-    console.log('financialStatementFormatId', financialStatementFormatId);
     setQueryParams({
       calculation_id: id,
       financialStatementFormatId: financialStatementFormatId,

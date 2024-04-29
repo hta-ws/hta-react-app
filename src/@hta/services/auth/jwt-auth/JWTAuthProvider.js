@@ -71,7 +71,7 @@ const JWTAuthAuthProvider = ({ children }) => {
       setAuthToken(data.token);
       const res = await jwtAxios.get('/auth');
       setJWTAuthData({
-        user: res.data,
+        user: res.data.items.user,
         isAuthenticated: true,
         isLoading: false,
       });

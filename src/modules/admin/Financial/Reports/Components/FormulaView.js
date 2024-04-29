@@ -121,13 +121,13 @@ const FormulaView = ({ formikValues }) => {
 
 FormulaView.propTypes = {
   formikValues: PropTypes.shape({
-    sp_id: PropTypes.number.isRequired,
+    sp_id: PropTypes.number,
     p_positive_codes: PropTypes.string,
     p_negative_codes: PropTypes.string,
     s_label: PropTypes.string,
     p_numerator_report_code: PropTypes.string,
     p_denominator_report_code: PropTypes.string,
-    p_multiplier: PropTypes.string,
+    p_multiplier: PropTypes.number,
     p_report_code: PropTypes.string,
   }).isRequired,
 };

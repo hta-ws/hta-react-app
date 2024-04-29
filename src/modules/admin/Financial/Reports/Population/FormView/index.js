@@ -1,286 +1,113 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
   Card,
   CardBody,
   CardHeader,
-  Row,
-  Col,
-  UncontrolledAlert,
+  Nav,
+  NavItem,
+  NavLink,
+  TabContent,
+  TabPane,
 } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import { useGetDataApi } from '@hta/hooks/APIHooksOld';
-import { setCurrentPopulationRecord } from 'toolkit/actions'; // Make sure to import this action
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-const validationSchema = Yup.object().shape({
-  report_code: Yup.string().required('Report code is required'),
-  label: Yup.string().required('Label is required'),
-  ifrs_code: Yup.string().required('IFRS Code is required'),
-  id: Yup.number(),
-});
-import AppDeleteModal from '@hta/components/AppDeleteModal';
-import IfrsCodeSelect from '../../Components/IfrsCodeSelect';
-import { StyledSimpleBarForm } from '../styled';
-import InformationTabs from '../InformationTabs/InformationTabs';
+
+import { setSelectedFormulaRecord } from 'toolkit/actions';
+import { selectSelectedPopulationRecord } from 'toolkit/selectors/adminSelectors';
+import { FormViewBar } from '../../Components/styled';
+import FormPan from './Tabs/FormPan';
+// import RunLogPan from './Tabs/RunLogPan';
+// import ResultPan from './Tabs/ResultPan';
 const FormView = ({ updateApiData }) => {
   const dispatch = useDispatch();
-  const {
-    financialStatementFormatId = null,
-    selectedPopulationRecord: selectedRow = null,
-  } = useSelector((state) => state.admin || {});
-  // Extract ID from the selectedRow, if it exists
-  const id = selectedRow?.id;
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
-  const controller = 'financial-management';
-  const actionGet = 'get-report-code-definition'; // Default action for GET
-  const actionDelete = 'get-report-code-definition';
-  const actionPost = 'get-report-code-definition'; // POST için action
-  const actionPut = 'get-report-code-definition'; // PUT için action
+  const [activeTab, setActiveTab] = useState('1');
 
-  const [{ loading, error, apiData }, { setQueryParams, submitData }] =
-    useGetDataApi(
-      controller,
-      actionGet,
-      [], // Initial data is empty
-      { id }, // Parameters for the GET request
-      true, // Fetch data on initial call
-      null, // No callback function
-      'GET', // Method for fetching data
-    );
+  // State to keep track of the active tab
 
-  // Local state for managing form data, defaulting to apiData or an empty object
-  const [formData, setFormData] = useState(apiData || {});
-
-  // Effect to update form data when apiData changes
+  const selectedRecord = useSelector(selectSelectedPopulationRecord);
+  const title = selectedRecord?.label || '';
   useEffect(() => {
-    if (apiData) {
-      setFormData(apiData);
+    if (!selectedRecord.id) setActiveTab('1');
+  }, [selectedRecord]);
+
+  const id = selectedRecord?.id || null;
+  const toggleTab = (tab) => {
+    if (id === null && (tab === '2' || tab === '3' || tab === '4')) {
+      return; // id null ise 2, 3 ve 4 numaralı tabları açmaya çalışma
     }
-  }, [apiData]);
-
-  useEffect(() => {
-    if (selectedRow?.id) {
-      setQueryParams({ id: selectedRow.id });
-    } else {
-      // If there's no selected row, you might want to reset the form data or set it to default values.
-      setFormData({
-        financial_statement_type_id: '',
-        id: 0,
-        is_locked: 0,
-        bilanco_tipi: 'Listeden seçim yapınız...',
-        financial_statement_format_id: financialStatementFormatId || '',
-      });
-    }
-  }, [selectedRow, setQueryParams, financialStatementFormatId]);
-
-  const title = formData?.label || 'New Record';
-
-  // Function to clear the selected row
-  const clearSelectedRow = () => {
-    dispatch(setCurrentPopulationRecord(null));
+    setActiveTab(tab);
   };
-  const handleDeleteRecord = () => {
-    submitData(formData, 'DELETE', actionDelete, () => {
-      updateApiData(formData, 'remove');
-      clearSelectedRow(null);
-    });
-    setDeleteModal(false);
-  };
-  const handleCodeSelected = () => {
-    // setSelectedIFRSCode(data.ifrs_code);
-    setModalOpen(false);
-  };
-  const handleSelectRecord = (data) => {
-    console.log('data', data);
-    // Update formData state with the new data
-    setFormData({
-      ...formData,
-      report_code: data?.slug || '', // Assuming 'slug' is the 'report_code' you want to use
-      label: data?.label || '',
-      ifrs_code: data?.ifrs_code || '',
-      bilanco_tipi: data?.bilanco_tipi || '',
-      financial_statement_type_id: data?.financial_statement_type_id || '',
-    });
 
-    // Close the modal after selection
-    setModalOpen(false);
-  };
   return (
     <Card>
       <CardHeader className='d-flex justify-content-between align-items-center'>
-        <h5 className='mb-0'>{title}</h5>
+        <h5 className='mb-0'>
+          <span className=''> {title}</span>
+          <span className='text-muted fw-normal fs-13 fw-500'>
+            {' '}
+            {title != '' ? 'Kod Tanımlama  ' : ' Yeni Kod Tanımlama'}
+          </span>{' '}
+        </h5>
         <button
           type='button'
           className='btn btn-soft-danger btn-icon btn-sm fs-16 close-btn-email material-shadow-none'
-          onClick={clearSelectedRow}
+          onClick={() => dispatch(setSelectedFormulaRecord(null))}
         >
           <i className='ri-close-fill align-bottom'></i>
         </button>
       </CardHeader>
       <CardBody>
-        <StyledSimpleBarForm>
-          <Formik
-            initialValues={{
-              report_code: formData?.report_code || '',
-              label: formData?.label || '',
-              ifrs_code: formData?.ifrs_code || '',
-              id: formData?.id || 0,
-              financial_statement_type_id: formData.financial_statement_type_id,
-              // financial_statement_format_code: financialStatementFormatCode,
-            }}
-            enableReinitialize
-            validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting, resetForm }) => {
-              const method = formData.id ? 'POST' : 'PUT'; // Seçili satır varsa PUT, yoksa POST
-              const action = formData.id ? actionPut : actionPost; // Action'ı dinamik olarak ayarla
-
-              submitData(values, method, action, (responseData) => {
-                updateApiData(responseData.items);
-
-                setSubmitting(false);
-                resetForm();
-              });
-            }}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <div className='mb-3'>
-                  <label htmlFor='report_code'>Repor Kodu</label>
-                  <Field
-                    name='report_code'
-                    type='text'
-                    className='form-control'
-                    disabled={formData?.is_locked == 1}
-                  />
-                  <ErrorMessage
-                    name='report_code'
-                    component='div'
-                    className='field-error'
-                  />
-                </div>
-                <div className='mb-3'>
-                  <label htmlFor='label'>Açıklama</label>
-                  <Field name='label' type='text' className='form-control' />
-                  <ErrorMessage
-                    name='label'
-                    component='div'
-                    className='field-error'
-                  />
-                </div>
-                <div className='mb-3'>
-                  <div className='input-group'>
-                    <Field
-                      name='ifrs_code'
-                      type='text'
-                      className='form-control'
-                      placeholder='IFRS Code'
-                      aria-label='IFRS Code'
-                      aria-describedby='button-addon-ifrs'
-                      disabled={formData?.is_locked === 1}
-                      readOnly
-                    />
-                    <button
-                      className='btn btn-outline-secondary'
-                      type='button'
-                      onClick={() => setModalOpen(true)}
-                      disabled={formData?.is_locked === 1}
-                    >
-                      <i className='ri-search-line search-icon align-bottom me-1'></i>
-                      Listeden seç
-                    </button>
-                  </div>
-                  <ErrorMessage
-                    name='ifrs_code'
-                    component='div'
-                    className='field-error'
-                  />
-                </div>
-
-                <div className='mb-3'>
-                  <label htmlFor='bilanco_tipi'>Bilanço Tipi</label>
-                  <span className='form-control'>{formData?.bilanco_tipi}</span>
-                </div>
-                <Row>
-                  <Col> </Col>
-                  <Col className='auto'>
-                    <div className='hstack gap-2 justify-content-end'>
-                      {isSubmitting && loading && (
-                        <span>
-                          <span
-                            className='spinner-border spinner-border-sm'
-                            role='status'
-                            aria-hidden='true'
-                          ></span>
-                          Data işleniyor...
-                        </span>
-                      )}
-                      <button
-                        type='submit'
-                        className='btn btn-primary'
-                        disabled={isSubmitting}
-                      >
-                        {formData?.id ? 'Kaydet' : 'Ekle'}
-                      </button>
-                      <button
-                        type='button'
-                        className='btn btn-soft-success'
-                        onClick={() => clearSelectedRow(null)}
-                      >
-                        İptal
-                      </button>
-                      {formData?.is_locked != 1 && formData.id ? (
-                        <button
-                          type='button'
-                          className='btn btn-danger'
-                          onClick={() => setDeleteModal(true)}
-                        >
-                          Sil
-                        </button>
-                      ) : null}
-                    </div>
-                  </Col>
-                </Row>
-
-                {isSubmitting && error && (
-                  <Row className='mt-2'>
-                    <Col md='12'>
-                      <UncontrolledAlert
-                        color='danger'
-                        className='alert-solid alert-dismissible bg-danger text-white alert-label-icon fade show material-shadow mb-xl-0'
-                      >
-                        <i className='ri-error-warning-line label-icon'></i>
-                        <strong>Hata</strong> - {error}
-                      </UncontrolledAlert>
-                    </Col>
-                  </Row>
-                )}
-              </Form>
-            )}
-          </Formik>
-
-          <Row className='mt-2'>
-            <Col>
-              <InformationTabs formData={formData} />
-            </Col>
-          </Row>
-        </StyledSimpleBarForm>
-        <AppDeleteModal
-          show={deleteModal}
-          onDeleteClick={handleDeleteRecord}
-          onCloseClick={() => setDeleteModal(false)}
-          handleCodeSelected={handleCodeSelected}
-        />
-        {isModalOpen && (
-          <IfrsCodeSelect
-            isOpen={isModalOpen}
-            toggle={() => setModalOpen(!isModalOpen)}
-            onReportCodeSelect={handleSelectRecord}
-            // financialStatementFormatCode={financialStatementFormatCode}
-            // setFinancialStatementFormatCode={setFinancialStatementFormatCode}
-          />
-        )}
+        <FormViewBar>
+          <Nav tabs className='nav nav-pills nav-custom nav-custom-light mb-3'>
+            <NavItem>
+              <NavLink
+                className={activeTab === '1' ? 'active' : ''}
+                onClick={() => toggleTab('1')}
+              >
+                Tanımlamalar
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                disabled={id === null} // Eğer id null ise bu tab'ı disable yap
+                className={activeTab === '2' ? 'active' : ''}
+                onClick={() => toggleTab('2')}
+              >
+                Çalışma Günlüğü
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                disabled={id === null} // Eğer id null ise bu tab'ı disable yap
+                className={activeTab === '3' ? 'active' : ''}
+                onClick={() => toggleTab('3')}
+              >
+                Örnek Sonuçlar
+              </NavLink>
+            </NavItem>
+            {/* <NavItem>
+              <NavLink
+                disabled={id === null} // Eğer id null ise bu tab'ı disable yap
+                className={activeTab === '4' ? 'active' : ''}
+                onClick={() => toggleTab('4')}
+              >
+                Tanımlamalar
+              </NavLink>
+            </NavItem> */}
+          </Nav>
+          <TabContent activeTab={activeTab}>
+            <TabPane tabId='1'>
+              <FormPan updateApiData={updateApiData} />
+            </TabPane>
+            <TabPane tabId='2'>
+              {/* <RunLogPan formikValues={selectedRecord} /> */}
+            </TabPane>
+            <TabPane tabId='3'>
+              {/* <ResultPan formikValues={selectedRecord} /> */}
+            </TabPane>
+          </TabContent>
+        </FormViewBar>
       </CardBody>
     </Card>
   );
@@ -288,4 +115,5 @@ const FormView = ({ updateApiData }) => {
 FormView.propTypes = {
   updateApiData: PropTypes.func.isRequired,
 };
+
 export default FormView;

@@ -1,57 +1,36 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col } from 'reactstrap'; // Assuming you're using Reactstrap
-import FormView from './FormView';
-import TableView from './TableView';
-import { setCurrentPopulationRecord } from 'toolkit/actions';
-import { useGetDataApi } from '@hta/hooks/APIHooksOld';
-import { withRouter } from '@hta/hooks/withRouter';
+import React from 'react';
+
+import { Row, Col } from 'reactstrap';
+import { useSelector } from 'react-redux';
+
 import AppMetaTags from '@hta/components/AppMetaTags';
+import { selectSelectedPopulationRecord } from 'toolkit/selectors/adminSelectors';
+import TableView from './TableView';
+import FormView from './FormView';
+import { useGetDataApi } from '@hta/hooks/APIHooks';
+
 const Population = () => {
-  const title = 'Rapor Kodları ve Etiketleri';
-  const description = 'Rapor Kodları ve Etiketleri Tanımlamak için hzarılandı.';
-  const dispatch = useDispatch();
-  const {
-    financialStatementFormatId = null,
-    selectedPopulationRecord: selectedRow = null,
-  } = useSelector((state) => state.admin || {});
+  const title = 'Rapor Formul ve Hesaplama Tanımlamaaları';
+  const description = 'Rapor Kodları ve Etiketleri Tanımlamak için kullanılır';
+  const selectedRecord = useSelector(selectSelectedPopulationRecord);
 
-  const [{ loading, apiData, error }, { setQueryParams, updateApiData }] =
-    useGetDataApi(
-      'financial-management',
-      'get-report-code-definitions',
-      [],
-      { financialStatementFormatId },
-      false,
-      null,
-      'POST',
-    );
-
-  useEffect(() => {
-    dispatch(setCurrentPopulationRecord(null));
-    setQueryParams({ financialStatementFormatId });
-  }, [financialStatementFormatId, setQueryParams]);
-  const refreshData = () => {
-    setQueryParams({
-      financialStatementFormatId: financialStatementFormatId,
-    });
-  };
+  const [apiStates, apiActions] = useGetDataApi({
+    controller: 'financial-statement-management',
+    action: 'get-population-code-list',
+    method: 'POST',
+    initialData: [],
+  });
 
   return (
     <>
       <AppMetaTags title={title} description={description} />
-      <Row>
-        <Col md={selectedRow ? '6' : '12'}>
-          <TableView
-            loading={loading}
-            apiData={apiData}
-            error={error}
-            refreshData={refreshData}
-          />
+      <Row className='gx-2'>
+        <Col md={selectedRecord ? '6' : '12'}>
+          <TableView apiStates={apiStates} apiActions={apiActions} />
         </Col>
-        {selectedRow && (
+        {selectedRecord && (
           <Col md={6}>
-            <FormView updateApiData={updateApiData} />
+            <FormView updateApiData={apiActions.updateApiData} />
           </Col>
         )}
       </Row>
@@ -59,4 +38,4 @@ const Population = () => {
   );
 };
 
-export default withRouter(Population);
+export default Population;

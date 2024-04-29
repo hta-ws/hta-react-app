@@ -2,10 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const FormikInput = ({ field, form: { touched, errors }, label, ...props }) => {
+  const inputProps = {
+    ...props,
+    ...field,
+    value: field.value || '', // Eğer field.value undefined ise boş string kullan
+  };
+
   return (
     <div className='mb-1'>
       <label htmlFor={props.id || props.name}>{label}</label>
-      <input className='form-control' {...field} {...props} />
+      <input className='form-control' {...inputProps} />
       {touched[field.name] && errors[field.name] && (
         <div className='text-danger'>{errors[field.name]}</div>
       )}

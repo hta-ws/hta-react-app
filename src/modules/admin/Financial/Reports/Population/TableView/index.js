@@ -1,69 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardBody, CardHeader, Row, Col } from 'reactstrap';
-import { FormatSelect } from '../../Components'; // Ensure the path matches your project structure
+import { Card, CardHeader, CardBody, Row, Col, Button } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setCurrentPopulationRecord } from 'toolkit/actions'; // Ensure this action is properly imported
-import { Columns } from './Columns';
-import AppApiStatusHandler from '@hta/components/AppApiStatusHandler'; // Status handler component
-import { TableViewBar } from '../styled';
-import DataTable from '../../Components/DataTable';
-import SearchBox from '../../Components/IfrsCodeSelect/SearchBox';
+import AppApiStatusHandler from '@hta/components/AppApiStatusHandler';
 import { useDebounce } from '@hta/hooks/useDebounce';
-const TableView = ({ loading, apiData, error, refreshData }) => {
+
+import SearchBox from '../../Components/SearchBox';
+import FormatSelect from '../../Components/FormatSelect';
+import { TableViewBar } from '../../Components/styled';
+import { TableColumns } from './TableColumns';
+import DataTable from '../../Components/DataTable';
+import { setCurrentPopulationRecord } from 'toolkit/actions';
+import { selectFinancialStatementFormatId } from 'toolkit/selectors/adminSelectors';
+import { selectSelectedFormulaRecord } from 'toolkit/selectors/adminSelectors';
+const TableView = ({ apiStates, apiActions }) => {
   const dispatch = useDispatch();
-
+  const { loading, error, apiData = [] } = apiStates;
   const [globalFilter, setGlobalFilter] = useState('');
-  const {
-    financialStatementFormatId = null,
-    selectedPopulationRecord: selectedRow = null,
-  } = useSelector((state) => state.admin || {});
-
+  const selectedFormulaRecord = useSelector(selectSelectedFormulaRecord);
+  const columns = TableColumns(selectedFormulaRecord);
+  const debouncedSearchTerm = useDebounce(globalFilter, 500);
+  const { setQueryParams } = apiActions;
+  const financialStatementFormatId = useSelector(
+    selectFinancialStatementFormatId,
+  );
+  useEffect(() => {
+    setQueryParams({ financialStatementFormatId: financialStatementFormatId });
+    dispatch(setCurrentPopulationRecord(null));
+  }, [financialStatementFormatId]);
+  const refreshData = () => {
+    setQueryParams({ financialStatementFormatId: financialStatementFormatId });
+  };
   const setSelectedRow = (data) => {
     const recordData = data || {
       financial_statement_format_id: financialStatementFormatId, // Default to the value from state
       is_locked: 0, // Default value if no specific data is provided
     };
-    console.log('recordData', recordData);
     dispatch(setCurrentPopulationRecord(recordData));
   };
-
-  const debouncedSearchTerm = useDebounce(globalFilter, 500);
-  const columns = Columns(selectedRow);
-
   return (
     <Card>
       <CardHeader className='d-flex justify-content-between align-items-center'>
-        <h5 className='mb-0'>Bilançodan Alınacak Kodların Tanımlama Ekranı</h5>
+        <h5 className='mb-0'>Bilanço Rasyo Tanımlama</h5>
         <FormatSelect />
       </CardHeader>
       <CardBody>
-        <Row className='g-2 mt-0 mb-2'>
+        <Row className='mb-3'>
           <Col md={6}>
-            {/* <div className='search-box'>
-              <Input
-                type='text'
-                className='form-control search'
-                placeholder='Search in list...'
-              />
-              <i className='ri-search-line search-icon'></i>
-            </div> */}
             <SearchBox value={globalFilter} onChange={setGlobalFilter} />
           </Col>
           <Col className='col-md-auto ms-auto '>
-            <button
+            <Button
               className='btn btn-success me-2'
-              onClick={() => setSelectedRow({})}
+              onClick={() => setSelectedRow(null)}
             >
-              <i className='ri-add-fill align-bottom me-1'></i> Add New Code
-            </button>
-            <button
+              <i className='ri-add-fill align-bottom me-1'></i>
+              Yeni Kayıt Ekle
+            </Button>
+            <Button
               className='btn btn-soft-info nav-link btn-icon fs-14 active filter-button material-shadow-none btn btn-info'
               onClick={refreshData}
             >
               <i className='ri-refresh-line align-bottom me-1'></i>
-            </button>
+            </Button>
           </Col>
         </Row>
         <TableViewBar>
@@ -84,76 +84,6 @@ const TableView = ({ loading, apiData, error, refreshData }) => {
                   setGlobalFilter={setGlobalFilter}
                 />
               </Col>
-              {/* <Col md={6}>
-                <Table className='align-middle table-nowrap table-hover mt-1'>
-                  <colgroup>
-                    {table.getAllLeafColumns().map((column) => (
-                      <col
-                        key={column.id}
-                        style={{ width: column.getSize() || 'auto' }}
-                      />
-                    ))}
-                  </colgroup>
-                  <thead className='bg-light sticky-top'>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <tr key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => (
-                          <th
-                            key={header.id}
-                            onClick={header.column.getToggleSortingHandler()}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                            {header.column.getIsSorted() && (
-                              <span>
-                                {header.column.getIsSorted() === 'desc'
-                                  ? ' 🔽'
-                                  : ' 🔼'}
-                              </span>
-                            )}
-                          </th>
-                        ))}
-                      </tr>
-                    ))}
-                  </thead>
-                  <tbody>
-                    {table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        onClick={() => setSelectedRow(row.original)}
-                        className='cursor-pointer'
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <td key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    {table.getFooterGroups().map((footerGroup) => (
-                      <tr key={footerGroup.id}>
-                        {footerGroup.headers.map((header) => (
-                          <th key={header.id}>
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.footer,
-                                  header.getContext(),
-                                )}
-                          </th>
-                        ))}
-                      </tr>
-                    ))}
-                  </tfoot>
-                </Table>
-              </Col> */}
             </Row>
           )}
         </TableViewBar>
@@ -161,10 +91,15 @@ const TableView = ({ loading, apiData, error, refreshData }) => {
     </Card>
   );
 };
+
 TableView.propTypes = {
-  apiData: PropTypes.array.isRequired,
-  refreshData: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  error: PropTypes.string,
+  apiStates: PropTypes.shape({
+    loading: PropTypes.bool,
+    error: PropTypes.string,
+    apiData: PropTypes.any, // Specify more specific types based on your data
+  }),
+  apiActions: PropTypes.shape({
+    setQueryParams: PropTypes.func,
+  }),
 };
 export default TableView;

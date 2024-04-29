@@ -42,6 +42,7 @@ const AppLayout = () => {
     leftSidebarSizeType,
   } = useSelector(({ layout }) => layout);
   const { user, isAuthenticated } = useAuthUser();
+
   // const { updateNavStyle } = useLayoutActionsContext();
   // const { updateMenuStyle, setSidebarBgImage } = useSidebarActionsContext();
   // const AppLayout = Layouts[navStyle];

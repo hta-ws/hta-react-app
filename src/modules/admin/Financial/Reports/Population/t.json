@@ -1,0 +1,145 @@
+{
+    common: {
+      error: '',
+      loading: false,
+      isAppDrawerOpen: false,
+      updatingContent: false,
+      message: ''
+    },
+    layout: {
+      initialPath: '/',
+      layoutType: 'twocolumn',
+      leftSidebarType: 'dark',
+      layoutModeType: 'light',
+      layoutWidthType: 'lg',
+      layoutPositionType: 'fixed',
+      topbarThemeType: 'light',
+      leftSidebarSizeType: 'lg',
+      leftSidebarViewType: 'default',
+      leftSidebarImageType: 'none',
+      preloader: 'disable',
+      sidebarVisibilityType: 'show',
+      menuItems: [
+        {
+          id: 'Anasayfa',
+          label: 'Anasayfa',
+          icon: 'ri-home-8-line',
+          link: '/son-bilancolar',
+          roles: [
+            'admin',
+            'user'
+          ]
+        },
+        {
+          id: 'hisse',
+          label: 'Hisse Analizi',
+          icon: 'ri-dashboard-line',
+          link: '/dashboard',
+          roles: [
+            'admin',
+            'user'
+          ],
+          subItems: [
+            {
+              id: 'analytics',
+              label: 'Analytics',
+              link: '/dashboard/analytics',
+              roles: [
+                'admin'
+              ]
+            },
+            {
+              id: 'reports',
+              label: 'Reports',
+              link: '/dashboard/reports',
+              roles: [
+                'admin',
+                'user'
+              ]
+            }
+          ]
+        },
+        {
+          id: 'admin',
+          label: 'Yonetim Paneli',
+          icon: 'ri-settings-3-line',
+          link: '/dashboard',
+          roles: [
+            'admin',
+            'user'
+          ],
+          subItems: [
+            {
+              id: 'Bilanco Rasyo Hesaplamalrı',
+              label: 'Rayolar Hesaplaması',
+              link: '/admin/financial-data-management/balance-sheet',
+              roles: [
+                'admin',
+                'user'
+              ],
+              subItems: [
+                {
+                  id: 'kod-definitions',
+                  label: 'Kod Tanımları',
+                  link: '/admin/financial-result-management/report-code-population-definitions',
+                  roles: [
+                    'admin'
+                  ]
+                },
+                {
+                  id: 'bilancodan-alinacak-kodlar',
+                  label: 'Formul tanımları',
+                  link: '/admin/financial-result-management/report-code-formula-definitions',
+                  roles: [
+                    'admin',
+                    'user'
+                  ]
+                },
+                {
+                  id: 'kk',
+                  label: 'Rasyo Formulleri',
+                  link: '/son-bilancolar',
+                  roles: [
+                    'admin',
+                    'user'
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'bilanco',
+              label: 'Bilanco',
+              link: '/son-bilancolar',
+              roles: [
+                'admin',
+                'user'
+              ]
+            }
+          ]
+        },
+        {
+          id: 'settings',
+          label: 'Settings',
+          icon: 'ri-settings-3-line',
+          link: '/son-bilancolar',
+          roles: [
+            'user'
+          ]
+        }
+      ],
+      activeMenus: {}
+    },
+    admin: {
+      financialStatementFormatList: [],
+      financialStatementTypeList: [],
+      financialStatementProcedureList: [],
+      financialStatementSampleStockCodeList: [],
+      financialStatementFormatId: 1,
+      financialStatementTypeId: 2,
+      selectedPopulationRecord: null,
+      selectedSampleStockCode: null,
+      spMetadataList: [],
+      reportCodeList: [],
+      selectedFormulaRecord: null
+    }
+  }

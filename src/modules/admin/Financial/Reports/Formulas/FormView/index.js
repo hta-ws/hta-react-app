@@ -46,7 +46,7 @@ const FormView = ({ updateTableData }) => {
           <span className='text-uppercase'> {title}</span>
           <span className='text-muted fw-normal fs-13 fw-500'>
             {' '}
-            formül tanımları
+            {title != '' ? 'Formül Tanımlama  ' : ' Yeni Formül Tanımlama'}
           </span>{' '}
         </h5>
         <button
@@ -86,7 +86,7 @@ const FormView = ({ updateTableData }) => {
                 Örnek Sonuçlar
               </NavLink>
             </NavItem>
-            <NavItem>
+            {/* <NavItem>
               <NavLink
                 disabled={id === null} // Eğer id null ise bu tab'ı disable yap
                 className={activeTab === '4' ? 'active' : ''}
@@ -94,7 +94,7 @@ const FormView = ({ updateTableData }) => {
               >
                 Tanımlamalar
               </NavLink>
-            </NavItem>
+            </NavItem> */}
           </Nav>
           <TabContent activeTab={activeTab}>
             <TabPane tabId='1'>
@@ -106,7 +106,6 @@ const FormView = ({ updateTableData }) => {
             <TabPane tabId='3'>
               <ResultPan formikValues={selectedRecord} />
             </TabPane>
-            <TabPane tabId='4'>Content of Tab 4</TabPane>
           </TabContent>
         </FormViewBar>
       </CardBody>

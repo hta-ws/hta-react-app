@@ -39,7 +39,7 @@ const FormPan = ({ updateTableData }) => {
     controller: 'financial-statement-management',
     action: 'get-formula',
     method: 'POST',
-    initialData: [],
+    initialData: {},
   });
 
   const { apiData, error, loading } = apiStates;

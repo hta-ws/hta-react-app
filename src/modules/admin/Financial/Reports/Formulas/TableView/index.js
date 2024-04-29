@@ -43,11 +43,11 @@ const TableView = ({ apiStates, apiActions }) => {
   return (
     <Card>
       <CardHeader className='d-flex justify-content-between align-items-center'>
-        <h5 className='mb-0'>Bilanço Rasyo Tanımlama</h5>
+        <h5 className='mb-0'>Formul Tanımlama</h5>
         <FormatSelect />
       </CardHeader>
       <CardBody>
-        <Row>
+        <Row className='mb-3'>
           <Col md={6}>
             <SearchBox value={globalFilter} onChange={setGlobalFilter} />
           </Col>

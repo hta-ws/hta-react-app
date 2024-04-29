@@ -9,25 +9,27 @@ const InputForReportCode = ({
   ...props
 }) => {
   const handleButtonClick = () => {
-    // Formik formundan 's_label' alanının mevcut değerini al
     const sLabelValue = slugify(values.s_label, { delimiter: '_' });
-
-    // 's_report_code' alanına 's_label' değerini atayalım
     setFieldValue(field.name, sLabelValue);
+  };
+
+  // Eğer field.value undefined ise boş string kullanarak kontrol edilmiş bir girdi sağla
+  const controlledFieldProps = {
+    ...field,
+    value: field.value || '',
   };
 
   return (
     <div className='mb-1'>
       <label htmlFor={props.id || field.name}>{label}</label>
       <div className='input-group'>
-        <input className='form-control' {...field} {...props} />
-
+        <input className='form-control' {...controlledFieldProps} {...props} />
         <button
           className='btn btn-outline-secondary'
           type='button'
           onClick={handleButtonClick}
         >
-          <i className=' ri-file-copy-line search-icon align-bottom me-1'></i>
+          <i className='ri-file-copy-line search-icon align-bottom me-1'></i>
           {buttonText}
         </button>
       </div>

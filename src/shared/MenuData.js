@@ -33,7 +33,7 @@ export const MenuData = [
     label: 'Yonetim Paneli',
     icon: 'ri-settings-3-line',
     link: '/dashboard',
-    roles: ['admin', 'user'], // Hem admin hem de user erişebilir
+    roles: ['admin'], // Hem admin hem de user erişebilir
     subItems: [
       {
         id: 'Bilanco Rasyo Hesaplamalrı',

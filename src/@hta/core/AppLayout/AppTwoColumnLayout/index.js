@@ -6,11 +6,18 @@ import { useSelector } from 'react-redux';
 import { getVisibleMenuItems } from 'selectors/menuSelectors'; // Varsayalım bu selector rol bazlı filtrelenmiş menü öğelerini getiriyor
 import logoSm from 'assets/images/logo/logo.png';
 import RecursiveMenu from './RecursiveMenu';
+import { useAuthUser } from '@hta/hooks/AuthHooks';
 // Recursive Menu List Component
 
 const AppTwoColumnLayout = () => {
   const [activeMenu, setActiveMenu] = useState(null); // Seçili ana menü öğesinin state'i
-  const visibleMenuItems = useSelector(getVisibleMenuItems); // Rol bazlı filtrelenmiş menü öğelerini al
+  const { user } = useAuthUser(); // Auth hook'unu çağır
+  const userRole = user ? user.role : 'guest'; // Rolü al
+
+  // useSelector ile selector'ı çağır ve ikinci argüman olarak userRole'ü geçir
+  const visibleMenuItems = useSelector((state) =>
+    getVisibleMenuItems(state, userRole),
+  );
 
   // Menü öğesine tıklandığında çalışacak fonksiyon
   const handleMenuItemClick = (item) => {
@@ -30,32 +37,6 @@ const AppTwoColumnLayout = () => {
       <Container fluid>
         {/* two-column-menu */}
         <div id='two-column-menu'>
-          {/* <SimpleBar className='twocolumn-iconview'>
-            <Link to='#' className='logo'>
-              <img src={logoSm} alt='' height='44' />
-            </Link>
-            {visibleMenuItems.map((item) => (
-              <React.Fragment key={item.id}>
-                {item.icon && (
-                  <li
-                    className={`iconView${activeMenu?.id === item.id ? ' active' : ''}`}
-                  >
-                    <Link
-                      onClick={() => handleMenuItemClick(item)}
-                      to='#'
-                      subitems={item.id}
-                      className='nav-icon'
-                      data-bs-toggle='collapse'
-                    >
-                      <i className={item.icon}></i>
-                    </Link>
-                    <div className='text-white'>{item.label}</div>
-                  </li>
-                )}
-              </React.Fragment>
-            ))}
-          </SimpleBar> */}
-
           <SimpleBar className='twocolumn-iconview'>
             <Link to='#' className='logo'>
               <img src={logoSm} alt='' height='44' />
