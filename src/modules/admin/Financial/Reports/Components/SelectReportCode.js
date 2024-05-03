@@ -21,23 +21,23 @@ const SelectReportCode = ({
     dispatch(getGetReporCodeList());
   }, [dispatch]);
 
-  const customStyles = {
-    control: (base, state) => ({
-      ...base,
-      borderColor: state.isFocused
-        ? '#666'
-        : error && touched
-          ? '#dc3545'
-          : base.borderColor,
-      '&:hover': {
-        borderColor: state.isFocused
-          ? '#888'
-          : error && touched
-            ? '#dc3545'
-            : '#aaa',
-      },
-    }),
-  };
+  // const customStyles = {
+  //   control: (base, state) => ({
+  //     ...base,
+  //     borderColor: state.isFocused
+  //       ? '#666'
+  //       : error && touched
+  //         ? '#dc3545'
+  //         : base.borderColor,
+  //     '&:hover': {
+  //       borderColor: state.isFocused
+  //         ? '#888'
+  //         : error && touched
+  //           ? '#dc3545'
+  //           : '#aaa',
+  //     },
+  //   }),
+  // };
 
   // String değerini Select bileşeni için uygun format array'e çevirme
   const formatValue = (valueString) => {
@@ -75,7 +75,7 @@ const SelectReportCode = ({
         options={reportCodeList}
         classNamePrefix='js-example-disabled-multi mb-0'
         isDisabled={isDisabled}
-        styles={customStyles}
+        // styles={customStyles}
       />
 
       {error && touched && <div className='text-danger'>{error}</div>}

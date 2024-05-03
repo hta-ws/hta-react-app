@@ -18,3 +18,13 @@ $dark-icon-view-active-bg-dark: tint-color($dark-vertical-menu-bg-dark, 15%);
 [data-bs-theme="dark"] {
     --vz-vertical-menu-bg-hover: #{$dark-icon-view-active-bg-dark};
 }
+
+/* Light tema için stil */
+[data-bs-theme="light"] .loading-backdrop {
+    background-color: rgba(255, 255, 255, 0.1); /* Açık tema için açık arka plan */
+}
+
+/* Dark tema için stil */
+[data-bs-theme="dark"] .loading-backdrop {
+    background-color: rgba(0, 0, 0, 0.1); /* Karanlık tema için koyu arka plan */
+}

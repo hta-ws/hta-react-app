@@ -21,6 +21,7 @@ const Formulas = () => {
     method: 'POST',
     initialData: [],
   });
+
   useEffect(() => {
     dispatch(getSpMetadataList());
   }, [dispatch]);

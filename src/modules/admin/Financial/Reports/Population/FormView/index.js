@@ -13,7 +13,7 @@ import {
   TabPane,
 } from 'reactstrap';
 
-import { setSelectedFormulaRecord } from 'toolkit/actions';
+import { setCurrentPopulationRecord } from 'toolkit/actions';
 import { selectSelectedPopulationRecord } from 'toolkit/selectors/adminSelectors';
 import { FormViewBar } from '../../Components/styled';
 import FormPan from './Tabs/FormPan';
@@ -52,7 +52,7 @@ const FormView = ({ updateApiData }) => {
         <button
           type='button'
           className='btn btn-soft-danger btn-icon btn-sm fs-16 close-btn-email material-shadow-none'
-          onClick={() => dispatch(setSelectedFormulaRecord(null))}
+          onClick={() => dispatch(setCurrentPopulationRecord(null))}
         >
           <i className='ri-close-fill align-bottom'></i>
         </button>

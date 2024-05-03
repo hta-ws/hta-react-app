@@ -11,7 +11,10 @@ import FormatSelect from '../../Components/FormatSelect';
 import { TableViewBar } from '../../Components/styled';
 import { TableColumns } from './TableColumns';
 import DataTable from '../../Components/DataTable';
-import { setCurrentPopulationRecord } from 'toolkit/actions';
+import {
+  setCurrentPopulationRecord,
+  getFinancialStatementSampleStockCodeList,
+} from 'toolkit/actions';
 import { selectFinancialStatementFormatId } from 'toolkit/selectors/adminSelectors';
 import { selectSelectedFormulaRecord } from 'toolkit/selectors/adminSelectors';
 const TableView = ({ apiStates, apiActions }) => {
@@ -28,6 +31,7 @@ const TableView = ({ apiStates, apiActions }) => {
   useEffect(() => {
     setQueryParams({ financialStatementFormatId: financialStatementFormatId });
     dispatch(setCurrentPopulationRecord(null));
+    dispatch(getFinancialStatementSampleStockCodeList(null));
   }, [financialStatementFormatId]);
   const refreshData = () => {
     setQueryParams({ financialStatementFormatId: financialStatementFormatId });
@@ -67,7 +71,7 @@ const TableView = ({ apiStates, apiActions }) => {
           </Col>
         </Row>
         <TableViewBar>
-          {loading || error ? (
+          {error ? (
             <AppApiStatusHandler
               loading={loading}
               error={error}
@@ -82,6 +86,7 @@ const TableView = ({ apiStates, apiActions }) => {
                   onSelectRow={setSelectedRow}
                   debouncedSearchTerm={debouncedSearchTerm}
                   setGlobalFilter={setGlobalFilter}
+                  loading={loading}
                 />
               </Col>
             </Row>

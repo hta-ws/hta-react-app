@@ -63,6 +63,21 @@ export const MenuData = [
         ],
       },
       {
+        id: 'task',
+
+        label: 'İş Günlügü ',
+        link: '#',
+        roles: ['admin', 'user'], // Sadece admin erişebilir
+        subItems: [
+          {
+            id: 'task-edit',
+            label: 'İş Günlügü Listesi',
+            link: '/admin/task/list',
+            roles: ['admin'], // Sadece admin erişebilir
+          },
+        ],
+      },
+      {
         id: 'bilanco',
         label: 'Bilanco',
         link: '/son-bilancolar',

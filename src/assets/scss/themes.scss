@@ -352,3 +352,13 @@ tr[role="button"].cursor-pointer,
 tr[role="button"].cursor-pointer td {
   cursor: pointer;
 }
+
+.btn:disabled,
+.btn.disabled,
+fieldset:disabled .btn {
+  color: inherit;
+  pointer-events: none;
+  background-color: transparent;
+  border-color: transparent;
+  opacity: var(--vz-btn-disabled-opacity);
+}

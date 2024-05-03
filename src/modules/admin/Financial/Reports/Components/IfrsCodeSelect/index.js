@@ -78,7 +78,7 @@ function IfrsCodeSelect({
   return (
     <Modal isOpen={isOpen} toggle={toggle} scrollable={true} size={'xl'}>
       <ModalHeader toggle={toggle} className='py-2'>
-        Bilanço Kalemi seçimill
+        Bilanço Kalemi seçimi...
       </ModalHeader>
       <ModalBody className='py-1'>
         <Card>

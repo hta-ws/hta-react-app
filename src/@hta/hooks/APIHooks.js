@@ -204,6 +204,9 @@ export const useGetDataApi = ({
     },
     [apiData],
   );
+  const resetData = () => {
+    setData(initialData);
+  };
   return [
     { loading, apiData, error, initialUrl },
     {
@@ -214,6 +217,7 @@ export const useGetDataApi = ({
       setQueryParams,
       submitData,
       updateApiData,
+      resetData,
     },
   ];
 };

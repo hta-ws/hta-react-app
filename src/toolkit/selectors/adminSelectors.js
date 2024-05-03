@@ -35,3 +35,12 @@ export const selectFinancialStatementFormatList = createSelector(
   [selectAdmin],
   (admin) => admin.financialStatementFormatList || null,
 );
+export const selectSchedulerMethodList = createSelector(
+  [selectAdmin],
+  (admin) => admin.schedulerMethodList || null,
+);
+
+export const selectSchedulerStatusList = createSelector(
+  [selectAdmin],
+  (admin) => admin.schedulerStatusList || null,
+);

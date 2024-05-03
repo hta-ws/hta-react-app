@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardBody, CardHeader, Row, Col } from 'reactstrap';
+import { Card, CardBody, Row, Col } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 import { setCurrentPopulationRecord } from 'toolkit/actions'; // Make sure to import this action
@@ -32,20 +32,6 @@ const FromPan = ({ updateApiData }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
 
-  // const actionDelete = 'get-report-code-definition';
-  // const actionPost = 'get-report-code-definition'; // POST için action
-  // const actionPut = 'get-report-code-definition'; // PUT için action
-
-  // const [{ loading, error, apiData }, { setQueryParams, submitData }] =
-  //   useGetDataApi(
-  //     controller,
-  //     actionGet,
-  //     [], // Initial data is empty
-  //     { id }, // Parameters for the GET request
-  //     true, // Fetch data on initial call
-  //     null, // No callback function
-  //     'GET', // Method for fetching data
-  //   );
   const [apiStates, apiActions] = useGetDataApi({
     controller: 'financial-statement-management',
     action: 'get-population-code',
@@ -80,8 +66,6 @@ const FromPan = ({ updateApiData }) => {
       });
     }
   }, [id, setQueryParams, financialStatementFormatId]);
-
-  const title = formData?.label || 'New Record';
 
   // Function to clear the selected row
   const clearSelectedRow = () => {
@@ -139,8 +123,8 @@ const FromPan = ({ updateApiData }) => {
             enableReinitialize
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
-              const method = formData.id ? 'POST' : 'PUT'; // Seçili satır varsa PUT, yoksa POST
-              const action = formData.id
+              const method = values.id ? 'POST' : 'PUT'; // Seçili satır varsa PUT, yoksa POST
+              const action = values.id
                 ? 'update-population-code'
                 : 'create-population-code'; // Action'ı dinamik olarak ayarla
 

@@ -50,3 +50,6 @@ export const GET_SP_METADATA_LIST = 'get_sp_meta_data_list';
 export const GET_REPORT_CODE_LIST = 'get_report_code_list';
 
 export const SET_SELECTED_FORMULA_RECORD = 'set_selected_formula_record';
+
+export const GET_SCHEDULER_METHOD_LIST = 'get_scheduler_method_list';
+export const GET_SCHEDULER_STATUS_LIST = 'get_scheduler_status_list';

@@ -14,6 +14,7 @@ import DataTable from '../../Components/DataTable';
 import { setSelectedFormulaRecord } from 'toolkit/actions';
 import { selectFinancialStatementFormatId } from 'toolkit/selectors/adminSelectors';
 import { selectSelectedFormulaRecord } from 'toolkit/selectors/adminSelectors';
+
 const TableView = ({ apiStates, apiActions }) => {
   const dispatch = useDispatch();
   const { loading, error, apiData = [] } = apiStates;
@@ -68,7 +69,7 @@ const TableView = ({ apiStates, apiActions }) => {
           </Col>
         </Row>
         <TableViewBar>
-          {loading || error ? (
+          {error ? (
             <AppApiStatusHandler
               loading={loading}
               error={error}
@@ -83,6 +84,7 @@ const TableView = ({ apiStates, apiActions }) => {
                   onSelectRow={setSelectedRow}
                   debouncedSearchTerm={debouncedSearchTerm}
                   setGlobalFilter={setGlobalFilter}
+                  loading={loading}
                 />
               </Col>
             </Row>

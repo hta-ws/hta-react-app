@@ -18,6 +18,8 @@ import {
   GET_SP_METADATA_LIST,
   GET_REPORT_CODE_LIST,
   SET_SELECTED_FORMULA_RECORD,
+  GET_SCHEDULER_METHOD_LIST,
+  GET_SCHEDULER_STATUS_LIST,
 } from 'shared/ActionTypes';
 
 import jwtAxios from '@hta/services/auth/jwt-auth';
@@ -230,4 +232,55 @@ export const setSelectedFormulaRecord = (item) => {
       type: SET_SELECTED_FORMULA_RECORD,
       payload: item,
     });
+};
+// --------------------------------------------------------------------------------
+
+export const getSchedulerMethodList = (params) => {
+  return (dispatch) => {
+    dispatch({ type: FETCH_START });
+    jwtAxios
+      .post(`/scheduler/get-method-list`, params)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch({ type: FETCH_SUCCESS });
+          dispatch({
+            type: GET_SCHEDULER_METHOD_LIST,
+            payload: data.data.items,
+          });
+        } else {
+          dispatch({
+            type: FETCH_ERROR,
+            payload: 'Something Went Wrong',
+          });
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: FETCH_ERROR, payload: error?.message || 'Hata' });
+      });
+  };
+};
+
+export const getSchedulerStatusList = (params) => {
+  return (dispatch) => {
+    dispatch({ type: FETCH_START });
+    jwtAxios
+      .post(`/scheduler/get-status-list`, params)
+      .then((data) => {
+        if (data.status === 200) {
+          dispatch({ type: FETCH_SUCCESS });
+          dispatch({
+            type: GET_SCHEDULER_STATUS_LIST,
+            payload: data.data.items,
+          });
+        } else {
+          dispatch({
+            type: FETCH_ERROR,
+            payload: 'Something Went Wrong',
+          });
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: FETCH_ERROR, payload: error?.message || 'Hata' });
+      });
+  };
 };
