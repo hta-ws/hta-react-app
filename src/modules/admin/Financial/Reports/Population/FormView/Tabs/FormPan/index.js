@@ -18,13 +18,16 @@ import IfrsCodeSelect from 'modules/admin/Financial/Reports/Components/IfrsCodeS
 import { StyledSimpleBarForm } from 'modules/admin/Financial/Reports/Components/styled';
 import InformationTabs from './InformationTabs/InformationTabs';
 
-import { selectSelectedPopulationRecord } from 'toolkit/selectors/adminSelectors';
+import {
+  selectSelectedPopulationRecord,
+  selectFinancialStatementFormatId,
+} from 'toolkit/selectors/adminSelectors';
 const FromPan = ({ updateApiData }) => {
   const dispatch = useDispatch();
-  const { financialStatementFormatId = null } = useSelector(
-    (state) => state.admin || {},
-  );
 
+  const financialStatementFormatId = useSelector(
+    selectFinancialStatementFormatId,
+  );
   const selectedRecord = useSelector(selectSelectedPopulationRecord);
 
   // Extract ID from the selectedRow, if it exists
@@ -92,11 +95,13 @@ const FromPan = ({ updateApiData }) => {
       ifrs_code: data?.ifrs_code || '',
       bilanco_tipi: data?.bilanco_tipi || '',
       financial_statement_type_id: data?.financial_statement_type_id || '',
+      financial_statement_format_id: data?.financialStatementFormatId || '',
     });
 
     // Close the modal after selection
     setModalOpen(false);
   };
+
   return (
     <Card>
       {/* <CardHeader className='d-flex justify-content-between align-items-center'>
@@ -118,7 +123,7 @@ const FromPan = ({ updateApiData }) => {
               ifrs_code: formData?.ifrs_code || '',
               id: formData?.id || 0,
               financial_statement_type_id: formData.financial_statement_type_id,
-              // financial_statement_format_code: financialStatementFormatCode,
+              financial_statement_format_id: financialStatementFormatId,
             }}
             enableReinitialize
             validationSchema={validationSchema}

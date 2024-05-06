@@ -17,6 +17,8 @@ import { setCurrentPopulationRecord } from 'toolkit/actions';
 import { selectSelectedPopulationRecord } from 'toolkit/selectors/adminSelectors';
 import { FormViewBar } from '../../Components/styled';
 import FormPan from './Tabs/FormPan';
+import RunLogPan from './Tabs/RunLogPan';
+import ResultPan from './Tabs/ResultPan';
 // import RunLogPan from './Tabs/RunLogPan';
 // import ResultPan from './Tabs/ResultPan';
 const FormView = ({ updateApiData }) => {
@@ -101,10 +103,10 @@ const FormView = ({ updateApiData }) => {
               <FormPan updateApiData={updateApiData} />
             </TabPane>
             <TabPane tabId='2'>
-              {/* <RunLogPan formikValues={selectedRecord} /> */}
+              <RunLogPan formikValues={selectedRecord} />
             </TabPane>
             <TabPane tabId='3'>
-              {/* <ResultPan formikValues={selectedRecord} /> */}
+              <ResultPan formikValues={selectedRecord} />
             </TabPane>
           </TabContent>
         </FormViewBar>

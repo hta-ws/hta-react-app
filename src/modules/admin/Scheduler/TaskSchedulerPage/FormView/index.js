@@ -75,6 +75,7 @@ const FormView = ({ onRefreshTable }) => {
       comment: (schedulerTask && schedulerTask.comment) || '',
       status_id: (schedulerTask && schedulerTask.status_id) || 1,
       cron_time: (schedulerTask && schedulerTask.cron_time) || '*/5 * * * *',
+      id: (schedulerTask && schedulerTask.id) || null,
       //   date: (schedulerTask && schedulerTask.date) || '',
       //   tags: (schedulerTask && schedulerTask.tags) || '',
     },
@@ -95,7 +96,11 @@ const FormView = ({ onRefreshTable }) => {
             autoClose: 3000, // 3 saniye sonra otomatik kapanır
           });
           if (!values.id) navigate('/admin/task/edit/' + response?.items?.id);
-          onRefreshTable({});
+          if (action == 'create-task') {
+            onRefreshTable(true);
+          } else {
+            onRefreshTable();
+          }
         } else {
           // İşlem başarısızsa, hata bildirimi yap
           toast.error(response?.message || 'Görev başlatılamadı', {

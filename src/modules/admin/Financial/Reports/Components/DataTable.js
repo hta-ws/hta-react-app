@@ -51,11 +51,11 @@ const DataTable = ({
         <div
           className='loading-backdrop'
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
+            position: 'fixed',
+            top: 20,
+            left: 20,
+            right: 20,
+            bottom: 20,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

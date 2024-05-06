@@ -4,26 +4,44 @@ import PropTypes from 'prop-types';
 
 const AppAlert = ({ strongMessage, message, color }) => {
   const [visible, setVisible] = useState(true);
-
   const onDismiss = () => setVisible(false);
+
+  // Function to render detailed error messages if message is an object
+  const renderErrors = () => {
+    if (typeof message === 'object' && message !== null) {
+      return Object.entries(message).map(([field, messages], index) => (
+        <div key={index}>
+          <strong>
+            {field.charAt(0).toUpperCase() + field.slice(1).replace(/_/g, ' ')}:
+          </strong>
+          {messages.map((error, i) => (
+            <div key={i}>{error}</div>
+          ))}
+        </div>
+      ));
+    }
+    // Default rendering for simple message
+    return message;
+  };
 
   return (
     <Alert color={color} isOpen={visible} toggle={onDismiss}>
-      {/* Only display the <strong> element if strongMessage is provided */}
       {color === 'danger' && (
         <i className='ri-alert-line me-3 align-middle fs-16'></i>
       )}
       {strongMessage && <strong>{strongMessage}</strong>}
-      {/* Conditionally add a dash only if strongMessage exists */}
       {strongMessage && ' - '}
-      {message}
+      {renderErrors()}
     </Alert>
   );
 };
 
 // Prop validation
 AppAlert.propTypes = {
-  message: PropTypes.string.isRequired, // Ensures 'message' is a string and required
+  message: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string)),
+  ]).isRequired, // Ensures 'message' can be either a string or a structured error object
   color: PropTypes.oneOf([
     'primary',
     'secondary',

@@ -117,7 +117,10 @@ export const useGetDataApi = ({
         if (jwtAxios.isCancel(error)) {
           console.log('Request canceled', error.message);
         } else {
-          const errorMessage = error.response?.data?.message || error.message;
+          const errorMessage =
+            error.response?.data?.error ||
+            error.response?.data?.message ||
+            error.message;
           setError(errorMessage);
           if (callback) {
             callback(error.response?.data); // Execute callback with the full response data

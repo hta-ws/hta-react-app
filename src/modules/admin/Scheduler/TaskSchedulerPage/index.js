@@ -59,10 +59,12 @@ const TaskSchedulerPage = () => {
     'statusName',
     { value: '', label: 'Hepsi' },
   );
-  const handleRefresh = () => {
+  const handleRefresh = (isCreated) => {
     setQueryParams({});
-    setSourceFilter(null);
-    setStatusFilter(null);
+    if (isCreated) {
+      setSourceFilter(null);
+      setStatusFilter(null);
+    }
   };
   return (
     <>
@@ -135,7 +137,7 @@ const TaskSchedulerPage = () => {
         </Col>
         {viewmode == 'edit' && (
           <div className='col-xl-5 col-md-12'>
-            <FormView onRefreshTable={setQueryParams} />
+            <FormView onRefreshTable={handleRefresh} />
           </div>
         )}
       </Row>

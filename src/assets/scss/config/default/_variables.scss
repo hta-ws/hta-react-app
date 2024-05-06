@@ -768,18 +768,18 @@ $table-accent-bg: transparent;
 $table-th-font-weight: $font-weight-semibold;
 
 $table-striped-color: $table-color;
-$table-striped-bg-factor: 0.02;
+$table-striped-bg-factor: 0.04;
 $table-striped-bg: rgba(var(--#{$prefix}body-color-rgb), $table-striped-bg-factor);
 
 $table-active-color: $table-color;
-$table-active-bg-factor: 0.04;
+$table-active-bg-factor: 0.08;
 $table-active-bg: rgba(var(--#{$prefix}body-color-rgb), $table-active-bg-factor);
 
 $table-hover-color: $table-color;
-$table-hover-bg-factor: 0.04;
+$table-hover-bg-factor: 0.08;
 $table-hover-bg: rgba(var(--#{$prefix}body-color-rgb), $table-hover-bg-factor);
 
-$table-border-factor: 0.1;
+$table-border-factor: 0.4;
 $table-border-width: var(--#{$prefix}border-width);
 $table-border-color: var(--#{$prefix}border-color);
 

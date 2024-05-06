@@ -28,10 +28,7 @@ const FormPan = ({ updateTableData }) => {
     selectFinancialStatementFormatId,
   );
 
-  const [formData, setFormData] = useState({
-    sp_id: 1,
-    financial_statement_format_id: financialStatementFormatId,
-  });
+  const [formData, setFormData] = useState();
   const [validationSchema, setValidationSchema] = useState();
   const [spId, setSpId] = useState();
 
@@ -39,7 +36,10 @@ const FormPan = ({ updateTableData }) => {
     controller: 'financial-statement-management',
     action: 'get-formula',
     method: 'POST',
-    initialData: {},
+    initialData: {
+      financial_statement_format_id: financialStatementFormatId,
+      p_multiplier: 100,
+    },
   });
 
   const { apiData, error, loading } = apiStates;
@@ -49,17 +49,23 @@ const FormPan = ({ updateTableData }) => {
     if (selectedRecord?.id) {
       setQueryParams({ id: selectedRecord.id });
     } else {
-      console.log('values', formik.values);
       const initialValues = {
         ...getInitialValues(),
-        sp_id: 1, // 'sp_id' alanını ekleyip değerini 1 olarak ayarla
+        sp_id: 1,
+        financial_statement_format_id: financialStatementFormatId,
+
+        // 'sp_id' alanını ekleyip değerini 1 olarak ayarla
       }; // Fonksiyonu doğru parametre ile çağır
 
       setFormData(initialValues);
-
       setSpId(1);
     }
-  }, [selectedRecord, setQueryParams, spMetadataList]);
+  }, [
+    selectedRecord,
+    setQueryParams,
+    spMetadataList,
+    financialStatementFormatId,
+  ]);
   useEffect(() => {
     setFormData(apiData);
     setSpId(apiData?.sp_id);
@@ -86,7 +92,6 @@ const FormPan = ({ updateTableData }) => {
   };
   const handleDeleteRecord = () => {
     submitData(formData, 'DELETE', 'delete-formula', (response) => {
-      console.log(response);
       if (response?.code == 0) {
         updateTableData(formData, 'remove');
         dispatch(setSelectedFormulaRecord(null));
@@ -94,6 +99,7 @@ const FormPan = ({ updateTableData }) => {
     });
     setDeleteModal(false);
   };
+
   const formik = useFormik({
     initialValues: formData,
     validationSchema: validationSchema,
@@ -101,6 +107,7 @@ const FormPan = ({ updateTableData }) => {
       // Correctly assign HTTP method based on the presence of formData.id
       const method = values.id ? 'POST' : 'PUT'; // Use PUT for update, POST for create
       const action = values.id ? 'update-formula' : 'create-formula'; // Dynamically set the action based on formData.id
+      values.financial_statement_format_id = financialStatementFormatId;
       submitData(values, method, action, (responseData) => {
         if (responseData?.code == 0) {
           updateTableData(responseData.items);
@@ -116,14 +123,18 @@ const FormPan = ({ updateTableData }) => {
   });
 
   const getInitialValues = () => {
-    // Dinamik olarak alanları null değerleri ile doldurur
-    const initialValues = spMetadataList.reduce(
-      (values, meta) => ({
+    const initialValues = spMetadataList.reduce((values, meta) => {
+      // Check if the parameter_name is 'p_multiplier' and set its value to 100, otherwise set it as ''
+      return {
         ...values,
-        [meta.parameter_name]: '', // Tüm değerleri null olarak başlat
-      }),
-      {},
-    );
+        [meta.parameter_name]:
+          meta.parameter_name === 'p_multiplier' ? 100 : '',
+      };
+    }, {});
+
+    // You mentioned adding financial_statement_format_id,
+    // Assuming you want to add this with a default value (e.g., an empty string or a specific value)
+    // initialValues['financial_statement_format_id'] = ''; // Set default value accordingly
 
     return initialValues;
   };
