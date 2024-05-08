@@ -122,13 +122,28 @@ export const useSelectOptionsFromTableData = (
 };
 
 export const fuzzyFilter = (row, columnId, value, addMeta) => {
-  const searchValue = row.getValue(columnId).toLocaleLowerCase('tr-TR');
-  const filterValue = value.toLocaleLowerCase('tr-TR');
-  console.log('serchValue', searchValue, 'filterValue', filterValue);
+  // Retrieve the value from the row and ensure it's neither null nor undefined
+  let searchValue = row.getValue(columnId);
+  if (searchValue == null) {
+    // This checks for both null and undefined
+    searchValue = ''; // Assign an empty string if the value is null or undefined
+  } else {
+    searchValue =
+      typeof searchValue === 'number'
+        ? searchValue.toString()
+        : searchValue.toLocaleLowerCase('tr-TR');
+  }
+
+  // Ensure the filter value is also neither null nor undefined
+  const filterValue = value == null ? '' : value.toLocaleLowerCase('tr-TR');
+  console.log('searchValue', searchValue, 'filterValue', filterValue);
+
+  // Assuming rankItem is a function that checks if the filterValue is included in searchValue and provides a ranking or match result
   const itemRank = rankItem(searchValue, filterValue);
   addMeta({
     itemRank,
   });
+
   return itemRank.passed;
 };
 

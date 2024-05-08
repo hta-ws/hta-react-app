@@ -35,6 +35,9 @@ const TaskSchedulerPage = React.lazy(
 const TaskSchedulerLogPage = React.lazy(
   () => import('./Scheduler/TaskSchedulerLogPage'),
 );
+const IsYatirimMappingPage = React.lazy(
+  () => import('./Financial/IsYatirimMapping'),
+);
 // const FinancialRatiosManagementPage = React.lazy(
 //   () =>
 //     import('./FinancialCalculationManagement/FinancialRatiosManagementPage'),
@@ -64,6 +67,16 @@ export const adminPagesConfigs = [
     permittedRole: RoutePermittedRole.admin,
     path: '/admin/task/:viewmode',
     element: <TaskSchedulerPage />,
+  },
+  {
+    permittedRole: RoutePermittedRole.admin,
+    path: '/admin/isyatirim-mapping',
+    element: <IsYatirimMappingPage />,
+  },
+  {
+    permittedRole: RoutePermittedRole.admin,
+    path: '/admin/isyatirim-mapping/:viewmode',
+    element: <IsYatirimMappingPage />,
   },
   //   {
   //     permittedRole: RoutePermittedRole.admin,

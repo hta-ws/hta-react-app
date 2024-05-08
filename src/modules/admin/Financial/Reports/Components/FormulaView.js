@@ -120,6 +120,38 @@ const FormulaView = ({ formikValues }) => {
 
       // Büyüme formülünü oluştur
       return `\\text{${s_label}} = \\left(\\frac{${formattedReportCodeCurrentYear} - ${formattedReportCodePreviousYear}}{${formattedReportCodePreviousYear}} \\right) \\times 100`;
+    } else if (sp_id === 6) {
+      // Alanların boş olup olmadığını kontrol et
+      if (
+        !p_numerator_report_code ||
+        !p_denominator_report_code ||
+        !p_multiplier
+      ) {
+        return ''; // Eğer gerekli alanlardan biri boşsa, formülü gösterme
+      }
+
+      // Formülü oluştur
+      const formattedNumerator = formatCodes(p_numerator_report_code);
+      const formattedDenominator = formatCodes(p_denominator_report_code);
+      const multiplier = p_multiplier || '1'; // Multiplier yoksa varsayılan olarak '1' kullan
+
+      return `\\text{${s_label}} = \\frac{${formattedNumerator}}{${formattedDenominator}} \\times ${multiplier}`;
+    } else if (sp_id === 7) {
+      // Alanların boş olup olmadığını kontrol et
+      if (
+        !p_numerator_report_code ||
+        !p_denominator_report_code ||
+        !p_multiplier
+      ) {
+        return ''; // Eğer gerekli alanlardan biri boşsa, formülü gösterme
+      }
+
+      // Formülü oluştur
+      const formattedNumerator = formatCodes(p_numerator_report_code);
+      const formattedDenominator = formatCodes(p_denominator_report_code);
+      const multiplier = p_multiplier || '1'; // Multiplier yoksa varsayılan olarak '1' kullan
+
+      return `\\text{${s_label}} = \\frac{${formattedNumerator}}{${formattedDenominator}} \\times ${multiplier}`;
     } else return ''; // SP ID '1' veya '3' değilse boş string döndür
   };
 

@@ -22,10 +22,10 @@ const AppApiStatusHandler = ({ loading, error, onRetry }) => {
   if (error) {
     return (
       <Alert color='danger'>
-        <h4 className='alert-heading'>Error!</h4>
+        <h4 className='alert-heading'>Hata alindi...!</h4>
         <p>{error}</p>
         <Button color='primary' onClick={onRetry}>
-          Refresh
+          Yeniden dene
         </Button>
       </Alert>
     );

@@ -17,6 +17,7 @@ const DataTable = ({
   onSelectRow,
   toggle,
   loading, // Yeni eklenen prop
+  selectedRecord,
 }) => {
   const [sorting, setSorting] = useState([]);
 
@@ -34,7 +35,13 @@ const DataTable = ({
     enableSorting: true,
     onGlobalFilterChange: setGlobalFilter,
   });
-  const trClass = typeof onSelectRow === 'function' ? 'cursor-pointer' : '';
+  const trClass = (row) => {
+    let classes = typeof onSelectRow === 'function' ? 'cursor-pointer' : '';
+    if (selectedRecord && row?.id == selectedRecord?.id) {
+      classes += ' table-active'; // 'active' sınıfını ekleyin
+    }
+    return classes;
+  };
 
   const handleClickRow = (row) => {
     if (typeof onSelectRow === 'function') {
@@ -44,7 +51,7 @@ const DataTable = ({
       toggle();
     }
   };
-
+  console.log('selectedRecord', selectedRecord);
   return (
     <div style={{ position: 'relative' }}>
       {loading && (
@@ -98,7 +105,7 @@ const DataTable = ({
             table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className={trClass}
+                className={trClass(row.original)}
                 onClick={() => handleClickRow(row.original)}
               >
                 {row.getVisibleCells().map((cell) => (
@@ -133,6 +140,7 @@ DataTable.propTypes = {
   onSelectRow: PropTypes.func,
   toggle: PropTypes.func,
   loading: PropTypes.bool, // Eklenen yeni prop
+  selectedRecord: PropTypes.object, // Yeni prop
 };
 
 export default DataTable;

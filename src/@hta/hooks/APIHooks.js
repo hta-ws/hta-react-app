@@ -160,6 +160,7 @@ export const useGetDataApi = ({
               callbackFun && callbackFun(response.data.items);
             } else {
               setLoading(false);
+
               setError(
                 response.data.error
                   ? response.data.error
@@ -174,9 +175,10 @@ export const useGetDataApi = ({
               console.log('Request canceled', error.message);
             } else {
               const errorMessage =
-                error.response?.data?.message || error.message;
+                error.response?.data?.message || error.response?.data?.error;
               setError(errorMessage);
               setLoading(false);
+              setData(initialData);
               callbackFun && callbackFun(error);
             }
           });

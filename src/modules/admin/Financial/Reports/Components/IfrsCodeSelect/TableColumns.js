@@ -18,6 +18,13 @@ export function getTableColumns() {
       enableSorting: true,
       filterFn: 'fuzzyFilter', // Bu bir fonksiyon olmalıdır, yani fonksiyonu import ettiğinizden emin olun.
     }),
+    columnHelper.accessor('ifrs_code', {
+      cell: (info) => info.row.original.ifrs_code,
+      header: () => <span>ifrs_code</span>,
+      enableSorting: true,
+      filterFn: 'fuzzyFilter', // Bu bir fonksiyon olmalıdır, yani fonksiyonu import ettiğinizden emin olun.
+    }),
+
     columnHelper.accessor('value1', {
       cell: (info) => {
         return typeof info.getValue() === 'number' && info.getValue() !== 0

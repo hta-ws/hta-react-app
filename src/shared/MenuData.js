@@ -54,12 +54,12 @@ export const MenuData = [
             link: '/admin/financial-result-management/report-code-formula-definitions',
             roles: ['admin', 'user'], // Sadece admin erişebilir
           },
-          {
-            id: 'kk',
-            label: 'Rasyo Formulleri',
-            link: '/son-bilancolar',
-            roles: ['admin', 'user'], // Hem admin hem de user erişebilir
-          },
+          // {
+          //   id: 'kk',
+          //   label: 'Rasyo Formulleri',
+          //   link: '/son-bilancolar',
+          //   roles: ['admin', 'user'], // Hem admin hem de user erişebilir
+          // },
         ],
       },
       {
@@ -78,9 +78,9 @@ export const MenuData = [
         ],
       },
       {
-        id: 'bilanco',
-        label: 'Bilanco',
-        link: '/son-bilancolar',
+        id: 'isyatirim-mapping',
+        label: 'İsyatirim Eşleme',
+        link: '/admin/isyatirim-mapping',
         roles: ['admin', 'user'], // Hem admin hem de user erişebilir
       },
     ],

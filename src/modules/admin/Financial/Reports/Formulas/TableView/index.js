@@ -85,6 +85,7 @@ const TableView = ({ apiStates, apiActions }) => {
                   debouncedSearchTerm={debouncedSearchTerm}
                   setGlobalFilter={setGlobalFilter}
                   loading={loading}
+                  selectedRecord={selectedFormulaRecord}
                 />
               </Col>
             </Row>

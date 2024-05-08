@@ -9,6 +9,7 @@ const AppPromptModal = ({
   title,
   subject,
 }) => {
+  const isHTML = typeof subject === 'object' && subject.__html;
   return (
     <Modal fade={true} isOpen={show} toggle={onCloseClick} centered={true}>
       <ModalBody className='py-3 px-5'>
@@ -21,7 +22,14 @@ const AppPromptModal = ({
           ></lord-icon>
           <div className='mt-4 pt-2 fs-15 mx-4 mx-sm-5'>
             <h4>{title}</h4>
-            <p className='text-muted mx-4 mb-0'>{subject}</p>
+            {isHTML ? (
+              <p
+                className='text-muted mx-4 mb-0'
+                dangerouslySetInnerHTML={subject}
+              />
+            ) : (
+              <p className='text-muted mx-4 mb-0'>{subject}</p>
+            )}
           </div>
         </div>
         <div className='d-flex gap-2 justify-content-center mt-4 mb-2'>

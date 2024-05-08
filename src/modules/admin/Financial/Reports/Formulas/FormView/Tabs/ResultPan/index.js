@@ -80,7 +80,8 @@ const ResultPan = ({ formikValues }) => {
                   <th className='text-center'>Period</th>
                   <th className='text-end'>Çeyreklik</th>
                   <th className='text-end'>Dönemsel</th>
-                  <th className='text-end'>Yıllıklandırılmış</th>
+                  <th className='text-end'>EM Çeyreklik</th>
+                  <th className='text-end'>EM Dönemsel</th>
                   <th>Hesaplama Zamanı</th>
                 </tr>
               </thead>
@@ -109,7 +110,15 @@ const ResultPan = ({ formikValues }) => {
                       </td>
                       <td className='text-end'>
                         <AppFormatter
-                          value={item.a_y}
+                          value={item.a_c}
+                          format={{ type: 'number', decimal: 2 }}
+                          Tag='div'
+                          className='d-block w-100'
+                        />
+                      </td>
+                      <td className='text-end'>
+                        <AppFormatter
+                          value={item.a_d}
                           format={{ type: 'number', decimal: 2 }}
                           Tag='div'
                           className='d-block w-100'
