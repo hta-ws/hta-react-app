@@ -7,7 +7,8 @@ import { errorPagesConfigs } from './ErrorPagesRoutes';
 import { accountPagesConfigs } from './AccountRoutes';
 import { samplePagesConfigs } from 'modules/sample';
 import { adminPagesConfigs } from 'modules/admin';
-// import { hissePagesConfig } from 'modules/hisse';
+import { hissePagesConfigs } from 'modules/hisse';
+import { publicPagesConfigs } from 'modules/public';
 
 export const authorizedStructure = (loginUrl) => {
   return {
@@ -17,7 +18,8 @@ export const authorizedStructure = (loginUrl) => {
       ...samplePagesConfigs,
       ...accountPagesConfigs,
       ...adminPagesConfigs,
-      // ...hissePagesConfig,
+      ...publicPagesConfigs,
+      ...hissePagesConfigs,
     ],
   };
 };

@@ -4,7 +4,7 @@ export const MenuData = [
     id: 'Anasayfa',
     label: 'Anasayfa',
     icon: 'ri-home-8-line',
-    link: '/son-bilancolar',
+    link: '/anasayfa',
     roles: ['admin', 'user'], // Sadece admin erişebilir
   },
   {
@@ -16,9 +16,9 @@ export const MenuData = [
     subItems: [
       {
         id: 'analytics',
-        label: 'Analytics',
-        link: '/dashboard/analytics',
-        roles: ['admin'], // Sadece admin erişebilir
+        label: 'Özet',
+        link: '/hisse/ozet',
+        roles: ['admin', 'user'], // Sadece admin erişebilir
       },
       {
         id: 'reports',

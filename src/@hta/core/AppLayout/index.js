@@ -112,7 +112,7 @@ const AppLayout = () => {
       ) : (
         /* <AppLayout routes={routes} routesConfig={routesConfig} /> */
 
-        <AppContentView className='auth-page-wrapper pt-5' routes={routes} />
+        <AppContentView routes={routes} />
       )}
     </>
   );
