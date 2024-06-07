@@ -1,4 +1,5 @@
 import React from 'react';
+import AppKanbanBoard from '@hta/components/AppKanbanBoard';
 
 const Home = () => {
   document.title = ' Landing | Velzon - React Admin & Dashboard Template';
@@ -6,7 +7,7 @@ const Home = () => {
   return (
     <React.Fragment>
       <div className='layout-wrapper landing'>
-        <div>anasayfa</div>
+        <AppKanbanBoard />
       </div>
     </React.Fragment>
   );

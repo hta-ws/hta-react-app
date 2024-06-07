@@ -1,0 +1,49 @@
+.kanban-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 250px;
+    min-height: 100px;
+    /* Kart genişliğini sabitle */
+}
+
+.kanban-card-content {
+    position: relative;
+}
+
+.kanban-card-delete {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    display: none;
+}
+
+.kanban-card:hover .kanban-card-delete {
+    display: block;
+}
+
+.kanban-card-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.kanban-card-description {
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: gray;
+}
+
+.kanban-card-details {
+    font-size: 14px;
+}
+
+.add-card-button {
+    margin-top: 10px;
+    cursor: pointer;
+    color: #007bff;
+}

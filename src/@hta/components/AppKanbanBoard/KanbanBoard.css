@@ -1,0 +1,51 @@
+.kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.kanban-title {
+  margin: 0;
+}
+
+.kanban-lane {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.kanban-lane-title {
+  font-weight: bold;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  padding: 10px;
+}
+
+.kanban-cards-container {
+  overflow-x: auto;
+  display: flex;
+  align-items: center;
+}
+
+.kanban-cards {
+  display: flex;
+  gap: 10px;
+  min-width: max-content;
+  min-height: 100px;
+  /* Lane'in minimum yüksekliğini belirle */
+}
+
+.empty-lane {
+  min-height: 100px;
+  /* Boş lane'lerin minimum yüksekliğini belirle */
+}
+
+.rotate-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}

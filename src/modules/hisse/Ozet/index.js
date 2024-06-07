@@ -36,7 +36,9 @@ const RecursiveRenderer = ({ item }) => {
   }
 
   if (item.type === 'widget') {
-    return <Widgets label={item.metadata.Label} data={item.metadata.data} />;
+    return (
+      <Widgets item={item} label={item.properties.label} data={item?.data} />
+    );
   }
 
   return null; // Return nothing if item type isn't recognized
@@ -45,11 +47,16 @@ const RecursiveRenderer = ({ item }) => {
 // Adding PropTypes and defaultProps
 RecursiveRenderer.propTypes = {
   item: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.string.isRequired,
     title: PropTypes.string,
     children: PropTypes.arrayOf(PropTypes.object),
     metadata: PropTypes.object,
-  }),
+    properties: PropTypes.shape({
+      label: PropTypes.string,
+    }),
+    data: PropTypes.object,
+  }).isRequired,
 };
 
 RecursiveRenderer.defaultProps = {
@@ -60,7 +67,7 @@ RecursiveRenderer.defaultProps = {
 };
 
 const Ozet = () => {
-  const [apiStates, apiActions] = useGetDataApi({
+  const [apiStates] = useGetDataApi({
     controller: 'report',
     action: 'get-report-data',
     method: 'POST',
@@ -68,7 +75,7 @@ const Ozet = () => {
     initialCall: true,
   });
 
-  const { apiData, loading, error } = apiStates;
+  const { apiData: fetchedData, loading, error } = apiStates;
 
   if (loading) {
     return <div>Loading...</div>;
@@ -80,11 +87,32 @@ const Ozet = () => {
 
   return (
     <Container fluid>
-      {apiData.map((item) => (
+      {fetchedData.map((item) => (
         <RecursiveRenderer key={item.id} item={item} />
       ))}
     </Container>
   );
+};
+
+// Adding PropTypes to Ozet
+Ozet.propTypes = {
+  apiData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.string.isRequired,
+      title: PropTypes.string,
+      children: PropTypes.arrayOf(PropTypes.object),
+      metadata: PropTypes.object,
+      properties: PropTypes.shape({
+        label: PropTypes.string,
+      }),
+      data: PropTypes.object,
+    }),
+  ),
+};
+
+Ozet.defaultProps = {
+  apiData: [],
 };
 
 export default Ozet;

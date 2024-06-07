@@ -1,0 +1,74 @@
+.kanban-lane {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.kanban-lane-title {
+    font-weight: bold;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: center;
+    padding: 10px;
+}
+
+.kanban-cards-container {
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+}
+
+.kanban-cards {
+    display: flex;
+    gap: 10px;
+    min-width: max-content;
+    min-height: 100px;
+    /* Lane'in minimum yüksekliğini belirle */
+}
+
+.empty-lane {
+    min-height: 100px;
+    /* Boş lane'lerin minimum yüksekliğini belirle */
+    border: 2px dashed #ddd;
+    /* Boş lane'lerin daha görünür olması için */
+}
+
+.rotate-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+}
+
+
+.kanban-lane-titles {
+    /* background-color: white; */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: border-left 0.3s ease;
+}
+
+.kanban-lane-titles:hover {
+    border-left: 4px solid red;
+}
+
+.rotate-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+}
+
+.btn-soft-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-color: #bee5eb;
+}
+
+.btn-soft-info:hover {
+    background-color: #c4e3f0;
+    color: #083d48;
+}

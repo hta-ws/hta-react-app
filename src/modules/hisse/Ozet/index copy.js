@@ -22,8 +22,8 @@ const RecursiveRenderer = ({ item }) => {
     return (
       <Card className='mb-3'>
         <CardBody>
-          <h5>{item.metadata.Label || 'Widget'}</h5>
-          <p>Data: {item.metadata.data || 'N/A'}</p>
+          <h5>{item.properties.label || 'Widget'}</h5>
+          <p>Data: {item.properties.data || 'N/A'}</p>
         </CardBody>
       </Card>
     );
