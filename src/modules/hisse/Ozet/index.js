@@ -68,7 +68,7 @@ RecursiveRenderer.defaultProps = {
 
 const Ozet = () => {
   const [apiStates] = useGetDataApi({
-    controller: 'report',
+    controller: 'dash',
     action: 'get-report-data',
     method: 'POST',
     initialData: [],

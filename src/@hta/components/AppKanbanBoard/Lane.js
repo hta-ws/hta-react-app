@@ -4,7 +4,7 @@ import { Row, Col, Button } from 'reactstrap';
 import KanbanCard from './KanbanCard';
 import './Lane.css';
 
-const Lane = ({ lane, index, onAddCard, onDeleteCard }) => {
+const Lane = ({ lane, index, onAddCard, onEditCard, onDeleteCard }) => {
   return (
     <Draggable draggableId={lane.id.toString()} index={index}>
       {(provided) => (
@@ -35,30 +35,41 @@ const Lane = ({ lane, index, onAddCard, onDeleteCard }) => {
               >
                 {(provided) => (
                   <div
-                    className={`kanban-cards ${lane.children.length === 0 ? 'empty-lane' : ''}`}
+                    className={`kanban-cards ${
+                      !lane.children || lane.children.length === 0
+                        ? 'empty-lane'
+                        : ''
+                    }`}
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                   >
-                    {lane.children.map((card, index) => (
-                      <Draggable
-                        draggableId={card.id.toString()}
-                        index={index}
-                        key={card.id}
-                      >
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <KanbanCard
-                              card={card}
-                              onDelete={() => onDeleteCard(lane.id, card.id)}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
+                    {lane.children && lane.children.length > 0 ? (
+                      lane.children.map((card, index) => (
+                        <Draggable
+                          draggableId={card.id.toString()}
+                          index={index}
+                          key={card.id}
+                        >
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <KanbanCard
+                                card={card}
+                                onDelete={() => onDeleteCard(lane.id, card.id)}
+                                onEdit={() => onEditCard(card.id)}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))
+                    ) : (
+                      <div className='kanban-empty-placeholder'>
+                        No cards available
+                      </div>
+                    )}
                     {provided.placeholder}
                   </div>
                 )}

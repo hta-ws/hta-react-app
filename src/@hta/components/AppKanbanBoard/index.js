@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Button } from 'reactstrap';
 import './KanbanBoard.css';
 import Lane from './Lane';
+import AddCardModal from './Modal/AddCardModal';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 
 const AppKanbanBoard = () => {
@@ -15,8 +16,11 @@ const AppKanbanBoard = () => {
       initialCall: true,
     });
 
-  const [data, setData] = React.useState(apiData);
-  const [versionId, setVersionId] = React.useState(null);
+  const [data, setData] = useState(apiData);
+  const [versionId, setVersionId] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedLaneId, setSelectedLaneId] = useState(null);
+  const [selectedCardId, setSelectedCardId] = useState(null);
 
   useEffect(() => {
     if (apiData) {
@@ -116,7 +120,6 @@ const AppKanbanBoard = () => {
 
   const addNewLane = () => {
     const newLane = {
-      id: Date.now(),
       type: 'Row',
       title: `Lane ${data.length + 1}`,
       sort_order: data.length + 1,
@@ -127,41 +130,89 @@ const AppKanbanBoard = () => {
       versionId: versionId,
     };
 
-    const newData = [...data, newLane];
-
-    setData(newData);
-
     const addLanePayload = {
       lane: newLane,
       versionId: versionId,
     };
-    submitData(addLanePayload, 'POST', 'add-lane');
+    submitData(addLanePayload, 'POST', 'add-lane', (response, error) => {
+      if (error) {
+        console.error('Error adding lane:', error);
+        return;
+      }
+
+      if (response && response.items && response.items.lane) {
+        const newData = [...data, response.items.lane];
+        setData(newData);
+      }
+    });
   };
 
-  const addNewCard = (laneId) => {
+  const addNewCard = (values) => {
     const newCard = {
-      id: Date.now(),
-      type: 'widget',
-      title: `Card ${Date.now()}`,
+      type: values.type,
+      title: values.title,
       sort_order: data.reduce((acc, lane) => lane.children.length + acc, 0) + 1,
       page_id: 1,
-      properties: {},
+      properties: {
+        widgetProperty: values.widgetProperty,
+        tableProperty: values.tableProperty,
+        chartProperty: values.chartProperty,
+      },
       data: {},
       versionId: versionId,
     };
 
-    const newData = [...data];
-    const laneIndex = newData.findIndex((lane) => lane.id === laneId);
-    newData[laneIndex].children.push(newCard);
-
-    setData(newData);
-
     const addCardPayload = {
-      laneId: laneId,
+      laneId: values.laneId,
       card: newCard,
       versionId: versionId,
     };
-    submitData(addCardPayload, 'POST', 'add-card');
+    submitData(addCardPayload, 'POST', 'add-card', (response, error) => {
+      if (error) {
+        console.error('Error adding card:', error);
+        return;
+      }
+
+      if (response && response.items && response.items.card) {
+        const newData = [...data];
+        const laneIndex = newData.findIndex(
+          (lane) => lane.id === values.laneId,
+        );
+        newData[laneIndex].children.push(response.items.card);
+        setData(newData);
+      }
+    });
+
+    toggleModal();
+  };
+
+  const editCard = (values) => {
+    // selectedCardId'yi values nesnesine ekleyin
+    const editCardPayload = {
+      ...values,
+      id: selectedCardId,
+    };
+
+    submitData(editCardPayload, 'POST', 'update-card', (response, error) => {
+      if (error) {
+        console.error('Error editing card:', error);
+        return;
+      }
+
+      if (response && response.items && response.items.card) {
+        const newData = [...data];
+        const laneIndex = newData.findIndex(
+          (lane) => lane.id === editCardPayload.laneId,
+        );
+        const cardIndex = newData[laneIndex].children.findIndex(
+          (card) => card.id === selectedCardId,
+        );
+        newData[laneIndex].children[cardIndex] = response.items.card;
+        setData(newData);
+      }
+    });
+
+    toggleModal();
   };
 
   const publishVersion = () => {
@@ -173,6 +224,23 @@ const AppKanbanBoard = () => {
 
   const refreshData = () => {
     setQueryParams({ page_id: 1, version: versionId });
+  };
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
+
+  const handleAddCard = (laneId) => {
+    setSelectedLaneId(laneId);
+    setSelectedCardId(null); // Yeni kart eklerken cardId null olmalı
+    toggleModal();
+  };
+
+  const handleEditCard = (laneId, cardId) => {
+    console.log('Editing card with id:', cardId); // Bu log'u ekleyin
+    setSelectedLaneId(laneId);
+    setSelectedCardId(cardId); // Mevcut kartı düzenlerken cardId olmalı
+    toggleModal();
   };
 
   return (
@@ -192,15 +260,20 @@ const AppKanbanBoard = () => {
       {loading && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId='all-lanes' direction='vertical' type='lane'>
+        <Droppable droppableId='all-lanes' direction='horizontal' type='lane'>
           {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className='lane-container'
+            >
               {data.map((lane, index) => (
                 <Lane
                   key={lane.id}
                   lane={lane}
                   index={index}
-                  onAddCard={addNewCard}
+                  onAddCard={() => handleAddCard(lane.id)}
+                  onEditCard={(cardId) => handleEditCard(lane.id, cardId)}
                   onDeleteCard={handleDeleteCard}
                 />
               ))}
@@ -209,6 +282,13 @@ const AppKanbanBoard = () => {
           )}
         </Droppable>
       </DragDropContext>
+      <AddCardModal
+        isOpen={modalOpen}
+        toggle={toggleModal}
+        onSubmit={selectedCardId ? editCard : addNewCard}
+        laneId={selectedLaneId}
+        cardId={selectedCardId}
+      />
     </>
   );
 };

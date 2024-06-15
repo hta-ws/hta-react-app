@@ -1,10 +1,11 @@
 import React from 'react';
 import { Card, CardBody, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-
 import './KanbanCard.css';
 
-const KanbanCard = ({ card, onDelete }) => {
+const KanbanCard = ({ card, onDelete, onEdit }) => {
+  const cardLabel = card.properties?.label || card.title;
+
   return (
     <Card className='card task-box kanban-card'>
       <CardBody>
@@ -14,27 +15,8 @@ const KanbanCard = ({ card, onDelete }) => {
               {card.type}
             </Link>
           </h6>
-          {/* <div className='kanban-card-buttons'>
-            <Button
-              color='link'
-              size='sm'
-              onClick={() => console.log('View clicked')}
-            >
-              <i className='ri-eye-fill align-bottom me-2 text-muted'></i>
-            </Button>
-            <Button
-              color='link'
-              size='sm'
-              onClick={() => console.log('Edit clicked')}
-            >
-              <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
-            </Button>
-            <Button color='link' size='sm' onClick={() => onDelete(card.id)}>
-              <i className='ri-delete-bin-fill align-bottom me-2 text-muted'></i>
-            </Button>
-          </div> */}
         </div>
-        <p className='text-muted mt-4'>{card.title}</p>
+        <p className='text-muted mt-4'>{cardLabel}</p>
       </CardBody>
       <div className='kanban-card-footer d-flex justify-content-between'>
         <Button
@@ -44,11 +26,7 @@ const KanbanCard = ({ card, onDelete }) => {
         >
           <i className='ri-eye-fill align-bottom me-2 text-muted'></i> View
         </Button>
-        <Button
-          color='link'
-          size='sm'
-          onClick={() => console.log('Edit clicked')}
-        >
+        <Button color='link' size='sm' onClick={() => onEdit(card.id)}>
           <i className='ri-pencil-fill align-bottom me-2 text-muted'></i> Edit
         </Button>
         <Button color='link' size='sm' onClick={() => onDelete(card.id)}>
