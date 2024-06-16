@@ -9,20 +9,14 @@ const AddCardModal = ({ isOpen, toggle, onSubmit, laneId, cardId }) => {
   const [initialValues, setInitialValues] = useState({
     type: '',
     title: '',
-    properties: {
-      dataSource: {
-        reportCode: '',
-        valueType: '',
-      },
-      label: '',
-      format: {
-        type: '',
-        decimals: '',
-        prefix: '',
-        suffix: '',
-      },
+    format: {
+      type: '',
+      decimals: '',
+      prefix: '',
+      suffix: '',
     },
     laneId: laneId || '',
+    properties: {},
   });
 
   const [
@@ -62,24 +56,46 @@ const AddCardModal = ({ isOpen, toggle, onSubmit, laneId, cardId }) => {
   useEffect(() => {
     if (cardId && isOpen) {
       setCardQueryParams({ id: cardId, initialCall: true });
+      setInitialValues({
+        type: '',
+        title: '',
+        format: {
+          type: '',
+          decimals: '',
+          prefix: '',
+          suffix: '',
+        },
+        laneId: laneId || '',
+        properties: {},
+      });
+      setFormStructure(null);
     }
-  }, [cardId, isOpen, setCardQueryParams]);
+  }, [cardId, isOpen, laneId, setCardQueryParams]);
 
   useEffect(() => {
     if (cardApiData) {
       setInitialValues({
         type: cardApiData.type,
         title: cardApiData.title,
-        properties: cardApiData.properties,
+        format: cardApiData.properties.format,
         laneId: cardApiData.laneId,
+        properties: cardApiData.properties,
       });
       setSelectedType(cardApiData.type);
     }
   }, [cardApiData]);
 
+  const handleTypeChange = (e) => {
+    setSelectedType(e.target.value);
+  };
+
   const handleCancel = () => {
     setSelectedType('');
     toggle();
+  };
+
+  const handleSubmit = (values) => {
+    onSubmit(values);
   };
 
   return (
@@ -87,19 +103,31 @@ const AddCardModal = ({ isOpen, toggle, onSubmit, laneId, cardId }) => {
       <ModalHeader toggle={toggle}>
         {cardId ? 'Edit Card' : 'Add New Card'}
       </ModalHeader>
-      <ModalBody>
+      <ModalBody className='bg-background-adaptive-09'>
         {formLoading && <div>Loading form structure...</div>}
         {formError && <div>Error loading form structure: {formError}</div>}
         <CardForm
           initialValues={initialValues}
           formStructure={formStructure}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           handleCancel={handleCancel}
+          selectedType={selectedType}
+          onTypeChange={handleTypeChange}
         />
       </ModalBody>
       <ModalFooter>
-        <Button color='secondary' onClick={handleCancel}>
+        <Button type='submit' color='primary' onClick={() => document.querySelector('form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))}>
+          Submit
+        </Button>
+        <Button type='button' color='secondary' onClick={handleCancel}>
           Cancel
+        </Button>
+        <Button
+          type='button'
+          color='info'
+          onClick={() => document.querySelector('form').dispatchEvent(new Event('validate', { cancelable: true, bubbles: true }))}
+        >
+          Validate
         </Button>
       </ModalFooter>
     </Modal>

@@ -9,7 +9,7 @@ const Lane = ({ lane, index, onAddCard, onEditCard, onDeleteCard }) => {
     <Draggable draggableId={lane.id.toString()} index={index}>
       {(provided) => (
         <div {...provided.draggableProps} ref={provided.innerRef}>
-          <Row className='kanban-lane'>
+          <Row className='kanban-lane bg-background-adaptive-02'>
             <Col
               xs='1'
               className='kanban-lane-titles'
@@ -27,7 +27,7 @@ const Lane = ({ lane, index, onAddCard, onEditCard, onDeleteCard }) => {
                 </Button>
               </div>
             </Col>
-            <Col className='kanban-cards-container'>
+            <Col className='kanban-cards-container bg-background-adaptive-03'>
               <Droppable
                 droppableId={lane.id.toString()}
                 direction='horizontal'

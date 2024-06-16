@@ -28,3 +28,68 @@ $dark-icon-view-active-bg-dark: tint-color($dark-vertical-menu-bg-dark, 15%);
 [data-bs-theme="dark"] .loading-backdrop {
     background-color: rgba(0, 0, 0, 0.1); /* Karanlık tema için koyu arka plan */
 }
+
+// src/assets/scss/themes.scss
+$background-adaptive-base: #fff;
+$background-adaptive-base-dark: #000; // Örnek koyu renk, $body-bg-dark yerine kullanılabilir
+
+@function shade-color($color, $percentage) {
+    @return mix(black, $color, $percentage);
+}
+
+@function tint-color($color, $percentage) {
+    @return mix(white, $color, $percentage);
+}
+
+@function to-rgba($color, $alpha) {
+    @return rgba(red($color), green($color), blue($color), $alpha);
+}
+
+[data-bs-theme="light"] {
+    // Base color for light theme
+    --#{$prefix}background-adaptive-base: #{$background-adaptive-base};
+
+    // Adaptive colors for light theme with opacity
+    --#{$prefix}background-adaptive-01: #{to-rgba(shade-color($background-adaptive-base, 5%), 0.7)};
+    --#{$prefix}background-adaptive-02: #{to-rgba(shade-color($background-adaptive-base, 10%), 0.5)};
+    --#{$prefix}background-adaptive-03: #{to-rgba(shade-color($background-adaptive-base, 15%), 0.5)};
+    --#{$prefix}background-adaptive-04: #{to-rgba(shade-color($background-adaptive-base, 20%), 0.5)};
+    --#{$prefix}background-adaptive-05: #{to-rgba(shade-color($background-adaptive-base, 25%), 0.5)};
+}
+
+[data-bs-theme="dark"] {
+    // Base color for dark theme
+    --#{$prefix}background-adaptive-base: #{$background-adaptive-base-dark};
+
+    // Adaptive colors for dark theme with opacity
+    --#{$prefix}background-adaptive-01: #{to-rgba(tint-color($background-adaptive-base-dark, 5%), 0.5)};
+    --#{$prefix}background-adaptive-02: #{to-rgba(tint-color($background-adaptive-base-dark, 10%), 0.5)};
+    --#{$prefix}background-adaptive-03: #{to-rgba(tint-color($background-adaptive-base-dark, 15%), 0.5)};
+    --#{$prefix}background-adaptive-04: #{to-rgba(tint-color($background-adaptive-base-dark, 20%), 0.5)};
+    --#{$prefix}background-adaptive-05: #{to-rgba(tint-color($background-adaptive-base-dark, 25%), 0.5)};
+}
+
+// Custom classes to use the new background colors
+.bg-background-adaptive-01 {
+    background-color: var(--#{$prefix}background-adaptive-01);
+}
+
+.bg-background-adaptive-02 {
+    background-color: var(--#{$prefix}background-adaptive-02);
+}
+
+.bg-background-adaptive-03 {
+    background-color: var(--#{$prefix}background-adaptive-03);
+}
+
+.bg-background-adaptive-04 {
+    background-color: var(--#{$prefix}background-adaptive-04);
+}
+
+.bg-background-adaptive-05 {
+    background-color: var(--#{$prefix}background-adaptive-05);
+}
+
+.modal-content {
+    background-color: var(--#{$prefix}body-bg);
+}

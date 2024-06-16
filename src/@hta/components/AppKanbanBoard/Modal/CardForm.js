@@ -1,10 +1,17 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Button, FormGroup, Label, Input, Row, Col } from 'reactstrap';
+import { FormGroup, Label, Input, Row, Col } from 'reactstrap';
 import GroupedFields from './GroupedFields';
 
-const CardForm = ({ initialValues, formStructure, onSubmit, handleCancel }) => {
+const CardForm = ({
+  initialValues,
+  formStructure,
+  onSubmit,
+  handleCancel,
+  selectedType,
+  onTypeChange,
+}) => {
   const validationSchema = formStructure?.validationSchema
     ? Yup.object().shape(
         Object.keys(formStructure.validationSchema).reduce((schema, key) => {
@@ -42,13 +49,19 @@ const CardForm = ({ initialValues, formStructure, onSubmit, handleCancel }) => {
           ...values,
           properties: values.properties,
         };
-        console.log('Submitting Values: ', submitValues);
         onSubmit(submitValues);
         setSubmitting(false);
       }}
       enableReinitialize={true}
     >
-      {({ values, setFieldValue, isSubmitting, validateForm }) => (
+      {({
+        values,
+        setFieldValue,
+        errors,
+        touched,
+        isSubmitting,
+        validateForm,
+      }) => (
         <Form>
           <Row>
             <Col xs='12' md='6'>
@@ -75,9 +88,10 @@ const CardForm = ({ initialValues, formStructure, onSubmit, handleCancel }) => {
                   type='select'
                   name='type'
                   id='type'
-                  value={values.type}
+                  value={selectedType}
                   onChange={(e) => {
                     setFieldValue('type', e.target.value);
+                    onTypeChange(e);
                   }}
                 >
                   <option value=''>Select</option>
@@ -94,22 +108,6 @@ const CardForm = ({ initialValues, formStructure, onSubmit, handleCancel }) => {
             </Col>
           </Row>
           {renderFormFields(values, setFieldValue)}
-          <Button type='submit' color='primary' disabled={isSubmitting}>
-            Submit
-          </Button>
-          <Button type='button' color='secondary' onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button
-            type='button'
-            color='info'
-            onClick={async () => {
-              const errors = await validateForm();
-              console.log('Validation Errors: ', errors);
-            }}
-          >
-            Validate
-          </Button>
         </Form>
       )}
     </Formik>
