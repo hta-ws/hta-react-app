@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 
 const ReportCodeSelect = ({ field, form, onChangeField }) => {
-  const [{ loading, apiData, error }, { setQueryParams }] = useGetDataApi({
+  const [{ loading, apiData }, { setQueryParams }] = useGetDataApi({
     controller: 'report',
     action: 'get-report-code-list',
     initialData: [],
@@ -33,7 +34,7 @@ const ReportCodeSelect = ({ field, form, onChangeField }) => {
     if (onChangeField) {
       const { targetField, action } = onChangeField;
       if (action === 'setLabelWithSelectedValue') {
-        form.setFieldValue(targetField, `${selected.label}`);
+        form.setFieldValue(targetField, `Label: ${selected.label}`);
       }
     }
   };
@@ -49,6 +50,20 @@ const ReportCodeSelect = ({ field, form, onChangeField }) => {
       getOptionValue={(option) => option.value}
     />
   );
+};
+
+ReportCodeSelect.propTypes = {
+  field: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    value: PropTypes.string,
+  }).isRequired,
+  form: PropTypes.shape({
+    setFieldValue: PropTypes.func.isRequired,
+  }).isRequired,
+  onChangeField: PropTypes.shape({
+    targetField: PropTypes.string,
+    action: PropTypes.string,
+  }),
 };
 
 export default ReportCodeSelect;

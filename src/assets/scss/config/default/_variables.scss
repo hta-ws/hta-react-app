@@ -774,7 +774,7 @@ $table-striped-bg-factor: 0.04;
 $table-striped-bg: rgba(var(--#{$prefix}body-color-rgb), $table-striped-bg-factor);
 
 $table-active-color: $table-color;
-$table-active-bg-factor: 0.15;
+$table-active-bg-factor: 0.2;
 $table-active-bg: rgba(var(--#{$prefix}body-color-rgb), $table-active-bg-factor);
 
 $table-hover-color: $table-color;

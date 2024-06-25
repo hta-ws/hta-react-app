@@ -1,0 +1,20 @@
+.modal-fullscreen .modal-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.modal-fullscreen .modal-body form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-fullscreen .modal-body form .card-body {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.modal-fullscreen .modal-footer {
+    justify-content: flex-end;
+}

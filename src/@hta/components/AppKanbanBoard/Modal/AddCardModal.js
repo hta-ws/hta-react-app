@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 import CardForm from './CardForm';
@@ -6,18 +7,7 @@ import CardForm from './CardForm';
 const AddCardModal = ({ isOpen, toggle, onSubmit, laneId, cardId }) => {
   const [selectedType, setSelectedType] = useState('');
   const [formStructure, setFormStructure] = useState(null);
-  const [initialValues, setInitialValues] = useState({
-    type: '',
-    title: '',
-    format: {
-      type: '',
-      decimals: '',
-      prefix: '',
-      suffix: '',
-    },
-    laneId: laneId || '',
-    properties: {},
-  });
+  const [initialValues, setInitialValues] = useState(null);
 
   const [
     { loading: formLoading, apiData: formApiData, error: formError },
@@ -30,57 +20,64 @@ const AddCardModal = ({ isOpen, toggle, onSubmit, laneId, cardId }) => {
     initialCall: false,
   });
 
-  const [
-    { loading: cardLoading, apiData: cardApiData, error: cardError },
-    { setQueryParams: setCardQueryParams },
-  ] = useGetDataApi({
-    controller: 'report',
-    action: 'get-card',
-    method: 'GET',
-    initialData: null,
-    initialCall: false,
-  });
+  const [{ apiData: cardApiData }, { setQueryParams: setCardQueryParams }] =
+    useGetDataApi({
+      controller: 'report',
+      action: 'get-card',
+      method: 'GET',
+      initialData: null,
+      initialCall: false,
+    });
 
   useEffect(() => {
     if (selectedType) {
       setFormQueryParams({ type: selectedType });
     }
-  }, [selectedType, setFormQueryParams, cardId]);
+  }, [selectedType, setFormQueryParams]);
 
   useEffect(() => {
-    if (formApiData) {
+    if (formApiData && formApiData.fields) {
       setFormStructure(formApiData);
+      const initialValues = {
+        type: '',
+        title: '',
+        laneId: laneId || '',
+        properties: {},
+      };
+      Object.keys(formApiData.fields).forEach((groupKey) => {
+        formApiData.fields[groupKey].rows.forEach((row) => {
+          row.forEach((field) => {
+            if (field.name.startsWith('properties')) {
+              const keys = field.name.split('.');
+              keys.reduce((acc, key, index) => {
+                if (!acc[key])
+                  acc[key] =
+                    index === keys.length - 1 ? field.defaultValue || '' : {};
+                return acc[key];
+              }, initialValues);
+            }
+          });
+        });
+      });
+      setInitialValues(initialValues);
     }
-  }, [formApiData]);
+  }, [formApiData, laneId]);
 
   useEffect(() => {
     if (cardId && isOpen) {
       setCardQueryParams({ id: cardId, initialCall: true });
-      setInitialValues({
-        type: '',
-        title: '',
-        format: {
-          type: '',
-          decimals: '',
-          prefix: '',
-          suffix: '',
-        },
-        laneId: laneId || '',
-        properties: {},
-      });
-      setFormStructure(null);
     }
-  }, [cardId, isOpen, laneId, setCardQueryParams]);
+  }, [cardId, isOpen, setCardQueryParams]);
 
   useEffect(() => {
     if (cardApiData) {
-      setInitialValues({
+      const updatedValues = {
         type: cardApiData.type,
         title: cardApiData.title,
-        format: cardApiData.properties.format,
         laneId: cardApiData.laneId,
-        properties: cardApiData.properties,
-      });
+        properties: cardApiData.properties || {},
+      };
+      setInitialValues(updatedValues);
       setSelectedType(cardApiData.type);
     }
   }, [cardApiData]);
@@ -95,7 +92,13 @@ const AddCardModal = ({ isOpen, toggle, onSubmit, laneId, cardId }) => {
   };
 
   const handleSubmit = (values) => {
-    onSubmit(values);
+    const submitValues = {
+      ...values,
+      laneId: laneId || values.laneId,
+    };
+
+    console.log('Submit values: ', submitValues); // Kontrol için ekleyin
+    onSubmit(submitValues);
   };
 
   return (
@@ -106,17 +109,29 @@ const AddCardModal = ({ isOpen, toggle, onSubmit, laneId, cardId }) => {
       <ModalBody className='bg-background-adaptive-09'>
         {formLoading && <div>Loading form structure...</div>}
         {formError && <div>Error loading form structure: {formError}</div>}
-        <CardForm
-          initialValues={initialValues}
-          formStructure={formStructure}
-          onSubmit={handleSubmit}
-          handleCancel={handleCancel}
-          selectedType={selectedType}
-          onTypeChange={handleTypeChange}
-        />
+        {initialValues && formStructure && (
+          <CardForm
+            initialValues={initialValues}
+            formStructure={formStructure}
+            onSubmit={handleSubmit}
+            handleCancel={handleCancel}
+            selectedType={selectedType}
+            onTypeChange={handleTypeChange}
+          />
+        )}
       </ModalBody>
       <ModalFooter>
-        <Button type='submit' color='primary' onClick={() => document.querySelector('form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))}>
+        <Button
+          type='submit'
+          color='primary'
+          onClick={() =>
+            document
+              .querySelector('form')
+              .dispatchEvent(
+                new Event('submit', { cancelable: true, bubbles: true }),
+              )
+          }
+        >
           Submit
         </Button>
         <Button type='button' color='secondary' onClick={handleCancel}>
@@ -125,13 +140,27 @@ const AddCardModal = ({ isOpen, toggle, onSubmit, laneId, cardId }) => {
         <Button
           type='button'
           color='info'
-          onClick={() => document.querySelector('form').dispatchEvent(new Event('validate', { cancelable: true, bubbles: true }))}
+          onClick={() =>
+            document
+              .querySelector('form')
+              .dispatchEvent(
+                new Event('validate', { cancelable: true, bubbles: true }),
+              )
+          }
         >
           Validate
         </Button>
       </ModalFooter>
     </Modal>
   );
+};
+
+AddCardModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  laneId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  cardId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default AddCardModal;

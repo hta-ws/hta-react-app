@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <React.Fragment>
       <div className='layout-wrapper landing'>
-        <AppKanbanBoard />
+        <AppKanbanBoard pageId={1} />
       </div>
     </React.Fragment>
   );

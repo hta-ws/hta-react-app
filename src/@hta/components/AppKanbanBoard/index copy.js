@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Button } from 'reactstrap';
-import PropTypes from 'prop-types';
 import './KanbanBoard.css';
 import Lane from './Lane';
-import CardModal from './CardModal';
+import AddCardModal from './Modal/AddCardModal';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 
-const AppKanbanBoard = ({ pageId = null }) => {
+const AppKanbanBoard = () => {
   const [{ loading, apiData, error }, { setQueryParams, submitData }] =
     useGetDataApi({
       controller: 'report',
       action: 'get-report-data',
       method: 'POST',
       initialData: [],
-      initialCall: false,
+      initialCall: true,
     });
 
   const [data, setData] = useState(apiData);
@@ -22,13 +21,6 @@ const AppKanbanBoard = ({ pageId = null }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedLaneId, setSelectedLaneId] = useState(null);
   const [selectedCardId, setSelectedCardId] = useState(null);
-  const [cardType, setCardType] = useState(''); // Kart tipi için durum ekleyin
-
-  useEffect(() => {
-    if (pageId) {
-      setQueryParams({ page_id: pageId, version: versionId });
-    }
-  }, [pageId, versionId]);
 
   useEffect(() => {
     if (apiData) {
@@ -38,12 +30,6 @@ const AppKanbanBoard = ({ pageId = null }) => {
       }
     }
   }, [apiData]);
-
-  if (!pageId) {
-    return (
-      <div>Page ID tanımlı değil. Lütfen geçerli bir Page ID sağlayın.</div>
-    );
-  }
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
@@ -128,7 +114,6 @@ const AppKanbanBoard = ({ pageId = null }) => {
       laneId: laneId,
       cardId: cardId,
       versionId: versionId,
-      pageId: pageId, // pageId'yi API isteğine ekleyin
     };
     submitData(deletePayload, 'POST', 'delete-card');
   };
@@ -138,7 +123,7 @@ const AppKanbanBoard = ({ pageId = null }) => {
       type: 'Row',
       title: `Lane ${data.length + 1}`,
       sort_order: data.length + 1,
-      page_id: pageId, // pageId'yi yeni lane'e ekleyin
+      page_id: 1,
       properties: [],
       data: null,
       children: [],
@@ -148,7 +133,6 @@ const AppKanbanBoard = ({ pageId = null }) => {
     const addLanePayload = {
       lane: newLane,
       versionId: versionId,
-      pageId: pageId, // pageId'yi API isteğine ekleyin
     };
     submitData(addLanePayload, 'POST', 'add-lane', (response, error) => {
       if (error) {
@@ -159,25 +143,29 @@ const AppKanbanBoard = ({ pageId = null }) => {
       if (response && response.items && response.items.lane) {
         const newData = [...data, response.items.lane];
         setData(newData);
-        refreshData(); // Add this line to refresh data after adding a lane
       }
     });
   };
 
   const addNewCard = (values) => {
     const newCard = {
-      ...{
-        versionId: versionId,
-        laneId: selectedLaneId,
-        pageId: pageId, // pageId'yi yeni karta ekleyin
+      type: values.type,
+      title: values.title,
+      sort_order: data.reduce((acc, lane) => lane.children.length + acc, 0) + 1,
+      page_id: 1,
+      properties: {
+        widgetProperty: values.widgetProperty,
+        tableProperty: values.tableProperty,
+        chartProperty: values.chartProperty,
       },
-      ...values,
+      data: {},
+      versionId: versionId,
     };
+
     const addCardPayload = {
-      laneId: selectedLaneId,
+      laneId: values.laneId,
       card: newCard,
       versionId: versionId,
-      pageId: pageId, // pageId'yi API isteğine ekleyin
     };
     submitData(addCardPayload, 'POST', 'add-card', (response, error) => {
       if (error) {
@@ -192,7 +180,6 @@ const AppKanbanBoard = ({ pageId = null }) => {
         );
         newData[laneIndex].children.push(response.items.card);
         setData(newData);
-        refreshData(); // Add this line to refresh data after adding a card
       }
     });
 
@@ -200,32 +187,29 @@ const AppKanbanBoard = ({ pageId = null }) => {
   };
 
   const editCard = (values) => {
+    // selectedCardId'yi values nesnesine ekleyin
     const editCardPayload = {
       ...values,
       id: selectedCardId,
-      pageId: pageId, // pageId'yi API isteğine ekleyin
     };
 
     submitData(editCardPayload, 'POST', 'update-card', (response, error) => {
-      // debugger;
-      // if (error) {
-      //   console.error('Error editing card:', error);
-      //   return;
-      // }
+      if (error) {
+        console.error('Error editing card:', error);
+        return;
+      }
 
-      // if (response && response.items && response.items.card) {
-      //   debugger;
-      //   const newData = [...data];
-      //   const laneIndex = newData.findIndex(
-      //     (lane) => lane.id === editCardPayload.laneId,
-      //   );
-      //   const cardIndex = newData[laneIndex].children.findIndex(
-      //     (card) => card.id === selectedCardId,
-      //   );
-      //   newData[laneIndex].children[cardIndex] = response.items.card;
-      //   setData(newData);
-      refreshData(); // Add this line to refresh data after editing a card
-      // }
+      if (response && response.items && response.items.card) {
+        const newData = [...data];
+        const laneIndex = newData.findIndex(
+          (lane) => lane.id === editCardPayload.laneId,
+        );
+        const cardIndex = newData[laneIndex].children.findIndex(
+          (card) => card.id === selectedCardId,
+        );
+        newData[laneIndex].children[cardIndex] = response.items.card;
+        setData(newData);
+      }
     });
 
     toggleModal();
@@ -234,13 +218,12 @@ const AppKanbanBoard = ({ pageId = null }) => {
   const publishVersion = () => {
     const publishPayload = {
       versionId: versionId,
-      pageId: pageId, // pageId'yi API isteğine ekleyin
     };
     submitData(publishPayload, 'POST', 'publish-version');
   };
 
   const refreshData = () => {
-    setQueryParams({ page_id: pageId, version: versionId });
+    setQueryParams({ page_id: 1, version: versionId });
   };
 
   const toggleModal = () => {
@@ -250,82 +233,64 @@ const AppKanbanBoard = ({ pageId = null }) => {
   const handleAddCard = (laneId) => {
     setSelectedLaneId(laneId);
     setSelectedCardId(null); // Yeni kart eklerken cardId null olmalı
-    setCardType('widget'); // Kart tipi için varsayılan değer
     toggleModal();
   };
 
   const handleEditCard = (laneId, cardId) => {
+    console.log('Editing card with id:', cardId); // Bu log'u ekleyin
     setSelectedLaneId(laneId);
     setSelectedCardId(cardId); // Mevcut kartı düzenlerken cardId olmalı
-    setCardType('widget'); // Kart tipi için varsayılan değer
     toggleModal();
   };
 
   return (
     <>
-      {!pageId && (
-        <div>Page ID tanımlı değil. Lütfen geçerli bir Page ID sağlayın.</div>
-      )}
-      {pageId && (
-        <>
-          <div className='kanban-header'>
-            <h1 className='kanban-title'>My Kanban Board</h1>
-            <Button color='primary' onClick={addNewLane}>
-              Yeni Satır Ekle
-            </Button>
-            <Button color='success' onClick={publishVersion}>
-              Yayınla
-            </Button>
-            <Button color='secondary' onClick={refreshData}>
-              Yenile
-            </Button>
-          </div>
-          {loading && <div>Loading...</div>}
-          {error && <div>Error: {error}</div>}
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable
-              droppableId='all-lanes'
-              direction='horizontal'
-              type='lane'
+      <div className='kanban-header'>
+        <h1 className='kanban-title'>My Kanban Board</h1>
+        <Button color='primary' onClick={addNewLane}>
+          Yeni Satır Ekle
+        </Button>
+        <Button color='success' onClick={publishVersion}>
+          Yayınla
+        </Button>
+        <Button color='secondary' onClick={refreshData}>
+          Yenile
+        </Button>
+      </div>
+      {loading && <div>Loading...</div>}
+      {error && <div>Error: {error}</div>}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId='all-lanes' direction='horizontal' type='lane'>
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className='lane-container'
             >
-              {(provided) => (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className='lane-container'
-                >
-                  {data.map((lane, index) => (
-                    <Lane
-                      key={lane.id}
-                      lane={lane}
-                      index={index}
-                      onAddCard={() => handleAddCard(lane.id)}
-                      onEditCard={(cardId) => handleEditCard(lane.id, cardId)}
-                      onDeleteCard={handleDeleteCard}
-                    />
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-          <CardModal
-            isOpen={modalOpen}
-            toggle={toggleModal}
-            onSubmit={selectedCardId ? editCard : addNewCard}
-            cardType={cardType}
-            cardId={selectedCardId}
-            laneId={selectedLaneId}
-            pageId={pageId} // CardModal'a pageId'yi pass edin
-          />
-        </>
-      )}
+              {data.map((lane, index) => (
+                <Lane
+                  key={lane.id}
+                  lane={lane}
+                  index={index}
+                  onAddCard={() => handleAddCard(lane.id)}
+                  onEditCard={(cardId) => handleEditCard(lane.id, cardId)}
+                  onDeleteCard={handleDeleteCard}
+                />
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+      <AddCardModal
+        isOpen={modalOpen}
+        toggle={toggleModal}
+        onSubmit={selectedCardId ? editCard : addNewCard}
+        laneId={selectedLaneId}
+        cardId={selectedCardId}
+      />
     </>
   );
-};
-
-AppKanbanBoard.propTypes = {
-  pageId: PropTypes.number, // pageId prop tipi
 };
 
 export default AppKanbanBoard;
