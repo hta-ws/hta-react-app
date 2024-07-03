@@ -1,46 +1,34 @@
 import {
-  FETCH_ERROR,
   FETCH_START,
   FETCH_SUCCESS,
-  //   HIDE_MESSAGE,
-  //   SHOW_MESSAGE,
-  //   TOGGLE_APP_DRAWER,
-  //   UPDATING_CONTENT,
-  GET_FINANCIAL_STATEMENT_FORMAT_LIST,
-  GET_FINANCIAL_STATEMENT_TYPE_LIST,
-  GET_FINANCIAL_STATEMENT_PROCEDURE_LIST,
-  SET_FINANCIAL_STATEMENT_FORMAT,
-  SET_FINANCIAL_STATEMENT_TYPE,
-  SET_FINANCIAL_STATEMENT_PROCEDURE,
-  SET_FINANCIAL_STATEMENT_CURRENT_POPULATION_RECORD,
-  GET_FINANCIAL_STATEMENT_SAMPLE_STOCK_CODE_LIST,
-  SET_FINANCIAL_STATEMENT_SAMPLE_STOCK_CODE,
-  GET_SP_METADATA_LIST,
-  GET_REPORT_CODE_LIST,
-  SET_SELECTED_FORMULA_RECORD,
-  GET_SCHEDULER_METHOD_LIST,
-  GET_SCHEDULER_STATUS_LIST,
+  FETCH_ERROR,
+  GET_FS_TEMPLATE_LIST,
+  SET_FS_TEMPLATE_ID,
+  GET_FS_TYPE_LIST,
+  SET_FS_TYPE,
+  GET_FS_STOCK_LIST,
+  SET_FS_STOCK,
 } from 'shared/ActionTypes';
 
 import jwtAxios from '@hta/services/auth/jwt-auth';
-// import { appIntl } from '@hta/helpers/Common';
 
-export const getFinancialStatementFormatList = (params) => {
+// Existing action
+export const getFsTemplateList = (params) => {
   return (dispatch) => {
     dispatch({ type: FETCH_START });
     jwtAxios
-      .post(`/financial-statement-management/get-format-list`, params)
-      .then((data) => {
-        if (data.status === 200) {
+      .get('/definition/get-fs-template-list', { params })
+      .then((response) => {
+        if (response.status === 200) {
           dispatch({ type: FETCH_SUCCESS });
           dispatch({
-            type: GET_FINANCIAL_STATEMENT_FORMAT_LIST,
-            payload: data.data.items,
+            type: GET_FS_TEMPLATE_LIST,
+            payload: response.data.items,
           });
         } else {
           dispatch({
             type: FETCH_ERROR,
-            payload: 'Something Went Wrong',
+            payload: 'Something went wrong',
           });
         }
       })
@@ -50,25 +38,23 @@ export const getFinancialStatementFormatList = (params) => {
   };
 };
 
-export const getFinancialStatementTypeList = (params) => {
+// New action for fetching FS type list using POST
+export const getFsTypeList = (params) => {
   return (dispatch) => {
     dispatch({ type: FETCH_START });
     jwtAxios
-      .post(
-        `/financial-statement-management/get-financial-statement-type-list`,
-        params,
-      )
-      .then((data) => {
-        if (data.status === 200) {
+      .post('/definition/get-fs-type-list', params)
+      .then((response) => {
+        if (response.status === 200) {
           dispatch({ type: FETCH_SUCCESS });
           dispatch({
-            type: GET_FINANCIAL_STATEMENT_TYPE_LIST,
-            payload: data.data.items,
+            type: GET_FS_TYPE_LIST,
+            payload: response.data.items,
           });
         } else {
           dispatch({
             type: FETCH_ERROR,
-            payload: 'Something Went Wrong',
+            payload: 'Something went wrong',
           });
         }
       })
@@ -78,25 +64,23 @@ export const getFinancialStatementTypeList = (params) => {
   };
 };
 
-export const getFinancialStatementProcedureList = (params) => {
+// New action for fetching FS stock list using POST
+export const getFsStockList = (fsTemplateId) => {
   return (dispatch) => {
     dispatch({ type: FETCH_START });
     jwtAxios
-      .post(
-        `/financial-statement-management/get-financial-statement-procedure-list`,
-        params,
-      )
-      .then((data) => {
-        if (data.status === 200) {
+      .post('/definition/get-stock-list', { fs_template_id: fsTemplateId })
+      .then((response) => {
+        if (response.status === 200) {
           dispatch({ type: FETCH_SUCCESS });
           dispatch({
-            type: GET_FINANCIAL_STATEMENT_PROCEDURE_LIST,
-            payload: data.data.items,
+            type: GET_FS_STOCK_LIST,
+            payload: response.data.items,
           });
         } else {
           dispatch({
             type: FETCH_ERROR,
-            payload: 'Something Went Wrong',
+            payload: 'Something went wrong',
           });
         }
       })
@@ -106,181 +90,18 @@ export const getFinancialStatementProcedureList = (params) => {
   };
 };
 
-export const getFinancialStatementSampleStockCodeList = (params) => {
-  return (dispatch) => {
-    dispatch({ type: FETCH_START });
-    jwtAxios
-      .post(
-        `/financial-statement-management/get-financial-statement-sample-stock-code-list`,
-        params,
-      )
-      .then((data) => {
-        if (data.status === 200) {
-          dispatch({ type: FETCH_SUCCESS });
-          dispatch({
-            type: GET_FINANCIAL_STATEMENT_SAMPLE_STOCK_CODE_LIST,
-            payload: data.data.items,
-          });
-        } else {
-          dispatch({
-            type: FETCH_ERROR,
-            payload: 'Something Went Wrong',
-          });
-        }
-      })
-      .catch((error) => {
-        dispatch({ type: FETCH_ERROR, payload: error?.message || 'Hata' });
-      });
-  };
-};
+// New action for setting FS stock
+export const setFsStock = (stock) => ({
+  type: SET_FS_STOCK,
+  payload: stock,
+});
 
-export const getSpMetadataList = (params) => {
-  return (dispatch) => {
-    dispatch({ type: FETCH_START });
-    jwtAxios
-      .post(`/financial-statement-management/get-sp-metadata-list`, params)
-      .then((data) => {
-        if (data.status === 200) {
-          dispatch({ type: FETCH_SUCCESS });
-          dispatch({
-            type: GET_SP_METADATA_LIST,
-            payload: data.data.items,
-          });
-        } else {
-          dispatch({
-            type: FETCH_ERROR,
-            payload: 'Something Went Wrong',
-          });
-        }
-      })
-      .catch((error) => {
-        dispatch({ type: FETCH_ERROR, payload: error?.message || 'Hata' });
-      });
-  };
-};
-export const getGetReporCodeList = (params, financialStatementFormatId) => {
-  return (dispatch, getState) => {
-    // Example of pulling financialStatementFormatId from Redux state if not passed
-    if (!financialStatementFormatId) {
-      financialStatementFormatId = getState().admin.financialStatementFormatId;
-    }
+export const setFsType = (fsType) => ({
+  type: SET_FS_TYPE,
+  payload: fsType,
+});
 
-    const paramsWithFormatId = {
-      ...params,
-      financialStatementFormatId, // Adding financialStatementFormatId to params
-    };
-
-    dispatch({ type: FETCH_START });
-    jwtAxios
-      .post(
-        `/financial-statement-management/get-report-code-list`,
-        paramsWithFormatId,
-      )
-      .then((data) => {
-        if (data.status === 200) {
-          dispatch({ type: FETCH_SUCCESS });
-          dispatch({
-            type: GET_REPORT_CODE_LIST,
-            payload: data.data.items,
-          });
-        } else {
-          dispatch({
-            type: FETCH_ERROR,
-            payload: 'Something Went Wrong',
-          });
-        }
-      })
-      .catch((error) => {
-        dispatch({ type: FETCH_ERROR, payload: error?.message || 'Hata' });
-      });
-  };
-};
-
-export const setFinancialStatementFormatId = (item) => {
-  return (dispatch) =>
-    dispatch({ type: SET_FINANCIAL_STATEMENT_FORMAT, payload: item });
-};
-
-export const setFinancialStatementTypeCode = (item) => {
-  return (dispatch) =>
-    dispatch({ type: SET_FINANCIAL_STATEMENT_TYPE, payload: item });
-};
-export const setFinancialStatementSampleStockCode = (item) => {
-  return (dispatch) =>
-    dispatch({
-      type: SET_FINANCIAL_STATEMENT_SAMPLE_STOCK_CODE,
-      payload: item,
-    });
-};
-
-export const set_financial_statement_procedure = (item) => {
-  return (dispatch) =>
-    dispatch({ type: SET_FINANCIAL_STATEMENT_PROCEDURE, payload: item });
-};
-
-export const setCurrentPopulationRecord = (item) => {
-  return (dispatch) =>
-    dispatch({
-      type: SET_FINANCIAL_STATEMENT_CURRENT_POPULATION_RECORD,
-      payload: item,
-    });
-};
-/------------------------------------------------------------------------------/;
-export const setSelectedFormulaRecord = (item) => {
-  return (dispatch) =>
-    dispatch({
-      type: SET_SELECTED_FORMULA_RECORD,
-      payload: item,
-    });
-};
-// --------------------------------------------------------------------------------
-
-export const getSchedulerMethodList = (params) => {
-  return (dispatch) => {
-    dispatch({ type: FETCH_START });
-    jwtAxios
-      .post(`/scheduler/get-method-list`, params)
-      .then((data) => {
-        if (data.status === 200) {
-          dispatch({ type: FETCH_SUCCESS });
-          dispatch({
-            type: GET_SCHEDULER_METHOD_LIST,
-            payload: data.data.items,
-          });
-        } else {
-          dispatch({
-            type: FETCH_ERROR,
-            payload: 'Something Went Wrong',
-          });
-        }
-      })
-      .catch((error) => {
-        dispatch({ type: FETCH_ERROR, payload: error?.message || 'Hata' });
-      });
-  };
-};
-
-export const getSchedulerStatusList = (params) => {
-  return (dispatch) => {
-    dispatch({ type: FETCH_START });
-    jwtAxios
-      .post(`/scheduler/get-status-list`, params)
-      .then((data) => {
-        if (data.status === 200) {
-          dispatch({ type: FETCH_SUCCESS });
-          dispatch({
-            type: GET_SCHEDULER_STATUS_LIST,
-            payload: data.data.items,
-          });
-        } else {
-          dispatch({
-            type: FETCH_ERROR,
-            payload: 'Something Went Wrong',
-          });
-        }
-      })
-      .catch((error) => {
-        dispatch({ type: FETCH_ERROR, payload: error?.message || 'Hata' });
-      });
-  };
-};
+export const setFsTemplateId = (id) => ({
+  type: SET_FS_TEMPLATE_ID,
+  payload: id,
+});

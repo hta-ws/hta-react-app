@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 import FormSelector from './FormSelector';
 
-const CardModal = ({ isOpen, toggle, onSubmit, laneId, cardId, pageId }) => {
+const CardModal = ({ isOpen, toggle, onSubmit, cardId, pageId }) => {
   const [initialValues, setInitialValues] = useState({ type: '', title: '' });
 
   const [{ apiData: cardData }, { setQueryParams: fetchCard }] = useGetDataApi({

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-
 import {
   Modal,
   ModalHeader,
@@ -11,65 +10,58 @@ import {
   Row,
   Col,
 } from 'reactstrap';
-import ToggleSwitch from 'modules/admin/Financial/Definitions/Components/IfrsCodeSelect/ToggleSwitch';
-import { useGetDataApi } from '@hta/hooks/APIHooksOld';
+import ToggleSwitch from './ToggleSwitch';
+import {
+  selectFsType,
+  selectFsTemplateId,
+  selectFsStock,
+} from 'toolkit/selectors';
 import { useDebounce } from '@hta/hooks/useDebounce';
 import SimpleBar from 'simplebar-react';
 import styled from 'styled-components';
+import AppDataTable from '@hta/components/AppDataTable';
+import TypeSelect from './TypeSelect';
+import { getTableColumns } from './TableColumns';
+import { SearchBox } from '../SearchBox';
+import StockSelect from './StockSelect';
+import { useGetDataApi } from '@hta/hooks/APIHooks';
 
-import DataTable from '../DataTable';
-import TypeSelect from '../TypeSelect';
-import { getTableColumns } from '../../../Definitions/Components/IfrsCodeSelect/TableColumns'; // Import columns configuration
-import SearchBox from './SearchBox';
-import SampleStockCodeSelect from '../SampleStockCodeSelect';
 export const StyledSimpleBar = styled(SimpleBar)`
   height: calc(100vh - 276px);
 `;
 
-function IfrsCodeSelect({
-  isOpen,
-  toggle,
-
-  onReportCodeSelect,
-}) {
-  const { financialStatementTypeId, selectedSampleStockCode } = useSelector(
-    (state) => state.admin,
-  );
+function IfrsCodeSelect({ isOpen, toggle, onReportCodeSelect }) {
+  const fsType = useSelector(selectFsType);
+  const selectedStock = useSelector(selectFsStock);
   const [isDisabled, setIsDisabled] = useState(0);
-  // const [searchTerm, setSearchTerm] = useState('');
-  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [globalFilter, setGlobalFilter] = useState('');
   const debouncedSearchTerm = useDebounce(globalFilter, 500);
   const columns = useMemo(() => getTableColumns(), []);
-  const [{ apiData }, { setQueryParams }] = useGetDataApi(
-    'financial-management',
-    'get-financial-data',
-    [],
-    {
-      stockCode: 'SASA',
-      financialStatementTypeId: financialStatementTypeId,
-      isDisabled: isDisabled,
-    },
-    false,
-    null,
-    'GET',
-  );
   const [disclosureIndex, setDisclosureIndex] = useState(null);
+
+  const [{ apiData, loading, error }, { setQueryParams }] = useGetDataApi({
+    controller: 'definition',
+    action: 'get-ifrs-code-list',
+    method: 'POST',
+    initialData: [],
+    initialCall: true,
+  });
+
+  useEffect(() => {
+    if (fsType && selectedStock) {
+      setQueryParams({
+        stockCode: selectedStock,
+        fs_type_id: fsType,
+        isDisabled: isDisabled,
+      });
+    }
+  }, [fsType, selectedStock, isDisabled, setQueryParams]);
 
   useEffect(() => {
     setDisclosureIndex(
       apiData && apiData.length > 0 ? apiData[0].disclosure_index : null,
     );
   }, [apiData]);
-
-  useEffect(() => {
-    if (financialStatementTypeId && selectedSampleStockCode) {
-      setQueryParams({
-        stockCode: selectedSampleStockCode,
-        financialStatementTypeId: financialStatementTypeId,
-        isDisabled: isDisabled,
-      });
-    }
-  }, [financialStatementTypeId, selectedSampleStockCode, isDisabled]);
 
   const handleToggleIsDisabled = () => {
     setIsDisabled(isDisabled === 0 ? 1 : 0);
@@ -97,7 +89,7 @@ function IfrsCodeSelect({
                     onChange={handleToggleIsDisabled}
                     label='Tüm Kalemler'
                   />
-                  <SampleStockCodeSelect />
+                  <StockSelect />
                   <TypeSelect />
                   {disclosureIndex && (
                     <div className='flex-shrink-0'>
@@ -121,9 +113,11 @@ function IfrsCodeSelect({
             <Row>
               <Col>
                 <StyledSimpleBar>
-                  <DataTable
+                  <AppDataTable
                     columns={columns}
                     data={apiData || []}
+                    loading={loading}
+                    error={error} // Pass error prop
                     onRowClick={(selectedData) => {
                       onReportCodeSelect(selectedData);
                       toggle();
@@ -146,7 +140,6 @@ function IfrsCodeSelect({
 IfrsCodeSelect.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  financialStatementFormatCode: PropTypes.number.isRequired,
   onReportCodeSelect: PropTypes.func.isRequired,
 };
 

@@ -80,7 +80,9 @@ const ResultPan = ({ formikValues }) => {
                   <th className='text-center'>Period</th>
                   <th className='text-end'>Çeyreklik</th>
                   <th className='text-end'>Dönemsel</th>
+                  <th className='text-end'>a_Dönemsel</th>
                   <th className='text-end'>Yıllıklandırılmış</th>
+                  <th className='text-end'> EM Yıllıklandırılmış</th>
                   <th>Hesaplama Zamanı</th>
                 </tr>
               </thead>
@@ -93,7 +95,7 @@ const ResultPan = ({ formikValues }) => {
                       <td className='text-center'>{item.period}</td>
                       <td className='text-end'>
                         <AppFormatter
-                          value={item.a_c}
+                          value={item.c}
                           format={{ type: 'number', decimal: 2 }}
                           Tag='div'
                           className='d-block w-100'
@@ -109,7 +111,23 @@ const ResultPan = ({ formikValues }) => {
                       </td>
                       <td className='text-end'>
                         <AppFormatter
-                          value={item.a_y}
+                          value={item.d}
+                          format={{ type: 'number', decimal: 2 }}
+                          Tag='div'
+                          className='d-block w-100'
+                        />
+                      </td>
+                      <td className='text-end'>
+                        <AppFormatter
+                          value={item.y}
+                          format={{ type: 'number', decimal: 2 }}
+                          Tag='div'
+                          className='d-block w-100'
+                        />
+                      </td>
+                      <td className='text-end'>
+                        <AppFormatter
+                          value={item.a_d}
                           format={{ type: 'number', decimal: 2 }}
                           Tag='div'
                           className='d-block w-100'

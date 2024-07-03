@@ -53,3 +53,15 @@ export const SET_SELECTED_FORMULA_RECORD = 'set_selected_formula_record';
 
 export const GET_SCHEDULER_METHOD_LIST = 'get_scheduler_method_list';
 export const GET_SCHEDULER_STATUS_LIST = 'get_scheduler_status_list';
+
+export const GET_FS_TYPE = 'get_fs_type';
+export const SET_FS_TYPE = 'set_fs_type';
+
+export const GET_FS_TEMPLATE_LIST = 'get_fs_format';
+export const SET_FS_TEMPLATE_ID = 'set_fs_template_id';
+
+export const GET_FS_TYPE_LIST = 'get_fs_type_list';
+export const SET_FS_TYPE_ID = 'set_fs_type_id';
+
+export const GET_FS_STOCK_LIST = 'get_fs_stock_list';
+export const SET_FS_STOCK = 'SET_FS_STOCK';

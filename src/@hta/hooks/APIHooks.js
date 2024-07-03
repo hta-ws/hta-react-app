@@ -30,61 +30,22 @@ export const useGetDataApi = ({
     setAllowApiCall(true);
   };
 
-  // const setQueryParams = (newParams) => {
-  //   setLoading(true);
-  //   setError(null);
-  //   updateQueryParams({ ...newParams });
-  //   setAllowApiCall(true);
-  // };
-  const setQueryParams = useCallback((newParams) => {
-    setLoading(true);
-    setError(null);
-    updateQueryParams({ ...newParams });
-    setAllowApiCall(true);
-  }, []); // No dependencies since the update logic does not rely on external variables
+  const setQueryParams = useCallback(
+    (newParams, newAction = action) => {
+      setLoading(true);
+      setError(null);
+      updateQueryParams({ ...newParams });
+      setInitialUrl(`${baseUrl}/${controller}/${newAction}`);
+      setAllowApiCall(true);
+    },
+    [baseUrl, controller, action],
+  ); // Dependencies include baseUrl and controller
 
-  // const submitData = (
-  //   data,
-  //   methodOverride = method,
-  //   actionOverride = action,
-  // ) => {
-  //   setLoading(true);
-  //   setError(null);
-  //   const url = `${baseUrl}/${controller}/${actionOverride}`;
-  //   const config = {
-  //     method: methodOverride,
-  //     url: url,
-  //     data: sanitizeData(data),
-  //     cancelToken: cancelTokenSource.current.token,
-  //   };
-
-  //   jwtAxios(config)
-  //     .then((response) => {
-  //       if (isRequestSuccessful(response.status)) {
-  //         setData(response.data.result);
-  //         callbackFun && callbackFun(response.data);
-  //       } else {
-  //         setError(
-  //           response.data.error ? response.data.error : response.data.message,
-  //         );
-  //         setData(initialData);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       if (jwtAxios.isCancel(error)) {
-  //         console.log('Request canceled', error.message);
-  //       } else {
-  //         const errorMessage = error.response?.data?.message || error.message;
-  //         setError(errorMessage);
-  //       }
-  //     })
-  //     .finally(() => setLoading(false));
-  // };
   const submitData = (
     data,
-    methodOverride = method, // Default to the 'method' defined in the hook setup
-    actionOverride = action, // Default to the 'action' defined in the hook setup
-    callback = callbackFun, // Default to the 'callbackFun' defined in the hook setup
+    methodOverride = method,
+    actionOverride = action,
+    callback = callbackFun,
   ) => {
     setLoading(true);
     setError(null);
@@ -99,9 +60,9 @@ export const useGetDataApi = ({
     jwtAxios(config)
       .then((response) => {
         if (isRequestSuccessful(response.status)) {
-          //setData(response.data.items); // Update state with the new data
+          setData(response.data.items);
           if (callback) {
-            callback(response.data); // Execute callback with the full response data
+            callback(response.data);
           }
         } else {
           setError(
@@ -109,8 +70,8 @@ export const useGetDataApi = ({
           );
           setData(initialData);
           if (callback) {
-            callback(response.data); // Execute callback with the full response data
-          } // Reset to initial data on error
+            callback(response.data);
+          }
         }
       })
       .catch((error) => {
@@ -123,7 +84,7 @@ export const useGetDataApi = ({
             error.message;
           setError(errorMessage);
           if (callback) {
-            callback(error.response?.data); // Execute callback with the full response data
+            callback(error.response?.data);
           }
         }
       })
@@ -160,7 +121,6 @@ export const useGetDataApi = ({
               callbackFun && callbackFun(response.data.items);
             } else {
               setLoading(false);
-
               setError(
                 response.data.error
                   ? response.data.error
@@ -190,6 +150,7 @@ export const useGetDataApi = ({
         'Component got unmounted or params changed.',
       );
   }, [initialUrl, queryParams, allowApiCall, method]);
+
   const updateApiData = useCallback(
     (updatedRow, actionType = 'update') => {
       let newData;
@@ -209,9 +170,11 @@ export const useGetDataApi = ({
     },
     [apiData],
   );
+
   const resetData = () => {
     setData(initialData);
   };
+
   return [
     { loading, apiData, error, initialUrl },
     {

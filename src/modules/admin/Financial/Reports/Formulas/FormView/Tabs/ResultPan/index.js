@@ -94,7 +94,7 @@ const ResultPan = ({ formikValues }) => {
                       <td className='text-center'>{item.period}</td>
                       <td className='text-end'>
                         <AppFormatter
-                          value={item.a_c}
+                          value={item.c}
                           format={{ type: 'number', decimal: 2 }}
                           Tag='div'
                           className='d-block w-100'
@@ -102,7 +102,7 @@ const ResultPan = ({ formikValues }) => {
                       </td>
                       <td className='text-end'>
                         <AppFormatter
-                          value={item.a_d}
+                          value={item.d}
                           format={{ type: 'number', decimal: 2 }}
                           Tag='div'
                           className='d-block w-100'

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { FormGroup, Label, Input, Button } from 'reactstrap';
@@ -30,6 +31,11 @@ const TableForm = ({ initialValues, onSubmit }) => {
       )}
     </Formik>
   );
+};
+
+TableForm.propTypes = {
+  initialValues: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default TableForm;

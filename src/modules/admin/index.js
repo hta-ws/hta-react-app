@@ -38,14 +38,10 @@ const TaskSchedulerLogPage = React.lazy(
 const IsYatirimMappingPage = React.lazy(
   () => import('./Financial/IsYatirimMapping'),
 );
-// const FinancialRatiosManagementPage = React.lazy(
-//   () =>
-//     import('./FinancialCalculationManagement/FinancialRatiosManagementPage'),
-// );
-// const StockSettingsPage = React.lazy(
-//   () => import('./admin/StockManagement/StockSettingsPage'),
-// );
 
+const CodeDefinitionPage = React.lazy(
+  () => import('./Financial/Definitions/CodeDefinition'),
+);
 // Route Configuration for admin module
 export const adminPagesConfigs = [
   {
@@ -102,6 +98,21 @@ export const adminPagesConfigs = [
     permittedRole: RoutePermittedRole.admin,
     path: '/admin/financial-result-management/report-code-formula-definitions',
     element: <ReportCodeFormulasPage />,
+  },
+  {
+    permittedRole: RoutePermittedRole.admin,
+    path: '/admin/financial-result-management/code-definition',
+    element: <CodeDefinitionPage />,
+  },
+  {
+    permittedRole: RoutePermittedRole.admin,
+    path: '/admin/financial-result-management/code-definition/:template',
+    element: <CodeDefinitionPage />,
+  },
+  {
+    permittedRole: RoutePermittedRole.admin,
+    path: '/admin/financial-result-management/code-definition/:template/:id',
+    element: <CodeDefinitionPage />,
   },
 
   // {

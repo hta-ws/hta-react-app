@@ -207,6 +207,7 @@ const AppKanbanBoard = ({ pageId = null }) => {
     };
 
     submitData(editCardPayload, 'POST', 'update-card', (response, error) => {
+      console.log('response', response, 'error', error);
       // debugger;
       // if (error) {
       //   console.error('Error editing card:', error);

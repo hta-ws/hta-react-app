@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -342,6 +343,11 @@ const WidgetForm = ({ initialValues = {}, onSubmit }) => {
       )}
     </Formik>
   );
+};
+
+WidgetForm.propTypes = {
+  initialValues: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default WidgetForm;
