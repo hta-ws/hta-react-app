@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useGetDataApi } from '@hta/hooks/APIHooks'; // Adjust the import path as necessary
+import { useParams } from 'react-router-dom';
+import { useGetDataApi } from '@hta/hooks/APIHooks';
 import { Card, CardBody, Row, Col, Table, Button } from 'reactstrap';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale'; // Türkçe için
 import { formatTime } from '@hta/helpers/Utils'; // formatTime
 import AppAlert from '@hta/components/AppAlert';
 
-const RunLogTab = ({ formData }) => {
+const RunLogTab = ({ templateId }) => {
   const runAction = 'run-fs-code-definition-job';
   const [apiStates, apiActions] = useGetDataApi({
     controller: 'definition',
@@ -15,8 +16,8 @@ const RunLogTab = ({ formData }) => {
     method: 'POST',
     initialData: [],
   });
+  const { id } = useParams();
 
-  const id = formData?.id;
   const { loading, apiData, error } = apiStates;
   const { setQueryParams } = apiActions;
   const params = { fs_code_definition_id: id };
@@ -70,6 +71,7 @@ const RunLogTab = ({ formData }) => {
                   <th>Kurulum saati</th>
                   <th>Calısma saati</th>
                   <th>Çalışma süresi</th>
+                  <th>Note</th>
                 </tr>
               </thead>
               <tbody>
@@ -100,6 +102,7 @@ const RunLogTab = ({ formData }) => {
                           : 'Bekliyor'}
                       </td>
                       <td>{formatTime(item.job_execution_time)}</td>
+                      <td>{item.notes}</td>
                     </tr>
                   ))}
               </tbody>
@@ -112,9 +115,7 @@ const RunLogTab = ({ formData }) => {
 };
 
 RunLogTab.propTypes = {
-  formData: PropTypes.shape({
-    id: PropTypes.number.isRequired, // Assuming `id` is a number
-  }).isRequired,
+  templateId: PropTypes.number.isRequired,
 };
 
 export default RunLogTab;

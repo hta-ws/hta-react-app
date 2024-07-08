@@ -10,11 +10,12 @@ import AppMetaTags from '@hta/components/AppMetaTags';
 import { Button, Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import RunLogModal from './RunLogModal';
-import CodeDefinitionList from './CodeDefinitionList';
-import CodeDefinitionTabs from './CodeDefinitionTabs';
+// import RunLogModal from './RunLogModal'; // Import the modal component
+import FormulaList from './FormulaList';
+import FormulaTabs from './FormulaTabs';
+// import FormulaRunLogModal from './FormulaRunLogModal';
 
-const CodeDefinition = () => {
+const FormulaDefinitionPage = () => {
   const { template, id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,8 +27,8 @@ const CodeDefinition = () => {
   const selectedTemplateId = useSelector(selectFsTemplateId);
 
   const [apiState, apiActions] = useGetDataApi({
-    controller: 'definition',
-    action: 'get-code-definition-list',
+    controller: 'formula-definition',
+    action: 'get-formula-definition-list',
     method: 'POST',
     initialData: [],
   });
@@ -103,12 +104,12 @@ const CodeDefinition = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <AppMetaTags
-        title='Rapor Formul ve Hesaplama Tanımlamaları'
-        description='Rapor Kodları ve Etiketleri Tanımlamak için kullanılır'
+        title='Rapor Formül ve Hesaplama Tanımlamaları'
+        description='Rapor Formülleri ve Hesaplamaları Tanımlamak için kullanılır'
       />
       <Card style={cardStyle}>
         <CardHeader className='d-flex justify-content-between align-items-center'>
-          <h2>Rapor Formul ve Hesaplama Tanımlamaları</h2>
+          <h2>Rapor Formül ve Hesaplama Tanımlamaları</h2>
           <div className='d-flex align-items-center'>
             <TemplateSelect />
             {currentTemplate && (
@@ -140,14 +141,15 @@ const CodeDefinition = () => {
           ) : (
             <Row className='gx-3'>
               <Col md={id || showNewForm ? '6' : '12'}>
-                <CodeDefinitionList
+                <FormulaList
                   apiState={apiState}
                   apiActions={apiActions}
+                  showNewForm={showNewForm}
                 />
               </Col>
               {(id || showNewForm) && (
                 <Col md={6}>
-                  <CodeDefinitionTabs
+                  <FormulaTabs
                     onClose={handleCloseForm}
                     showNewForm={showNewForm}
                     updateApiData={apiActions.updateApiData}
@@ -158,13 +160,13 @@ const CodeDefinition = () => {
           )}
         </CardBody>
       </Card>
-      <RunLogModal
+      {/* <FormulaRunLogModal
         isOpen={showRunLogModal}
         toggle={handleCloseRunLogModal}
         templateId={selectedTemplateId}
-      />
+      /> */}
     </DndProvider>
   );
 };
 
-export default CodeDefinition;
+export default FormulaDefinitionPage;

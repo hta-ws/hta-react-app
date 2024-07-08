@@ -17,18 +17,18 @@ import AppDataTable from '@hta/components/AppDataTable';
 import { TableColumns } from './TableColumns';
 import { TableViewBar, SearchBox } from '../../Components';
 
-const DefinitionList = () => {
+const DefinitionList = ({ apiState, apiActions }) => {
   const { template, id } = useParams(); // URL parametrelerinden template ve id'yi alıyoruz
   const navigate = useNavigate();
   const fsTemplateList = useSelector(selectFsTemplateList) || [];
-  const [apiState, apiActions] = useGetDataApi({
-    controller: 'definition',
-    action: 'get-code-definition-list',
-    initialData: [],
-    params: {},
-    initialCall: false,
-    method: 'POST',
-  });
+  // const [apiState, apiActions] = useGetDataApi({
+  //   controller: 'definition',
+  //   action: 'get-code-definition-list',
+  //   initialData: [],
+  //   params: {},
+  //   initialCall: false,
+  //   method: 'POST',
+  // });
   const [selectedRow, setSelectedRow] = useState(null);
   const [globalFilter, setGlobalFilter] = useState(''); // Global filter state
 

@@ -54,12 +54,18 @@ export const MenuData = [
             link: '/admin/financial-result-management/report-code-formula-definitions',
             roles: ['admin', 'user'], // Sadece admin erişebilir
           },
-          // {
-          //   id: 'kk',
-          //   label: 'Rasyo Formulleri',
-          //   link: '/son-bilancolar',
-          //   roles: ['admin', 'user'], // Hem admin hem de user erişebilir
-          // },
+          {
+            id: 'kk',
+            label: 'Kod tan8ımları yenı',
+            link: '/admin/financial-result-management/code-definition',
+            roles: ['admin', 'user'], // Hem admin hem de user erişebilir
+          },
+          {
+            id: 'kssk',
+            label: 'Yenı Formul tanımlama ',
+            link: '/admin/financial-result-management/formula-definition',
+            roles: ['admin', 'user'], // Hem admin hem de user erişebilir
+          },
         ],
       },
       {

@@ -21,6 +21,7 @@ const AppDataTable = ({
   error, // Add error prop
   selectedRecord,
   isDraggable,
+  isSortable = true,
   reorderRow,
 }) => {
   const [sorting, setSorting] = useState([]);
@@ -36,7 +37,7 @@ const AppDataTable = ({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    enableSorting: true,
+    enableSorting: isSortable, // Use isSortable to control sorting
     onGlobalFilterChange: setGlobalFilter,
   });
 
@@ -93,8 +94,12 @@ const AppDataTable = ({
                       colSpan={header.colSpan}
                       role='columnheader'
                       className={header.column.columnDef.className}
-                      style={{ cursor: 'pointer' }}
-                      onClick={header.column.getToggleSortingHandler()}
+                      style={{ cursor: isSortable ? 'pointer' : 'default' }}
+                      onClick={
+                        isSortable
+                          ? header.column.getToggleSortingHandler()
+                          : undefined
+                      }
                     >
                       {flexRender(
                         header.column.columnDef.header,
@@ -173,6 +178,7 @@ AppDataTable.propTypes = {
   error: PropTypes.string, // Add error prop type
   selectedRecord: PropTypes.object,
   isDraggable: PropTypes.bool,
+  isSortable: PropTypes.bool, // Add isSortable prop type
   reorderRow: PropTypes.func,
 };
 

@@ -15,10 +15,10 @@ import {
 } from 'reactstrap';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 import FormTab from './FormTab';
-import RunLogTab from './RunLogTab';
+import RunLogTab from '../../Components/RunLogTab';
 import ResultTab from './ResultTab';
 
-const DefinitionTabs = ({ onClose, showNewForm }) => {
+const CodeDefinitionTabs = ({ onClose, showNewForm, updateApiData }) => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('1');
   const [title, setTitle] = useState('Formül Tanımlama');
@@ -31,12 +31,12 @@ const DefinitionTabs = ({ onClose, showNewForm }) => {
     method: 'POST',
   });
 
+  // Set active tab to '1' whenever the id changes
   useEffect(() => {
-    if (id) {
-      apiActions.setQueryParams({ id: parseInt(id, 10) });
-    }
-  }, [id]);
+    if (showNewForm) setActiveTab('1');
+  }, [showNewForm]);
 
+  const { submitData } = apiActions;
   const toggleTab = (tab) => {
     if (!id && (tab === '2' || tab === '3' || tab === '4')) {
       return; // id null ise 2, 3 ve 4 numaralı tabları açmaya çalışma
@@ -44,9 +44,6 @@ const DefinitionTabs = ({ onClose, showNewForm }) => {
     setActiveTab(tab);
   };
 
-  useEffect(() => {
-    if (!id) apiActions.resetData();
-  }, [showNewForm, id]);
   const formContent = () => {
     if (showNewForm) {
       return (
@@ -54,25 +51,13 @@ const DefinitionTabs = ({ onClose, showNewForm }) => {
           <TabPane tabId='1'>
             <FormTab
               formData={null}
-              updateApiData={apiActions.updateApiData}
               onClose={onClose}
-              apiError={apiState.error}
+              updateApiData={updateApiData}
+              showNewForm={showNewForm}
             />
           </TabPane>
         </TabContent>
       );
-    }
-
-    if (apiState.loading) {
-      return <Spinner color='primary' />;
-    }
-
-    if (apiState.error) {
-      return <Alert color='danger'>{apiState.error}</Alert>;
-    }
-
-    if (!apiState.apiData) {
-      return <Alert color='danger'>ID bulunamadı</Alert>;
     }
 
     return (
@@ -80,13 +65,16 @@ const DefinitionTabs = ({ onClose, showNewForm }) => {
         <TabPane tabId='1'>
           <FormTab
             formData={apiState.apiData}
-            updateApiData={apiActions.updateApiData}
+            updateApiData={updateApiData}
             onClose={onClose}
             apiError={apiState.error}
+            submitData={submitData}
+            showNewForm={showNewForm}
           />
         </TabPane>
         <TabPane tabId='2'>
-          <RunLogTab formData={apiState.apiData} />
+          {/* <RunLogTab formData={apiState.apiData} /> */}
+          <RunLogTab entityType='code' entityLevel='id' />
         </TabPane>
         <TabPane tabId='3'>
           <ResultTab formData={apiState.apiData} />
@@ -148,9 +136,9 @@ const DefinitionTabs = ({ onClose, showNewForm }) => {
   );
 };
 
-DefinitionTabs.propTypes = {
+CodeDefinitionTabs.propTypes = {
   onClose: PropTypes.func.isRequired,
   showNewForm: PropTypes.bool.isRequired,
 };
 
-export default DefinitionTabs;
+export default CodeDefinitionTabs;

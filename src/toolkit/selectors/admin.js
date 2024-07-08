@@ -36,3 +36,15 @@ export const selectFsStock = createSelector(
   [selectFsAdmin],
   (fsAdmin) => fsAdmin.selectedFsStock || null,
 );
+
+// New selector for fsSpMetadataList
+export const selectFsSpMetadataList = createSelector(
+  [selectFsAdmin],
+  (fsAdmin) => fsAdmin.fsSpMetadataList || [],
+);
+
+// New selector for fsReportCodeList
+export const selectFsReportCodeList = createSelector(
+  [selectFsAdmin],
+  (fsAdmin) => fsAdmin.fsReportCodeList || [],
+);

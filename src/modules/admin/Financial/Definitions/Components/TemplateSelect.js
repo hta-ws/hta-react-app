@@ -5,15 +5,16 @@ import {
   DropdownItem,
   UncontrolledDropdown,
 } from 'reactstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFsTemplateList } from 'toolkit/actions/Admin';
 import { selectFsTemplateList } from 'toolkit/selectors';
 
 const TemplateSelect = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
-  const { template } = useParams();
+  const { template, id } = useParams();
   const fsTemplateList = useSelector(selectFsTemplateList) || [];
   const [activeTemplate, setActiveTemplate] = useState(null);
 
@@ -32,8 +33,18 @@ const TemplateSelect = () => {
     }
   }, [template, fsTemplateList]);
 
+  const getBasePath = () => {
+    const parts = location.pathname.split('/');
+    if (template && id) {
+      return parts.slice(0, -2).join('/');
+    } else if (template) {
+      return parts.slice(0, -1).join('/');
+    }
+    return parts.join('/');
+  };
+
   const handleSelect = (slug) => {
-    navigate(`/admin/financial-result-management/code-definition/${slug}`);
+    navigate(`${getBasePath()}/${slug}`);
   };
 
   const activeLabel = activeTemplate

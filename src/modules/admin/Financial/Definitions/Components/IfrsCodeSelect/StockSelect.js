@@ -15,16 +15,11 @@ const StockSelect = () => {
   const financialStatementFormatId = useSelector(selectFsTemplateId);
 
   useEffect(() => {
-    if (
-      !financialStatementSampleStockCodeList ||
-      financialStatementSampleStockCodeList.length === 0
-    ) {
-      dispatch(
-        getFsStockList({
-          financialStatementFormatId: financialStatementFormatId,
-        }),
-      );
-    }
+    dispatch(
+      getFsStockList({
+        fs_template_id: financialStatementFormatId,
+      }),
+    );
   }, [dispatch, financialStatementFormatId]);
 
   useEffect(() => {

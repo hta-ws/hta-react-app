@@ -65,3 +65,6 @@ export const SET_FS_TYPE_ID = 'set_fs_type_id';
 
 export const GET_FS_STOCK_LIST = 'get_fs_stock_list';
 export const SET_FS_STOCK = 'SET_FS_STOCK';
+
+export const GET_FS_SP_METADATA_LIST = 'get_fs_sp_metadata_list';
+export const GET_FS_REPORT_CODE_LIST = 'get_fs_report_code_list';

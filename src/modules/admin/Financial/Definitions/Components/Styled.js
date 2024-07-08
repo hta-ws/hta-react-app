@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import SimpleBar from 'simplebar-react';
 
 export const TableViewBar = styled(SimpleBar)`
-  height: calc(100vh - 240px);
+  height: calc(100vh - 270px);
 `;
 
 export const FormViewBar = styled(SimpleBar)`
