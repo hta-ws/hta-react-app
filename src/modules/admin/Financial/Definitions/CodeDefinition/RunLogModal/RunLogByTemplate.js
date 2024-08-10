@@ -1,29 +1,60 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
-import { useGetDataApi } from '@hta/hooks/APIHooks'; // Adjust the import path as necessary
+import { useSelector } from 'react-redux';
+import { useGetDataApi } from '@hta/hooks/APIHooks';
 import { Card, CardBody, Row, Col, Table, Button } from 'reactstrap';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale'; // Türkçe için
 import { formatTime } from '@hta/helpers/Utils'; // formatTime
 import AppAlert from '@hta/components/AppAlert';
+import { selectFsTemplateId } from 'toolkit/selectors'; // Import the selector
 
-const RunLogTab = () => {
-  const runAction = 'run-fs-code-definition-job';
+const RunLogByTemplate = ({ entityType = 'code' }) => {
+  // Updated the component name and added entityType prop
+  const fsTemplateId = useSelector(selectFsTemplateId); // Use selector to get template ID
+
+  const runAction = 'run-job';
   const [apiStates, apiActions] = useGetDataApi({
-    controller: 'definition',
-    action: 'get-fs-code-definition-run-log-list',
+    controller: 'run',
+    action: 'get-run-log-list',
     method: 'POST',
     initialData: [],
+    queryParams: {
+      entity_id: fsTemplateId,
+      entity_type: entityType, // entity_type prop used here
+      entity_level: 'template', // fixed to 'template'
+    },
   });
-  const { id } = useParams();
 
   const { loading, apiData, error } = apiStates;
-  const { setQueryParams } = apiActions;
-  const params = { fs_code_definition_id: id };
+  const { setQueryParams, submitData } = apiActions;
+
+  const params = {
+    entity_id: fsTemplateId,
+    entity_type: entityType,
+    entity_level: 'template',
+  };
+
   useEffect(() => {
-    setQueryParams(params);
-  }, [id, setQueryParams]);
+    if (fsTemplateId) {
+      setQueryParams(params);
+    }
+  }, [fsTemplateId, setQueryParams]);
+
+  const handleDelete = (logId) => {
+    const deleteParams = { id: logId };
+    submitData(deleteParams, 'DELETE', 'delete-run-log', () => {
+      // Refresh the log list after delete
+      setQueryParams(params);
+    });
+  };
+
+  const handleRunJob = () => {
+    submitData(params, 'POST', runAction, () => {
+      // Refresh the log list after running the job
+      setQueryParams(params);
+    });
+  };
 
   return (
     <Card>
@@ -33,7 +64,7 @@ const RunLogTab = () => {
           <Col className='col-md-auto ms-auto '>
             <Button
               className='btn btn-success me-2'
-              onClick={() => setQueryParams(params, runAction)}
+              onClick={handleRunJob}
               disabled={!apiData?.canRunJob}
             >
               <i className=' ri-stack-fill align-bottom me-1'></i>
@@ -69,9 +100,10 @@ const RunLogTab = () => {
                   <th>No</th>
                   <th>Durumu</th>
                   <th>Kurulum saati</th>
-                  <th>Calısma saati</th>
+                  <th>Çalışma saati</th>
                   <th>Çalışma süresi</th>
                   <th>Note</th>
+                  <th>Aksiyon</th>
                 </tr>
               </thead>
               <tbody>
@@ -103,6 +135,16 @@ const RunLogTab = () => {
                       </td>
                       <td>{formatTime(item.job_execution_time)}</td>
                       <td>{item.notes}</td>
+                      <td>
+                        {(item.status_id === 1 || item.status_id === 2) && (
+                          <Button
+                            className='btn btn-sm btn-light'
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            <i className='ri-delete-bin-line'></i>
+                          </Button>
+                        )}
+                      </td>
                     </tr>
                   ))}
               </tbody>
@@ -114,10 +156,8 @@ const RunLogTab = () => {
   );
 };
 
-RunLogTab.propTypes = {
-  formData: PropTypes.shape({
-    id: PropTypes.number, // Assuming `id` is a number
-  }),
+RunLogByTemplate.propTypes = {
+  entityType: PropTypes.string.isRequired, // 'code' veya 'formula'
 };
 
-export default RunLogTab;
+export default RunLogByTemplate;

@@ -3,9 +3,21 @@ import PropTypes from 'prop-types';
 import { BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 import SimpleBar from 'simplebar-react';
-import { Card, CardBody } from 'reactstrap';
-// SimpleBar için stil dosyası
 
+/**
+ * FormulaView component
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.formikValues - Formik values for the formula
+ * @param {number} props.formikValues.sp_id - ID of the stored procedure
+ * @param {string} props.formikValues.p_positive_codes - Positive codes for the formula
+ * @param {string} props.formikValues.p_negative_codes - Negative codes for the formula
+ * @param {string} props.formikValues.s_label - Label for the formula
+ * @param {string} props.formikValues.p_numerator_report_code - Numerator report code
+ * @param {string} props.formikValues.p_denominator_report_code - Denominator report code
+ * @param {number} props.formikValues.p_multiplier - Multiplier for the formula
+ * @param {string} props.formikValues.p_report_code - Report code
+ */
 const FormulaView = ({ formikValues }) => {
   const {
     sp_id,
@@ -31,6 +43,7 @@ const FormulaView = ({ formikValues }) => {
         .join(' ') + suffix
     );
   };
+
   const formatCodes1 = (codes) => {
     // codes değeri boşsa (null, undefined veya boş string), boş string dön
     if (!codes) {
@@ -76,7 +89,7 @@ const FormulaView = ({ formikValues }) => {
       );
 
       // Multiplier kontrolü - eğer tanımlı değilse 1 kabul et
-      //const multiplier = p_multiplier || '1';
+      // const multiplier = p_multiplier || '1';
 
       // Formülü oluştur
       return `\\text{${s_label}} = \\left(\\frac{${formattedReportCodeCurrentYear} + ${formattedReportCodePreviousYear}}{2}\\right)`;

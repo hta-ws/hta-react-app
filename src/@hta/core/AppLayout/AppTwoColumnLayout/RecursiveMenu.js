@@ -1,14 +1,35 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types'; // PropTypes'ı import et
+import PropTypes from 'prop-types';
 import { Collapse } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import StockHeader from './components/StockHeader'; // Bileşeni import et
+
+// Bileşen haritası
+const componentsMap = {
+  StockHeader: StockHeader,
+};
+
 const MenuItem = ({ item }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
 
+  // `renderer` kontrolü
+  if (typeof item.renderer === 'function') {
+    return <>{item.renderer({ label: item.label })}</>;
+  }
+
+  if (typeof item.renderer === 'string' && componentsMap[item.renderer]) {
+    const Component = componentsMap[item.renderer];
+    return (
+      <>
+        <Component label={item.label} />
+      </>
+    );
+  }
+
   return (
-    <li className='nav-item'>
+    <>
       <Link
         to={item.link || '#'}
         onClick={item.subItems ? toggle : null}
@@ -31,7 +52,7 @@ const MenuItem = ({ item }) => {
           </ul>
         </Collapse>
       )}
-    </li>
+    </>
   );
 };
 
@@ -43,11 +64,18 @@ MenuItem.propTypes = {
     subItems: PropTypes.arrayOf(PropTypes.object),
     badgeName: PropTypes.string,
     badgeColor: PropTypes.string,
+    renderer: PropTypes.oneOfType([PropTypes.func, PropTypes.string]), // renderer kontrolü
   }).isRequired,
 };
 
 const RecursiveMenu = ({ items }) => {
-  return items.map((item, index) => <MenuItem key={index} item={item} />);
+  return (
+    <>
+      {items.map((item, index) => (
+        <MenuItem key={index} item={item} />
+      ))}
+    </>
+  );
 };
 
 // PropTypes ile items'ın beklenen yapısını tanımla

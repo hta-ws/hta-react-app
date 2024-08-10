@@ -2,29 +2,62 @@
 export const MenuData = [
   {
     id: 'Anasayfa',
-    label: 'Anasayfa',
+    label: 'Ana Sayfa',
     icon: 'ri-home-8-line',
     link: '/anasayfa',
-    roles: ['admin', 'user'], // Sadece admin erişebilir
+    roles: ['admin', 'user'],
   },
   {
+    id: 'Ara',
+    label: 'Arama',
+    icon: ' ri-search-line',
+    link: '/anasayfa',
+    roles: ['admin', 'user'],
+  },
+
+  {
+    id: 'stock-dashboard',
+  },
+  {
+    label: 'Menu with Function',
+    renderer: (props) => {
+      return <div>{props.label}ğğğğğ</div>; // Bu öğe bir fonksiyon kullanacak
+    },
+  },
+
+  {
     id: 'hisse',
-    label: 'Hisse Analizi',
+    label: 'BOSSA',
     icon: 'ri-dashboard-line',
     link: '/dashboard',
-    roles: ['admin', 'user'], // Hem admin hem de user erişebilir
+    roles: ['admin', 'user'],
+
     subItems: [
+      {
+        label: 'Menu',
+        isHeader: true,
+      },
+      {
+        label: 'Menu with Function',
+        renderer: (props) => {
+          return <div>{props.label}ğğğğğ</div>; // Bu öğe bir fonksiyon kullanacak
+        },
+      },
       {
         id: 'analytics',
         label: 'Özet',
         link: '/hisse/ozet',
-        roles: ['admin', 'user'], // Sadece admin erişebilir
+        roles: ['admin', 'user'],
+      },
+      {
+        label: 'Menu',
+        renderer: 'StockHeader', // Bu öğe özel bir renderer kullanacak
       },
       {
         id: 'reports',
         label: 'Reports',
         link: '/dashboard/reports',
-        roles: ['admin', 'user'], // Hem admin hem de user erişebilir
+        roles: ['admin', 'user'],
       },
     ],
   },
@@ -33,61 +66,59 @@ export const MenuData = [
     label: 'Yonetim Paneli',
     icon: 'ri-settings-3-line',
     link: '/dashboard',
-    roles: ['admin'], // Hem admin hem de user erişebilir
+    roles: ['admin'],
     subItems: [
       {
         id: 'Bilanco Rasyo Hesaplamalrı',
-
         label: 'Rayolar Hesaplaması',
         link: '/admin/financial-data-management/balance-sheet',
-        roles: ['admin', 'user'], // Sadece admin erişebilir
+        roles: ['admin', 'user'],
         subItems: [
           {
-            id: 'kod-definitions',
-            label: 'Kod Tanımları',
-            link: '/admin/financial-result-management/report-code-population-definitions',
-            roles: ['admin'], // Sadece admin erişebilir
-          },
-          {
-            id: 'bilancodan-alinacak-kodlar',
-            label: 'Formul tanımları',
-            link: '/admin/financial-result-management/report-code-formula-definitions',
-            roles: ['admin', 'user'], // Sadece admin erişebilir
-          },
-          {
             id: 'kk',
-            label: 'Kod tan8ımları yenı',
+            label: 'Kod Tanımları',
             link: '/admin/financial-result-management/code-definition',
-            roles: ['admin', 'user'], // Hem admin hem de user erişebilir
+            roles: ['admin', 'user'],
           },
           {
             id: 'kssk',
-            label: 'Yenı Formul tanımlama ',
+            label: 'Yeni Formül Tanımlama',
             link: '/admin/financial-result-management/formula-definition',
-            roles: ['admin', 'user'], // Hem admin hem de user erişebilir
+            roles: ['admin', 'user'],
           },
         ],
       },
       {
         id: 'task',
-
-        label: 'İş Günlügü ',
+        label: 'İş Günlüğü',
         link: '#',
-        roles: ['admin', 'user'], // Sadece admin erişebilir
+        roles: ['admin', 'user'],
         subItems: [
           {
             id: 'task-edit',
-            label: 'İş Günlügü Listesi',
+            label: 'İş Günlüğü Listesi',
             link: '/admin/task/list',
-            roles: ['admin'], // Sadece admin erişebilir
+            roles: ['admin'],
           },
         ],
       },
       {
         id: 'isyatirim-mapping',
-        label: 'İsyatirim Eşleme',
+        label: 'İş Yatırım Eşleme',
         link: '/admin/isyatirim-mapping',
-        roles: ['admin', 'user'], // Hem admin hem de user erişebilir
+        roles: ['admin', 'user'],
+      },
+      {
+        id: 'kk',
+        label: 'Kod Tanımları',
+        link: '/admin/financial-result-management/code-definition',
+        roles: ['admin', 'user'],
+      },
+      {
+        id: 'kssk',
+        label: 'Yeni Formül Tanımlama',
+        link: '/admin/financial-result-management/formula-definition',
+        roles: ['admin', 'user'],
       },
     ],
   },
@@ -96,6 +127,6 @@ export const MenuData = [
     label: 'Settings',
     icon: 'ri-settings-3-line',
     link: '/son-bilancolar',
-    roles: ['user'], // Sadece admin erişebilir
+    roles: ['user'],
   },
 ];

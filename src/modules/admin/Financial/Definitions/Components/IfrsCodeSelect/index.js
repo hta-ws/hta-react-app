@@ -11,11 +11,7 @@ import {
   Col,
 } from 'reactstrap';
 import ToggleSwitch from './ToggleSwitch';
-import {
-  selectFsType,
-  selectFsTemplateId,
-  selectFsStock,
-} from 'toolkit/selectors';
+import { selectFsType, selectFsStock } from 'toolkit/selectors';
 import { useDebounce } from '@hta/hooks/useDebounce';
 import SimpleBar from 'simplebar-react';
 import styled from 'styled-components';
@@ -23,13 +19,21 @@ import AppDataTable from '@hta/components/AppDataTable';
 import TypeSelect from './TypeSelect';
 import { getTableColumns } from './TableColumns';
 import { SearchBox } from '../SearchBox';
-import StockSelect from './StockSelect';
+import StockSelect from '../StockSelect';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 
 export const StyledSimpleBar = styled(SimpleBar)`
   height: calc(100vh - 276px);
 `;
 
+/**
+ * IfrsCodeSelect component
+ *
+ * @param {Object} props - Component props
+ * @param {boolean} props.isOpen - Determines if the modal is open
+ * @param {function} props.toggle - Function to toggle the modal
+ * @param {function} props.onReportCodeSelect - Function to handle the selection of a report code
+ */
 function IfrsCodeSelect({ isOpen, toggle, onReportCodeSelect }) {
   const fsType = useSelector(selectFsType);
   const selectedStock = useSelector(selectFsStock);

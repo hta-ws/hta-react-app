@@ -1,35 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import {
-  selectSelectedFormulaRecord,
-  selectFsSpMetadataList,
-  selectFsTemplateId,
-} from 'toolkit/selectors';
-import { getFsSpMetadataList } from 'toolkit/actions';
+import { selectFsSpMetadataList, selectFsTemplateId } from 'toolkit/selectors';
+import { getFsSpMetadataList, setSelectedFormulaRecord } from 'toolkit/actions';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 import { Row, Col } from 'reactstrap';
 import AppAlert from '@hta/components/AppAlert';
-import { setSelectedFormulaRecord } from 'toolkit/actions';
-import SpSelectInput from 'modules/admin/Financial/Reports/Components/SpSelectInput';
-import TextDivider from 'modules/admin/Financial/Reports/Components/TextDivider';
+import SpSelectInput from '../../../Components/SpSelectInput';
+import TextDivider from '../../../Components/TextDivider';
 import SelectReportCode from '../../../Components/SelectReportCode';
-import FormikInput from 'modules/admin/Financial/Reports/Components/FormikInput';
-import InputForReportCode from 'modules/admin/Financial/Reports/Components/InputForReportCode';
+import FormikInput from '../../../Components/FormikInput';
+import InputForReportCode from '../../../Components/InputForReportCode';
 import FormulaView from './FormulaView';
 import AppDeleteModal from '@hta/components/AppDeleteModal';
+import { toast } from 'react-toastify';
 
 const FormulaForm = ({ updateApiData }) => {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { template, id } = useParams();
   const [deleteModal, setDeleteModal] = useState(false);
-  const selectedRecord = useSelector(selectSelectedFormulaRecord);
   const spMetadataList = useSelector(selectFsSpMetadataList);
   const selectedTemplateId = useSelector(selectFsTemplateId);
-  console.log('spMetadataList', spMetadataList);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState();
   const [validationSchema, setValidationSchema] = useState();
@@ -79,7 +74,6 @@ const FormulaForm = ({ updateApiData }) => {
   }, [spId, spMetadataList]);
 
   const handleSpChange = (value) => {
-    console.log('spId', value);
     setSpId(value);
   };
 
@@ -96,7 +90,17 @@ const FormulaForm = ({ updateApiData }) => {
     });
     setDeleteModal(false);
   };
-  console.log('formData', formData);
+
+  const getBasePath = () => {
+    const parts = location.pathname.split('/');
+    if (template && id) {
+      return parts.slice(0, -2).join('/');
+    } else if (template) {
+      return parts.slice(0, -1).join('/');
+    }
+    return parts.join('/');
+  };
+
   const formik = useFormik({
     initialValues: formData,
     validationSchema: validationSchema,
@@ -106,11 +110,36 @@ const FormulaForm = ({ updateApiData }) => {
       values.fs_template_id = selectedTemplateId;
       submitData(values, method, action, (responseData) => {
         if (responseData?.code === 0) {
+          toast.success(responseData?.message, {
+            autoClose: 3000,
+          });
           updateApiData(responseData.items);
-          if (!values.id) {
-            dispatch(setSelectedFormulaRecord(responseData.items));
-          }
+          setFormData(responseData.items);
+          const newId = responseData.items.id;
+          if (!values.id) navigate(`${getBasePath()}/${template}/${newId}`);
+          updateApiData(responseData.items);
           setSubmitting(false);
+        } else {
+          let errorMessage = 'HATA ALINDI';
+
+          if (responseData?.error) {
+            if (typeof responseData.error === 'object') {
+              errorMessage = Object.values(responseData.error)
+                .flat()
+                .join(', ');
+            } else {
+              errorMessage = responseData.error.toString();
+            }
+          } else if (responseData?.message) {
+            errorMessage = responseData.message;
+          }
+
+          toast.error(errorMessage, {
+            autoClose: 3000,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
         }
         setSubmitting(false);
       });
@@ -170,6 +199,15 @@ const FormulaForm = ({ updateApiData }) => {
                 label={meta.label}
                 error={formik.errors[meta.parameter_name]}
                 touched={formik.touched[meta.parameter_name]}
+              />
+            ) : meta.parameter_type === 'number' ? (
+              <FormikInput
+                type='number'
+                step='0.0001'
+                min='-1000000000000'
+                field={formik.getFieldProps(meta.parameter_name)}
+                form={formik}
+                label={meta.label || meta.parameter_name}
               />
             ) : (
               <FormikInput
@@ -250,14 +288,9 @@ const createValidationSchema = (metadata, spId) => {
     (meta) => meta.fs_sp_definition_id === spId,
   );
 
-  console.log('Relevant Metadata:', relevantMetadata); // Debugging: Log relevant metadata
-
   return Yup.object().shape(
     relevantMetadata.reduce(
       (acc, meta) => {
-        console.log(
-          `Parameter: ${meta.parameter_name}, Required: ${meta.required}`,
-        ); // Debugging: Log parameter name and its required value
         let validator;
 
         if (meta.required) {
@@ -272,7 +305,6 @@ const createValidationSchema = (metadata, spId) => {
         return acc;
       },
       {
-        // Initialize the reduction with a validation for sp_id
         sp_id: Yup.number().required(
           'Hesaplamada kullanılacak formul seçim zorunludur',
         ),

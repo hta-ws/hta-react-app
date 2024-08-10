@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardBody, Row, Col, Alert } from 'reactstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { Card, CardBody, Row, Col } from 'reactstrap';
+import { useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
@@ -12,6 +12,8 @@ import { StyledSimpleBarForm } from 'modules/admin/Financial/Reports/Components/
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 import { selectFsTemplateId } from 'toolkit/selectors';
 import { toast } from 'react-toastify';
+import slugify from 'react-slugify';
+
 const validationSchema = Yup.object().shape({
   report_code: Yup.string().required('Rapor kodu zorunludur'),
   label: Yup.string().required('Açıklama zorunludur'),
@@ -20,7 +22,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const FormTab = ({ updateApiData, onClose, showNewForm }) => {
-  const dispatch = useDispatch();
   const [isModalOpen, setModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const navigate = useNavigate();
@@ -119,6 +120,12 @@ const FormTab = ({ updateApiData, onClose, showNewForm }) => {
     }
     return parts.join('/');
   };
+
+  const handleSlugify = (setFieldValue, values) => {
+    const sLabelValue = slugify(values.label, { delimiter: '_' });
+    setFieldValue('report_code', sLabelValue);
+  };
+
   return (
     <Card>
       <CardBody>
@@ -194,8 +201,30 @@ const FormTab = ({ updateApiData, onClose, showNewForm }) => {
                 });
               }}
             >
-              {({ isSubmitting }) => (
+              {({ isSubmitting, setFieldValue, values }) => (
                 <Form autoComplete='off'>
+                  <div className='mb-3'>
+                    <label htmlFor='label'>Açıklama</label>
+                    <div className='input-group'>
+                      <Field
+                        name='label'
+                        type='text'
+                        className='form-control'
+                      />
+                      <button
+                        className='btn btn-outline-secondary'
+                        type='button'
+                        onClick={() => handleSlugify(setFieldValue, values)}
+                      >
+                        Slug Oluştur
+                      </button>
+                    </div>
+                    <ErrorMessage
+                      name='label'
+                      component='div'
+                      className='field-error text-warning'
+                    />
+                  </div>
                   <div className='mb-3'>
                     <label htmlFor='report_code'>Repor Kodu</label>
                     <Field
@@ -206,15 +235,6 @@ const FormTab = ({ updateApiData, onClose, showNewForm }) => {
                     />
                     <ErrorMessage
                       name='report_code'
-                      component='div'
-                      className='field-error text-warning'
-                    />
-                  </div>
-                  <div className='mb-3'>
-                    <label htmlFor='label'>Açıklama</label>
-                    <Field name='label' type='text' className='form-control' />
-                    <ErrorMessage
-                      name='label'
                       component='div'
                       className='field-error text-warning'
                     />
@@ -332,7 +352,8 @@ FormTab.propTypes = {
   formData: PropTypes.object,
   updateApiData: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  apiError: PropTypes.string, // Adding apiError prop type
+  apiError: PropTypes.string,
+  showNewForm: PropTypes.bool.isRequired, // Adding apiError prop type
 };
 
 export default FormTab;

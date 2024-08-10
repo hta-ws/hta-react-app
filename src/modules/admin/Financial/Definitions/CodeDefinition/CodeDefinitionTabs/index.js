@@ -10,18 +10,15 @@ import {
   NavLink,
   TabContent,
   TabPane,
-  Spinner,
-  Alert,
 } from 'reactstrap';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 import FormTab from './FormTab';
-import RunLogTab from '../../Components/RunLogTab';
-import ResultTab from './ResultTab';
+import RunLogTab from '../../Components/Tabs/RunLogTab';
+import ResultTab from '../../Components/Tabs/ResultTab';
 
 const CodeDefinitionTabs = ({ onClose, showNewForm, updateApiData }) => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('1');
-  const [title, setTitle] = useState('Formül Tanımlama');
   const [apiState, apiActions] = useGetDataApi({
     controller: 'definition',
     action: 'get-code-definition',
@@ -31,15 +28,15 @@ const CodeDefinitionTabs = ({ onClose, showNewForm, updateApiData }) => {
     method: 'POST',
   });
 
-  // Set active tab to '1' whenever the id changes
+  // id değiştiğinde aktif tab'ı '1' olarak ayarla
   useEffect(() => {
     if (showNewForm) setActiveTab('1');
   }, [showNewForm]);
 
   const { submitData } = apiActions;
   const toggleTab = (tab) => {
-    if (!id && (tab === '2' || tab === '3' || tab === '4')) {
-      return; // id null ise 2, 3 ve 4 numaralı tabları açmaya çalışma
+    if (!id && (tab === '2' || tab === '3')) {
+      return; // id null ise 2 ve 3 numaralı tabları açmaya çalışma
     }
     setActiveTab(tab);
   };
@@ -73,7 +70,6 @@ const CodeDefinitionTabs = ({ onClose, showNewForm, updateApiData }) => {
           />
         </TabPane>
         <TabPane tabId='2'>
-          {/* <RunLogTab formData={apiState.apiData} /> */}
           <RunLogTab entityType='code' entityLevel='id' />
         </TabPane>
         <TabPane tabId='3'>
@@ -87,10 +83,9 @@ const CodeDefinitionTabs = ({ onClose, showNewForm, updateApiData }) => {
     <Card>
       <CardHeader className='d-flex justify-content-between align-items-center'>
         <h5 className='mb-0'>
-          <span className='text-uppercase'>{title}</span>
+          <span className='text-uppercase'>Formül Tanımlama</span>
           <span className='text-muted fw-normal fs-13 fw-500'>
-            {' '}
-            {title !== '' ? 'Formül Tanımlama  ' : ' Yeni Formül Tanımlama'}
+            {id ? 'Formül Tanımlama' : 'Yeni Formül Tanımlama'}
           </span>
         </h5>
         <button
@@ -113,7 +108,7 @@ const CodeDefinitionTabs = ({ onClose, showNewForm, updateApiData }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              disabled={!id} // Eğer id null ise bu tab'ı disable yap
+              disabled={!id} // Eğer id null ise bu tab'ı devre dışı bırak
               className={activeTab === '2' ? 'active' : ''}
               onClick={() => toggleTab('2')}
             >
@@ -122,7 +117,7 @@ const CodeDefinitionTabs = ({ onClose, showNewForm, updateApiData }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              disabled={!id} // Eğer id null ise bu tab'ı disable yap
+              disabled={!id} // Eğer id null ise bu tab'ı devre dışı bırak
               className={activeTab === '3' ? 'active' : ''}
               onClick={() => toggleTab('3')}
             >
@@ -139,6 +134,7 @@ const CodeDefinitionTabs = ({ onClose, showNewForm, updateApiData }) => {
 CodeDefinitionTabs.propTypes = {
   onClose: PropTypes.func.isRequired,
   showNewForm: PropTypes.bool.isRequired,
+  updateApiData: PropTypes.func.isRequired,
 };
 
 export default CodeDefinitionTabs;

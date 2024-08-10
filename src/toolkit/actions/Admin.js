@@ -12,6 +12,7 @@ import {
   SET_FS_STOCK,
   GET_FS_SP_METADATA_LIST,
   GET_FS_REPORT_CODE_LIST,
+  GET_FS_PROCEDURE_LIST, // Updated action type
 } from 'shared/ActionTypes';
 
 import jwtAxios from '@hta/services/auth/jwt-auth';
@@ -143,6 +144,32 @@ export const getFsReportCodeList = (params = {}) => {
           dispatch({ type: FETCH_SUCCESS });
           dispatch({
             type: GET_FS_REPORT_CODE_LIST,
+            payload: response.data.items,
+          });
+        } else {
+          dispatch({
+            type: FETCH_ERROR,
+            payload: 'Something Went Wrong',
+          });
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: FETCH_ERROR, payload: error?.message || 'Hata' });
+      });
+  };
+};
+
+// New action for fetching FS procedure list
+export const getFsProcedureList = (params) => {
+  return (dispatch) => {
+    dispatch({ type: FETCH_START });
+    jwtAxios
+      .post('/formula-definition/get-fs-procedure-list', params)
+      .then((response) => {
+        if (response.status === 200) {
+          dispatch({ type: FETCH_SUCCESS });
+          dispatch({
+            type: GET_FS_PROCEDURE_LIST,
             payload: response.data.items,
           });
         } else {

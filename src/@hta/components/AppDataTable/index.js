@@ -12,7 +12,7 @@ import DraggableRow from './DraggableRow';
 
 const AppDataTable = ({
   columns,
-  data = [], // Default to an empty array if data is null
+  data = null, // Default to null if data is null
   debouncedSearchTerm,
   setGlobalFilter,
   onSelectRow,
@@ -23,12 +23,13 @@ const AppDataTable = ({
   isDraggable,
   isSortable = true,
   reorderRow,
+  tableClass = 'table-hover table-striped', // Default class
 }) => {
   const [sorting, setSorting] = useState([]);
 
   const table = useReactTable({
     columns,
-    data,
+    data: data || [], // Provide empty array if data is null
     state: {
       sorting,
       globalFilter: debouncedSearchTerm,
@@ -82,7 +83,7 @@ const AppDataTable = ({
           <h6>Hata: {error}</h6>
         </div>
       ) : (
-        <Table className='table-hover table-striped'>
+        <Table className={tableClass}>
           <thead className='bg-light sticky-top'>
             <tr>
               {isDraggable && <th></th>}
@@ -118,7 +119,7 @@ const AppDataTable = ({
             </tr>
           </thead>
           <tbody role='rowgroup'>
-            {data.length > 0 ? (
+            {data && data.length > 0 ? (
               table.getRowModel().rows.map((row) => {
                 if (isDraggable) {
                   return (
@@ -180,6 +181,7 @@ AppDataTable.propTypes = {
   isDraggable: PropTypes.bool,
   isSortable: PropTypes.bool, // Add isSortable prop type
   reorderRow: PropTypes.func,
+  tableClass: PropTypes.string, // Add tableClass prop type
 };
 
 export default AppDataTable;

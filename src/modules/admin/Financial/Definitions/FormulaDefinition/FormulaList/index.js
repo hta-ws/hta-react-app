@@ -9,14 +9,13 @@ import {
   Spinner,
   Alert,
 } from 'reactstrap';
-
+import PropTypes from 'prop-types';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectFsTemplateList } from 'toolkit/selectors';
 import AppDataTable from '@hta/components/AppDataTable';
 import { TableColumns } from './TableColumns';
-import { TableViewBar, SearchBox } from '../../Components';
-import DragToggleHeader from '../../Components/DragToggleHeader'; // Import DragToggleHeader
+import { TableViewBar, SearchBox, DragToggleHeader } from '../../Components';
 
 const FormulaList = ({ apiState, apiActions, showNewForm }) => {
   const { template, id } = useParams(); // URL parametrelerinden template ve id'yi alıyoruz
@@ -66,11 +65,6 @@ const FormulaList = ({ apiState, apiActions, showNewForm }) => {
     setData(apiState.apiData);
   }, [apiState.apiData]);
 
-  const cardStyle = {
-    height: 'calc(100vh - 400px)',
-    backgroundColor: 'var(--vz-body-bg)',
-  };
-
   const handleSelectRow = (row) => {
     if (!isDraggable) {
       setSelectedRow(row);
@@ -111,6 +105,7 @@ const FormulaList = ({ apiState, apiActions, showNewForm }) => {
 
   const reorderRow = (fromId, toId) => {
     const updatedData = [...data];
+    console.log();
     const fromIndex = updatedData.findIndex((item) => item.id === fromId);
     const toIndex = updatedData.findIndex((item) => item.id === toId);
 
@@ -206,6 +201,19 @@ const FormulaList = ({ apiState, apiActions, showNewForm }) => {
       </CardBody>
     </Card>
   );
+};
+
+FormulaList.propTypes = {
+  apiState: PropTypes.shape({
+    loading: PropTypes.bool,
+    error: PropTypes.string,
+    apiData: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+  apiActions: PropTypes.shape({
+    setQueryParams: PropTypes.func.isRequired,
+    submitData: PropTypes.func.isRequired,
+  }).isRequired,
+  showNewForm: PropTypes.bool.isRequired,
 };
 
 export default FormulaList;

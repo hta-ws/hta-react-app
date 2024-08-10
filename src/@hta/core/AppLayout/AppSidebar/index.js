@@ -46,7 +46,7 @@ const AppSidebar = () => {
   return (
     <React.Fragment>
       <div className='app-menu navbar-menu'>
-        <div className='navbar-brand-box'>
+        {/* <div className='navbar-brand-box'>
           <Link to='/' className='logo logo-dark'>
             <span className='logo-sm'>
               <img src={logoSm} alt='' height='22' />
@@ -72,7 +72,7 @@ const AppSidebar = () => {
           >
             <i className='ri-record-circle-line'></i>
           </button>
-        </div>
+        </div> */}
 
         <AppTwoColumnLayout layout='twocolumn' />
 

@@ -68,3 +68,6 @@ export const SET_FS_STOCK = 'SET_FS_STOCK';
 
 export const GET_FS_SP_METADATA_LIST = 'get_fs_sp_metadata_list';
 export const GET_FS_REPORT_CODE_LIST = 'get_fs_report_code_list';
+export const GET_FS_PROCEDURE_LIST = 'get_fs_procedure_list';
+
+export const SET_STOCK_CODE = 'SET_STOCK_CODE';

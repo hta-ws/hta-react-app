@@ -9,8 +9,10 @@ import {
   CHANGE_SIDEBAR_VISIBILITY_TYPE,
   TOGGLE_MENU,
   SET_MENU_ITEMS,
+  SET_STOCK_CODE, // Add this new action type
 } from 'shared/ActionTypes';
 import { MenuData } from 'shared/MenuData';
+import { StockMenuData } from 'shared/StockMenuData';
 import { createReducer } from '@reduxjs/toolkit';
 import {
   layoutTypes,
@@ -25,6 +27,7 @@ import {
   preloaderTypes,
   sidebarVisibilitytypes,
 } from 'shared/Layout';
+
 const initialSettings = {
   initialPath: '/',
   layoutType: layoutTypes.TWOCOLUMN,
@@ -40,6 +43,21 @@ const initialSettings = {
   sidebarVisibilityType: sidebarVisibilitytypes.SHOW,
   menuItems: MenuData,
   activeMenus: {},
+  stock_code: null, // Initialize stock_code as null
+};
+
+const replaceStockCodePlaceholders = (menuItems, stockCode) => {
+  return menuItems.map((item) => {
+    const newItem = { ...item };
+    newItem.label = item.label.replace('{stock_code}', stockCode);
+    newItem.link = item.link.replace('{stock_code}', stockCode);
+
+    if (item.subItems) {
+      newItem.subItems = replaceStockCodePlaceholders(item.subItems, stockCode);
+    }
+
+    return newItem;
+  });
 };
 
 const layoutReducer = createReducer(initialSettings, (builder) => {
@@ -50,7 +68,6 @@ const layoutReducer = createReducer(initialSettings, (builder) => {
     .addCase(CHANGE_LAYOUT, (state, action) => {
       state.layoutType = action.payload;
     })
-
     .addCase(CHANGE_LAYOUT_MODE, (state, action) => {
       state.layoutModeType = action.payload;
     })
@@ -69,13 +86,38 @@ const layoutReducer = createReducer(initialSettings, (builder) => {
     .addCase(CHANGE_SIDEBAR_VISIBILITY_TYPE, (state, action) => {
       state.sidebarVisibilitytype = action.payload;
     })
-
     .addCase(TOGGLE_MENU, (state, action) => {
       const menuId = action.payload;
       state.activeMenus[menuId] = !state.activeMenus[menuId];
     })
     .addCase(SET_MENU_ITEMS, (state, action) => {
       state.menuItems = action.payload;
+    })
+    .addCase(SET_STOCK_CODE, (state, action) => {
+      state.stock_code = action.payload;
+
+      // Replace stock code placeholders in StockMenuData
+      const stockMenuItems = replaceStockCodePlaceholders(
+        StockMenuData,
+        state.stock_code,
+      );
+
+      // Find the index of the item with id 'stock-dashboard'
+      const stockDashboardIndex = state.menuItems.findIndex(
+        (item) => item.id === 'stock-dashboard',
+      );
+
+      if (stockDashboardIndex !== -1) {
+        // Replace the existing item with stockMenuItems
+        state.menuItems = [
+          ...state.menuItems.slice(0, stockDashboardIndex),
+          ...stockMenuItems,
+          ...state.menuItems.slice(stockDashboardIndex + 1),
+        ];
+      } else {
+        // If 'stock-dashboard' is not found, append stockMenuItems
+        state.menuItems = [...state.menuItems, ...stockMenuItems];
+      }
     });
 });
 

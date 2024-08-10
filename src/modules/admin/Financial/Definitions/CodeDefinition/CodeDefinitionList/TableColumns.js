@@ -4,10 +4,10 @@ import { createColumnHelper } from '@tanstack/react-table';
 const columnHelper = createColumnHelper();
 
 export const TableColumns = (selectedRow) => [
-  columnHelper.accessor('id', {
-    header: 'ID',
+  columnHelper.accessor('sort_order', {
+    header: 'Sıralama',
     size: 50,
-    cell: (info) => <span>{info.getValue()}</span>,
+    cell: (info) => <span className='vertical-center'>{info.getValue()}</span>,
   }),
 
   // Combined Report Code and Label column configuration

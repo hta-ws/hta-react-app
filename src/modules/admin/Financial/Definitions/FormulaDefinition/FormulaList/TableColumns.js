@@ -1,6 +1,6 @@
 import React from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
-import FormulaView from '../../Components/FormulaView'; // FormulaView bileşeninin doğru yolunu kontrol edin
+// import FormulaView from '../../Components/FormulaView'; // FormulaView bileşenini kullanmak istemiyorsanız kaldırın
 
 const columnHelper = createColumnHelper();
 
@@ -94,12 +94,6 @@ export const TableColumns = (selectedRow, isDraggable) => {
         </div>
       ),
     }),
-    // Yeni sütun - FormulaView
-    // columnHelper.accessor('formula_view', {
-    //   header: 'Formül Görüntüsü',
-    //   size: 400,
-    //   cell: (info) => <FormulaView formikValues={info.row.original} />,
-    // }),
   ];
 
   if (isDraggable) {

@@ -10,6 +10,7 @@ import {
   CHANGE_SIDEBAR_VISIBILITY_TYPE,
   TOGGLE_MENU, // Menü toggle için action type
   SET_MENU_ITEMS,
+  SET_STOCK_CODE,
 } from 'shared/ActionTypes';
 import { changeHTMLAttribute } from '@hta/helpers/Utils';
 
@@ -123,4 +124,8 @@ export const toggleMenu = (menuId) => ({
 export const setMenuItems = (menuItems) => ({
   type: SET_MENU_ITEMS,
   payload: menuItems,
+});
+export const setStockCode = (stockCode) => ({
+  type: SET_STOCK_CODE,
+  payload: stockCode,
 });

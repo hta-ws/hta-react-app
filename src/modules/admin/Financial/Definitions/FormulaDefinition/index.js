@@ -14,7 +14,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import FormulaList from './FormulaList';
 import FormulaTabs from './FormulaTabs';
 // import FormulaRunLogModal from './FormulaRunLogModal';
-
+import FormulaRunLogModal from './FormulaRunLogModal';
 const FormulaDefinitionPage = () => {
   const { template, id } = useParams();
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ const FormulaDefinitionPage = () => {
     }
 
     // Template değiştiğinde yeni formu kapat
-    setShowNewForm(false);
+    // setShowNewForm(false);
   }, [template, fsTemplateList, dispatch, selectedTemplateId, navigate]);
 
   const currentTemplate = fsTemplateList.find(
@@ -140,7 +140,7 @@ const FormulaDefinitionPage = () => {
             <div>Geçersiz şablon, lütfen geçerli bir şablon seçin</div>
           ) : (
             <Row className='gx-3'>
-              <Col md={id || showNewForm ? '6' : '12'}>
+              <Col md={id || showNewForm ? '4' : '12'}>
                 <FormulaList
                   apiState={apiState}
                   apiActions={apiActions}
@@ -148,7 +148,7 @@ const FormulaDefinitionPage = () => {
                 />
               </Col>
               {(id || showNewForm) && (
-                <Col md={6}>
+                <Col md={8}>
                   <FormulaTabs
                     onClose={handleCloseForm}
                     showNewForm={showNewForm}
@@ -160,11 +160,11 @@ const FormulaDefinitionPage = () => {
           )}
         </CardBody>
       </Card>
-      {/* <FormulaRunLogModal
+      <FormulaRunLogModal
         isOpen={showRunLogModal}
         toggle={handleCloseRunLogModal}
         templateId={selectedTemplateId}
-      /> */}
+      />
     </DndProvider>
   );
 };

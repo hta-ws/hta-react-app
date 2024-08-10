@@ -2,43 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useAuthMethod } from '@hta/hooks/AuthHooks';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  changeSidebarVisibility,
-  changeLayoutMode,
-  setStockCode,
-} from 'toolkit/actions';
 import logoSm from '../../../../assets/images/logo-sm.png';
 import logoDark from '../../../../assets/images/logo-dark.png';
 import logoLight from '../../../../assets/images/logo-light.png';
+import { changeSidebarVisibility } from 'toolkit/actions';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeLayoutMode } from 'toolkit/actions';
 import FullScreenDropdown from './FullScreenDropdown';
 import LightDark from './LightDark';
-
+// import AppStockSearch from '@veo/components/AppStockSearch';
 const AppHeader = ({ headerClass }) => {
   const { logout } = useAuthMethod();
   const dispatch = useDispatch();
-  const { sidebarVisibilityType, layoutModeType, stock_code } = useSelector(
+  const { sidebarVisibilityType, layoutModeType } = useSelector(
     ({ layout }) => layout,
   );
-
-  const stockCodes = [
-    'AAPL',
-    'GOOGL',
-    'MSFT',
-    'AMZN',
-    'FB',
-    'TSLA',
-    'NFLX',
-    'NVDA',
-    'BABA',
-    'V',
-  ];
-
-  const handleStockCodeChange = (event) => {
-    const selectedStockCode = event.target.value;
-    dispatch(setStockCode(selectedStockCode));
-  };
-
   const toogleMenuBtn = () => {
     var windowSize = document.documentElement.clientWidth;
 
@@ -47,12 +25,14 @@ const AppHeader = ({ headerClass }) => {
     if (windowSize > 767)
       document.querySelector('.hamburger-icon').classList.toggle('open');
 
+    //For collapse horizontal menu
     if (document.documentElement.getAttribute('data-layout') === 'horizontal') {
       document.body.classList.contains('menu')
         ? document.body.classList.remove('menu')
         : document.body.classList.add('menu');
     }
 
+    //For collapse vertical and semibox menu
     if (
       sidebarVisibilityType === 'show' &&
       (document.documentElement.getAttribute('data-layout') === 'vertical' ||
@@ -74,19 +54,18 @@ const AppHeader = ({ headerClass }) => {
       }
     }
 
+    //Two column menu
     if (document.documentElement.getAttribute('data-layout') === 'twocolumn') {
       document.body.classList.contains('twocolumn-panel')
         ? document.body.classList.remove('twocolumn-panel')
         : document.body.classList.add('twocolumn-panel');
     }
   };
-
   const onChangeLayoutMode = (value) => {
     if (changeLayoutMode) {
       dispatch(changeLayoutMode(value));
     }
   };
-
   return (
     <React.Fragment>
       <header id='page-topbar' className={headerClass}>
@@ -125,21 +104,7 @@ const AppHeader = ({ headerClass }) => {
                 </span>
               </button>
 
-              {/* Stock Code Selector */}
-              <select
-                className='form-select mx-2'
-                onChange={handleStockCodeChange}
-                value={stock_code || ''}
-              >
-                <option value='' disabled>
-                  Select Stock Code
-                </option>
-                {stockCodes.map((code) => (
-                  <option key={code} value={code}>
-                    {code}
-                  </option>
-                ))}
-              </select>
+              {/* <AppStockSearch /> */}
             </div>
 
             <div className='d-flex align-items-center'>
@@ -164,7 +129,6 @@ const AppHeader = ({ headerClass }) => {
     </React.Fragment>
   );
 };
-
 AppHeader.propTypes = {
   headerClass: PropTypes.string,
 };

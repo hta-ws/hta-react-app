@@ -54,13 +54,13 @@ const CodeDefinition = () => {
     }
 
     // Template değiştiğinde yeni formu kapat
-    setShowNewForm(false);
+    // setShowNewForm(false);
   }, [template, fsTemplateList, dispatch, selectedTemplateId, navigate]);
 
   const currentTemplate = fsTemplateList.find(
     (item) => item.id === selectedTemplateId,
   );
-
+  console.log('id', id, ' showNewForm', showNewForm);
   useEffect(() => {
     if (id) {
       setShowNewForm(false);
@@ -139,14 +139,14 @@ const CodeDefinition = () => {
             <div>Geçersiz şablon, lütfen geçerli bir şablon seçin</div>
           ) : (
             <Row className='gx-3'>
-              <Col md={id || showNewForm ? '6' : '12'}>
+              <Col md={id || showNewForm ? '3' : '12'}>
                 <CodeDefinitionList
                   apiState={apiState}
                   apiActions={apiActions}
                 />
               </Col>
               {(id || showNewForm) && (
-                <Col md={6}>
+                <Col md={9}>
                   <CodeDefinitionTabs
                     onClose={handleCloseForm}
                     showNewForm={showNewForm}

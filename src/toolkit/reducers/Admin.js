@@ -6,8 +6,9 @@ import {
   SET_FS_TYPE,
   GET_FS_STOCK_LIST,
   SET_FS_STOCK,
-  GET_FS_SP_METADATA_LIST, // Yeni action türü
-  GET_FS_REPORT_CODE_LIST, // Yeni action türü
+  GET_FS_SP_METADATA_LIST,
+  GET_FS_REPORT_CODE_LIST,
+  GET_FS_PROCEDURE_LIST, // Yeni action türü
 } from 'shared/ActionTypes';
 
 const INIT_STATE = {
@@ -19,6 +20,7 @@ const INIT_STATE = {
   selectedFsStock: null, // Seçili FS stock için yeni state property
   fsSpMetadataList: [], // Yeni state property for FS SP metadata
   fsReportCodeList: [], // Yeni state property for FS report code list
+  fsProcedureList: [], // Yeni state property for FS procedure list
 };
 
 const adminReducer = createReducer(INIT_STATE, (builder) => {
@@ -38,7 +40,10 @@ const adminReducer = createReducer(INIT_STATE, (builder) => {
     .addCase(GET_FS_STOCK_LIST, (state, action) => {
       state.fsStockList = action.payload;
       if (state.fsStockList.length > 0) {
-        state.selectedFsStock = state.fsStockList[0].value; // Assuming the payload contains objects with a 'value' property
+        // selectedFsStock zaten tanımlıysa, yeni değeri atlamayı pass geç
+        if (!state.selectedFsStock) {
+          state.selectedFsStock = state.fsStockList[0].value; // Assuming the payload contains objects with a 'value' property
+        }
       } else {
         state.selectedFsStock = null;
       }
@@ -51,6 +56,9 @@ const adminReducer = createReducer(INIT_STATE, (builder) => {
     })
     .addCase(GET_FS_REPORT_CODE_LIST, (state, action) => {
       state.fsReportCodeList = action.payload;
+    })
+    .addCase(GET_FS_PROCEDURE_LIST, (state, action) => {
+      state.fsProcedureList = action.payload;
     });
 });
 

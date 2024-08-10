@@ -48,3 +48,22 @@ export const selectFsReportCodeList = createSelector(
   [selectFsAdmin],
   (fsAdmin) => fsAdmin.fsReportCodeList || [],
 );
+
+// New selector for fsProcedureList
+export const selectFsProcedureList = createSelector(
+  [selectFsAdmin],
+  (fsAdmin) => fsAdmin.fsProcedureList || [],
+);
+
+// Export all selectors
+// export {
+//   selectFsTemplateList,
+//   selectFsTemplateId,
+//   selectFsTypeList,
+//   selectFsType,
+//   selectFsStockList,
+//   selectFsStock,
+//   selectFsSpMetadataList,
+//   selectFsReportCodeList,
+//   selectFsProcedureList,
+// };

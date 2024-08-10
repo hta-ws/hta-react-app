@@ -13,13 +13,13 @@ import {
 } from 'reactstrap';
 import { useGetDataApi } from '@hta/hooks/APIHooks';
 import FormTab from './FormTab';
-import RunLogTab from '../../Components/RunLogTab';
-import ResultTab from './ResultTab';
+import RunLogTab from '../../Components/Tabs/RunLogTab';
+import ResultTab from '../../Components/Tabs/ResultTab';
 
 const FormulaTabs = ({ onClose, showNewForm, updateApiData }) => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('1');
-  const [title, setTitle] = useState('Formül Tanımlama');
+  const [title] = useState('Formül Tanımlama');
   const [apiState, apiActions] = useGetDataApi({
     controller: 'formula-definition',
     action: 'get-formula-definition',
@@ -74,7 +74,7 @@ const FormulaTabs = ({ onClose, showNewForm, updateApiData }) => {
           <RunLogTab entityType='formula' entityLevel='id' />
         </TabPane>
         <TabPane tabId='3'>
-          <ResultTab formData={apiState.apiData} />
+          <ResultTab modelType={'formula'} />
         </TabPane>
       </TabContent>
     );
